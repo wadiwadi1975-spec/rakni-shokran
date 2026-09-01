@@ -13,8 +13,19 @@ const COLORS = {
   border: 'rgba(201,168,106,0.35)',
 };
 
-const MOCK_CAR = { type: 'Toyota Corolla', plate: 'أ ب ج 1234', color: 'أبيض', status: 'متوقفة بأمان', spot: 'A-24' };
-const MOCK_PARKING = { available: 117, total: 500, valetOnline: 6 };
+const MOCK_CAR = { type: 'Toyota Corolla', plate: 'أ ب ج 1234', color: 'أبيض', status: 'متوقفة بأمان', spot: '2-145' };
+const PARKING_BUILDING = {
+  floors: [
+    { id: '1', name: 'الطابق 1', capacity: 500, occupied: 420 },
+    { id: '2', name: 'الطابق 2', capacity: 500, occupied: 380 },
+    { id: '3', name: 'الطابق 3', capacity: 500, occupied: 210 },
+    { id: '4', name: 'الطابق 4', capacity: 500, occupied: 95 },
+  ],
+  get total() { return 2000 },
+  get occupied() { return this.floors.reduce((s,f)=>s+f.occupied,0) },
+  get available() { return this.total - this.occupied },
+  valetOnline: 6,
+};
 
 export default function App() {
   const [stage, setStage] = useState('splash'); // splash, auth, role, student, valet, admin
@@ -98,9 +109,12 @@ export default function App() {
             <Text style={styles.info}>الحالة: <Text style={{color:'#4ade80'}}>{car.status}</Text> — موقف {car.spot}</Text>
           </View>
           <View style={styles.card}>
-            <Text style={styles.cardTitle}>المواقف الآن</Text>
-            <Text style={styles.info}>🟢 متاحة: {MOCK_PARKING.available} / {MOCK_PARKING.total}</Text>
-            <Text style={styles.info}>👥 Valet متصل: {MOCK_PARKING.valetOnline}</Text>
+            <Text style={styles.cardTitle}>مبنى المواقف — 4 طوابق × 500</Text>
+            <Text style={styles.info}>🅿️ الإجمالي: {PARKING_BUILDING.total} — 🟢 متاحة: {PARKING_BUILDING.available} — 🔴 مشغولة: {PARKING_BUILDING.occupied}</Text>
+            {PARKING_BUILDING.floors.map(f=>(
+              <Text key={f.id} style={styles.info}>• {f.name}: {f.capacity - f.occupied} متاحة / {f.capacity} — {f.occupied} مشغولة</Text>
+            ))}
+            <Text style={styles.info}>👥 Valet متصل: {PARKING_BUILDING.valetOnline}</Text>
           </View>
           <TouchableOpacity style={[styles.btn, {margin:16}]} onPress={()=> {
             const id = Date.now();
@@ -179,11 +193,18 @@ export default function App() {
       <SafeAreaView style={styles.container}>
         <ScrollView>
           <Text style={styles.title}>Rakni Shokran — Admin</Text>
+          <Text style={[styles.info, {textAlign:'center', marginBottom:10}]}>مبنى 4 طوابق × 500 — الإجمالي 2000</Text>
           <View style={styles.grid}>
-            <View style={styles.stat}><Text style={styles.statNum}>386</Text><Text style={styles.statLabel}>متوقفة حالياً</Text></View>
-            <View style={styles.stat}><Text style={styles.statNum}>117</Text><Text style={styles.statLabel}>مواقف متاحة</Text></View>
-            <View style={styles.stat}><Text style={styles.statNum}>24</Text><Text style={styles.statLabel}>Valet متصل</Text></View>
+            <View style={styles.stat}><Text style={styles.statNum}>{PARKING_BUILDING.occupied}</Text><Text style={styles.statLabel}>متوقفة حالياً</Text></View>
+            <View style={styles.stat}><Text style={styles.statNum}>{PARKING_BUILDING.available}</Text><Text style={styles.statLabel}>متاحة</Text></View>
+            <View style={styles.stat}><Text style={styles.statNum}>{PARKING_BUILDING.valetOnline}</Text><Text style={styles.statLabel}>Valet متصل</Text></View>
             <View style={styles.stat}><Text style={styles.statNum}>742</Text><Text style={styles.statLabel}>طلبات اليوم</Text></View>
+          </View>
+          <View style={styles.card}>
+            <Text style={styles.cardTitle}>إشغال الطوابق</Text>
+            {PARKING_BUILDING.floors.map(f=>(
+              <Text key={f.id} style={styles.info}>{f.name}: {f.occupied}/500 ({Math.round(f.occupied/5)}%) — متاح {f.capacity - f.occupied}</Text>
+            ))}
           </View>
           <View style={styles.card}>
             <Text style={styles.cardTitle}>إدارة</Text>
