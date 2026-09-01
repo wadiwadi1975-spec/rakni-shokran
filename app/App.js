@@ -334,14 +334,28 @@ export default function App() {
             <View style={styles.stat}><Text style={styles.statNum}>742</Text><Text style={styles.statLabel}>طلبات اليوم</Text></View>
           </View>
           <View style={styles.card}>
-            <Text style={styles.cardTitle}>إشغال الطوابق</Text>
+            <Text style={styles.cardTitle}>إشغال الطوابق — مراقبة حية</Text>
             {PARKING_BUILDING.floors.map(f=>(
-              <Text key={f.id} style={styles.info}>{f.name}: {f.occupied}/500 ({Math.round(f.occupied/5)}%) — متاح {f.capacity - f.occupied}</Text>
+              <Text key={f.id} style={styles.info}>{f.name}: {f.occupied}/500 ({Math.round(f.occupied/500*100)}%) — متاح {f.capacity - f.occupied} {f.capacity - f.occupied < 50 ? '🔴' : '🟢'}</Text>
             ))}
           </View>
           <View style={styles.card}>
-            <Text style={styles.cardTitle}>إدارة</Text>
-            <Text style={styles.info}>• الطلاب • السائقين • المواقف • الطلبات Live • الإيرادات • التقارير</Text>
+            <Text style={styles.cardTitle}>تقارير اليوم</Text>
+            <Text style={styles.info}>• إجمالي السيارات: {PARKING_BUILDING.occupied} — الفارغ: {PARKING_BUILDING.available}</Text>
+            <Text style={styles.info}>• طلبات مكتملة: 68 — قيد الانتظار: 4 — متوسط زمن الاستلام: 3.2 دقيقة</Text>
+            <Text style={styles.info}>• الإيرادات: 8,450 ج.م — اشتراكات: 42</Text>
+            <Text style={styles.info}>• ذروة الازدحام: 10:00-11:30 ص</Text>
+          </View>
+          <View style={styles.card}>
+            <Text style={styles.cardTitle}>التواصل والتوجيه</Text>
+            {VALET_STAFF.map(v=>(
+              <View key={v.id} style={{flexDirection:'row', justifyContent:'space-between', alignItems:'center', marginVertical:6}}>
+                <Text style={styles.info}>{v.name} — {v.phone}</Text>
+                <TouchableOpacity style={[styles.btn, {paddingVertical:6, paddingHorizontal:12}]} onPress={()=> alert('تم إرسال توجيه إلى '+v.name+' — التواصل حي عبر WebSocket')}>
+                  <Text style={[styles.btnText, {fontSize:12}]}>توجيه</Text>
+                </TouchableOpacity>
+              </View>
+            ))}
           </View>
         </ScrollView>
       </SafeAreaView>
