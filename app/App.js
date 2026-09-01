@@ -33,6 +33,8 @@ export default function App() {
   const [user, setUser] = useState(null);
   const [car, setCar] = useState(MOCK_CAR);
   const [requests, setRequests] = useState([]);
+  const [floor, setFloor] = useState('2');
+  const [spot, setSpot] = useState(null);
 
   useEffect(()=>{
     const t = setTimeout(()=> setStage('auth'), 1800);
@@ -116,12 +118,15 @@ export default function App() {
             ))}
             <Text style={styles.info}>👥 Valet متصل: {PARKING_BUILDING.valetOnline}</Text>
           </View>
-          <TouchableOpacity style={[styles.btn, {margin:16}]} onPress={()=> {
+          <TouchableOpacity style={[styles.btn, {margin:16}]} onPress={()=> setStage('floorMap')}>
+            <Text style={styles.btnText}>عرض خريطة المواقف واختيار الطابق</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={[styles.btn, {margin:16, marginTop:0}]} onPress={()=> {
             const id = Date.now();
-            setRequests([...requests, {id, status:'pending', from:'مبنى الهندسة', to:'A-24'}]);
+            setRequests([...requests, {id, status:'pending', from:'مبنى الهندسة', to:'2-145'}]);
             setStage('tracking');
           }}>
-            <Text style={styles.btnText}>اطلب Valet</Text>
+            <Text style={styles.btnText}>اطلب Valet فوراً</Text>
           </TouchableOpacity>
           <View style={styles.card}>
             <Text style={styles.cardTitle}>إضافة سيارة</Text>
@@ -129,6 +134,49 @@ export default function App() {
             <TextInput placeholder="رقم اللوحة" placeholderTextColor={COLORS.muted} style={styles.input} defaultValue={car.plate} />
           </View>
         </ScrollView>
+      </SafeAreaView>
+    );
+  }
+
+  if (stage === 'floorMap') {
+    const f = PARKING_BUILDING.floors.find(x=>x.id===floor);
+    const spots = Array.from({length: 500}, (_,i)=> {
+      const n = i+1;
+      const occupied = n <= f.occupied;
+      const isSelected = spot===n;
+      return {n, occupied, isSelected};
+    });
+    return (
+      <SafeAreaView style={styles.container}>
+        <Text style={styles.title}>خريطة مبنى المواقف</Text>
+        <View style={{flexDirection:'row', gap:8, marginBottom:12}}>
+          {PARKING_BUILDING.floors.map(fl=>(
+            <TouchableOpacity key={fl.id} onPress={()=> {setFloor(fl.id); setSpot(null);}} style={[styles.stat, {flex:1, backgroundColor: floor===fl.id ? COLORS.gold : COLORS.card, borderColor: COLORS.gold}]}>
+              <Text style={[styles.statNum, {color: floor===fl.id ? COLORS.black : COLORS.gold}]}>{fl.name}</Text>
+              <Text style={[styles.statLabel, {color: floor===fl.id ? COLORS.black : COLORS.muted}]}>{fl.capacity - fl.occupied} متاح</Text>
+            </TouchableOpacity>
+          ))}
+        </View>
+        <Text style={styles.info}>الطابق {f.name} — اختر موقفاً (أخضر متاح، أحمر مشغول، ذهبي اختيارك)</Text>
+        <ScrollView style={{flex:1, marginTop:8}}>
+          <View style={{flexDirection:'row', flexWrap:'wrap'}}>
+            {spots.map(s=>(
+              <TouchableOpacity key={s.n} disabled={s.occupied} onPress={()=> setSpot(s.n)} style={{width: 30, height: 22, margin:3, borderRadius:4, backgroundColor: s.isSelected ? COLORS.gold : s.occupied ? '#ef4444' : '#22c55e', opacity: s.occupied?0.5:1, alignItems:'center', justifyContent:'center'}}>
+                <Text style={{fontSize:7, color: s.isSelected? COLORS.black : '#fff'}}>{s.n}</Text>
+              </TouchableOpacity>
+            ))}
+          </View>
+        </ScrollView>
+        <TouchableOpacity style={[styles.btn, {opacity: spot?1:0.5}]} disabled={!spot} onPress={()=> {
+          const id = Date.now();
+          const to = `${floor}-${spot}`;
+          setCar({...car, spot: to});
+          setRequests([...requests, {id, status:'pending', from:'مبنى الهندسة', to}]);
+          setStage('tracking');
+        }}>
+          <Text style={styles.btnText}>{spot ? `تأكيد موقف ${floor}-${spot} وطلب Valet` : 'اختر موقفاً أولاً'}</Text>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={()=> setStage('student')}><Text style={styles.link}>رجوع</Text></TouchableOpacity>
       </SafeAreaView>
     );
   }
