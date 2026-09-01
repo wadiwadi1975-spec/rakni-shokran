@@ -14,6 +14,11 @@ const COLORS = {
 };
 
 const MOCK_CAR = { type: 'Toyota Corolla', plate: 'أ ب ج 1234', color: 'أبيض', status: 'متوقفة بأمان', spot: '2-145' };
+const VALET_STAFF = [
+  { id: 'V01', name: 'أحمد سامي', phone: '01012345678', idNumber: '29801010101012', photo: null, rating: 4.9, trips: 342 },
+  { id: 'V02', name: 'محمد عادل', phone: '01023456789', idNumber: '29802020202013', photo: null, rating: 4.8, trips: 298 },
+  { id: 'V03', name: 'يوسف خالد', phone: '01034567890', idNumber: '29803030303014', photo: null, rating: 4.9, trips: 410 },
+];
 const PARKING_BUILDING = {
   floors: [
     { id: '1', name: 'الطابق 1', capacity: 500, occupied: 420 },
@@ -155,6 +160,9 @@ export default function App() {
           <TouchableOpacity style={[styles.btn, {margin:16}]} onPress={()=> setStage('floorMap')}>
             <Text style={styles.btnText}>عرض خريطة المواقف واختيار الطابق</Text>
           </TouchableOpacity>
+          <TouchableOpacity style={[styles.btn, {margin:16, marginTop:0, backgroundColor: COLORS.card, borderWidth:1, borderColor: COLORS.border}]} onPress={()=> setStage('payment')}>
+            <Text style={[styles.btnText, {color: COLORS.gold}]}>الدفع والاشتراكات</Text>
+          </TouchableOpacity>
           <TouchableOpacity style={[styles.btn, {margin:16, marginTop:0}]} onPress={()=> {
             const id = Date.now();
             setRequests([...requests, {id, status:'pending', from:'مبنى الهندسة', to:'2-145'}]);
@@ -168,6 +176,31 @@ export default function App() {
             <TextInput placeholder="رقم اللوحة" placeholderTextColor={COLORS.muted} style={styles.input} defaultValue={car.plate} />
           </View>
         </ScrollView>
+      </SafeAreaView>
+    );
+  }
+
+  if (stage === 'payment') {
+    return (
+      <SafeAreaView style={styles.container}>
+        <Text style={styles.title}>الدفع والاشتراكات</Text>
+        <View style={styles.card}>
+          <Text style={styles.cardTitle}>Student Pass — 499 ج.م / شهر</Text>
+          <Text style={styles.info}>• 30 عملية Valet</Text>
+          <Text style={styles.info}>• أولوية في أوقات الازدحام</Text>
+          <TouchableOpacity style={styles.btn} onPress={()=> alert('تم الاشتراك — شكراً')}>
+            <Text style={styles.btnText}>اشترك الآن</Text>
+          </TouchableOpacity>
+        </View>
+        <View style={styles.card}>
+          <Text style={styles.cardTitle}>الدفع للعملية الحالية</Text>
+          <Text style={styles.info}>المبلغ: 25 ج.م — موقف 2-145 — ساعة</Text>
+          <View style={{flexDirection:'row', gap:8, marginTop:10}}>
+            <TouchableOpacity style={[styles.btn, {flex:1}]} onPress={()=> alert('دفع عبر شام كاش — محاكاة')}><Text style={styles.btnText}>شام كاش</Text></TouchableOpacity>
+            <TouchableOpacity style={[styles.btn, {flex:1, backgroundColor: COLORS.card, borderWidth:1, borderColor: COLORS.border}]} onPress={()=> alert('دفع نقدي عند الاستلام')}><Text style={[styles.btnText, {color: COLORS.gold}]}>نقدي</Text></TouchableOpacity>
+          </View>
+        </View>
+        <TouchableOpacity onPress={()=> setStage('student')}><Text style={styles.link}>رجوع</Text></TouchableOpacity>
       </SafeAreaView>
     );
   }
@@ -217,14 +250,22 @@ export default function App() {
 
   if (stage === 'tracking') {
     const last = requests[requests.length-1];
+    const valet = VALET_STAFF[0];
     return (
       <SafeAreaView style={styles.container}>
         <Text style={styles.title}>تتبع طلبك</Text>
         <View style={styles.card}>
           <Text style={styles.info}>طلب #{last?.id?.toString().slice(-4)} — {last?.from} → {last?.to}</Text>
           <Text style={styles.step}>✓ تم إرسال الطلب</Text>
-          <Text style={styles.step}>● في الطريق إليك — موظف الركن أحمد</Text>
-          <Text style={styles.stepMuted}>○ تم الاستلام → ركن في A-24 → متوقفة بأمان</Text>
+          <View style={[styles.card, {backgroundColor: 'rgba(201,168,106,0.08)', marginVertical:8}]}>
+            <Text style={styles.cardTitle}>موظف الاستلام</Text>
+            <Text style={styles.info}>👤 {valet.name} — ⭐ {valet.rating} ({valet.trips} عملية)</Text>
+            <Text style={styles.info}>🪪 هوية: {valet.idNumber}</Text>
+            <Text style={styles.info}>📞 {valet.phone} — للتواصل المباشر</Text>
+            <Text style={[styles.info, {color: COLORS.gold, marginTop:6}]}>يمكنك أخذ لقطة شاشة لهذه البيانات</Text>
+          </View>
+          <Text style={styles.step}>● في الطريق إليك — {valet.name}</Text>
+          <Text style={styles.stepMuted}>○ تم الاستلام → ركن في {last?.to} → متوقفة بأمان</Text>
         </View>
         <TouchableOpacity style={styles.btn} onPress={()=> setStage('student')}>
           <Text style={styles.btnText}>طلب استرجاع السيارة</Text>
@@ -237,17 +278,27 @@ export default function App() {
   }
 
   if (stage === 'valet') {
+    const me = VALET_STAFF[0];
     return (
       <SafeAreaView style={styles.container}>
-        <Text style={styles.title}>طلبات Valet</Text>
-        <View style={styles.card}>
-          <Text style={styles.cardTitle}>طلب #1042 — منذ 25 ثانية</Text>
-          <Text style={styles.info}>📍 مبنى الهندسة</Text>
-          <Text style={styles.info}>🚗 Toyota Corolla — أ ب ج 1234</Text>
-          <TouchableOpacity style={styles.btn} onPress={()=> setStage('valet-progress')}>
-            <Text style={styles.btnText}>قبول الطلب</Text>
-          </TouchableOpacity>
-        </View>
+        <ScrollView>
+          <View style={styles.card}>
+            <Text style={styles.cardTitle}>بياناتي كـ Valet</Text>
+            <Text style={styles.info}>👤 {me.name} — {me.id} — ⭐ {me.rating}</Text>
+            <Text style={styles.info}>🪪 {me.idNumber} — 📞 {me.phone}</Text>
+            <Text style={styles.info}>📊 {me.trips} عملية — متاح للطلبات</Text>
+          </View>
+          <Text style={styles.title}>طلبات جديدة</Text>
+          <View style={styles.card}>
+            <Text style={styles.cardTitle}>طلب #1042 — منذ 25 ثانية</Text>
+            <Text style={styles.info}>📍 مبنى الهندسة — نقطة Valet B</Text>
+            <Text style={styles.info}>🚗 Toyota Corolla — أ ب ج 1234 — أبيض</Text>
+            <Text style={styles.info}>👤 الطالب: أحمد (20241042) — 01098765432</Text>
+            <TouchableOpacity style={styles.btn} onPress={()=> setStage('valet-progress')}>
+              <Text style={styles.btnText}>قبول الطلب — سأستلم السيارة</Text>
+            </TouchableOpacity>
+          </View>
+        </ScrollView>
       </SafeAreaView>
     );
   }
