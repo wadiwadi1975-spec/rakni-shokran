@@ -80,7 +80,7 @@ export default function App() {
     return (
       <SafeAreaView style={styles.container}>
         <Text style={styles.title}>اختر نوع الحساب</Text>
-        <TouchableOpacity style={styles.roleCard} onPress={()=> { setRole('student'); setStage('student'); }}>
+        <TouchableOpacity style={styles.roleCard} onPress={()=> { setRole('student'); setStage('addCar'); }}>
           <Text style={styles.roleEmoji}>🎓</Text>
           <Text style={styles.roleTitle}>طالب</Text>
           <Text style={styles.roleDesc}>طلب ركن واسترجاع السيارة</Text>
@@ -95,6 +95,29 @@ export default function App() {
           <Text style={styles.roleTitle}>الإدارة</Text>
           <Text style={styles.roleDesc}>لوحة تحكم الجامعة</Text>
         </TouchableOpacity>
+      </SafeAreaView>
+    );
+  }
+
+  if (stage === 'addCar') {
+    return (
+      <SafeAreaView style={styles.container}>
+        <ScrollView>
+          <Text style={styles.title}>تسجيل الطالب — بيانات السيارة</Text>
+          <View style={styles.card}>
+            <TextInput placeholder="البريد الجامعي (name@future.edu.eg)" placeholderTextColor={COLORS.muted} style={styles.input} />
+            <TextInput placeholder="رمز OTP (جرب 123456)" placeholderTextColor={COLORS.muted} style={styles.input} />
+            <TextInput placeholder="نوع السيارة (Toyota)" placeholderTextColor={COLORS.muted} style={styles.input} defaultValue={car.type} />
+            <TextInput placeholder="الموديل (Corolla 2022)" placeholderTextColor={COLORS.muted} style={styles.input} />
+            <TextInput placeholder="اللون (أبيض)" placeholderTextColor={COLORS.muted} style={styles.input} defaultValue={car.color} />
+            <TextInput placeholder="رقم اللوحة" placeholderTextColor={COLORS.muted} style={styles.input} defaultValue={car.plate} />
+            <TextInput placeholder="ملاحظات خاصة" placeholderTextColor={COLORS.muted} style={styles.input} />
+            <Text style={[styles.info, {marginTop:8}]}>📷 صورة السيارة: (اختياري — سيتم التقاطها)</Text>
+          </View>
+          <TouchableOpacity style={styles.btn} onPress={()=> { setStage('student'); }}>
+            <Text style={styles.btnText}>حفظ ومتابعة كطالب</Text>
+          </TouchableOpacity>
+        </ScrollView>
       </SafeAreaView>
     );
   }
@@ -117,6 +140,17 @@ export default function App() {
               <Text key={f.id} style={styles.info}>• {f.name}: {f.capacity - f.occupied} متاحة / {f.capacity} — {f.occupied} مشغولة</Text>
             ))}
             <Text style={styles.info}>👥 Valet متصل: {PARKING_BUILDING.valetOnline}</Text>
+          </View>
+          <View style={styles.card}>
+            <Text style={styles.cardTitle}>خريطة الجامعة</Text>
+            <Image source={{uri: 'https://staticmap.openstreetmap.de/staticmap.php?center=30.025,31.491&zoom=16&size=600x300&markers=30.025,31.491,red'}} style={{height:160, borderRadius:12, backgroundColor:'#222'}} />
+            <Text style={styles.info}>جامعة المستقبل — نهاية شارع التسعين، القاهرة الجديدة</Text>
+          </View>
+          <View style={styles.card}>
+            <Text style={styles.cardTitle}>تكاليف الباركينج</Text>
+            <Text style={styles.info}>• ساعة: 20 ج.م — يوم: 80 ج.م</Text>
+            <Text style={styles.info}>• اشتراك شهري Student Pass: 499 ج.م (30 عملية Valet)</Text>
+            <Text style={[styles.info, {color: COLORS.gold}]}>الدفع: شام كاش / سيريتل / MTN / بنكي / نقدي</Text>
           </View>
           <TouchableOpacity style={[styles.btn, {margin:16}]} onPress={()=> setStage('floorMap')}>
             <Text style={styles.btnText}>عرض خريطة المواقف واختيار الطابق</Text>
