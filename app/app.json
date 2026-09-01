@@ -1,0 +1,31 @@
+{
+  "expo": {
+    "name": "RAKNI SHOKRAN",
+    "slug": "rakni-shokran",
+    "scheme": "rakni-shokran",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "dark",
+    "backgroundColor": "#0A0A0A",
+    "splash": {
+      "backgroundColor": "#0A0A0A",
+      "image": "./assets/splash-icon.png",
+      "resizeMode": "contain"
+    },
+    "ios": {
+      "supportsTablet": true
+    },
+    "android": {
+      "adaptiveIcon": {
+        "backgroundColor": "#0A0A0A",
+        "foregroundImage": "./assets/android-icon-foreground.png",
+        "backgroundImage": "./assets/android-icon-background.png",
+        "monochromeImage": "./assets/android-icon-monochrome.png"
+      }
+    },
+    "web": {
+      "favicon": "./assets/favicon.png"
+    }
+  }
+}
