@@ -50,25 +50,29 @@
     <div class="card" onclick="show('valet')" style="cursor:pointer;text-align:center"><div style="font-size:32px">🚗</div><b>Valet</b><div class="sub">استلام الطلبات</div></div>
     <div class="card" onclick="show('admin')" style="cursor:pointer;text-align:center"><div style="font-size:32px">🏢</div><b>الإدارة</b><div class="sub">لوحة تحكم</div></div>
   </div>
-  <!-- Student -->
+  <!-- Student — شاشة رئيسية نظيفة -->
   <div class="screen" id="student">
     <div class="title">مرحباً أحمد 👋</div>
-    <div class="card"><b>🚗 سيارتك</b><br>Toyota Corolla — أ ب ج 1234<br><span style="color:#4ade80">متوقفة بأمان — موقف 2-145</span></div>
-    <div class="card"><b>مبنى المواقف — 4 طوابق × 500</b><br>الإجمالي 2000 — متاحة 895<br>الطابق 1: 80 متاح — الطابق 2: 120 متاح</div>
-    <button class="btn" onclick="show('floorMap')">عرض خريطة المواقف</button>
-    <button class="btn" onclick="show('tracking')">اطلب Valet فوراً</button>
+    <div class="card"><b>🚗 سيارتك</b><br>Toyota Corolla — أ ب ج 1234 — أبيض<br><span style="color:#4ade80">متوقفة بأمان — موقف 2-145</span></div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+      <div class="card" onclick="show('floorMap')" style="cursor:pointer;text-align:center"><div style="font-size:24px">🗺️</div><b>الخرائط والمواقف</b><div class="sub">4 طوابق × 500</div></div>
+      <div class="card" onclick="show('payment')" style="cursor:pointer;text-align:center"><div style="font-size:24px">💳</div><b>التكاليف والدفع</b><div class="sub">20/80/499</div></div>
+      <div class="card" onclick="show('tracking')" style="cursor:pointer;text-align:center"><div style="font-size:24px">🚕</div><b>طلب Valet</b><div class="sub">تتبع لحظي</div></div>
+      <div class="card" onclick="show('history')" style="cursor:pointer;text-align:center"><div style="font-size:24px">📋</div><b>سجل العمليات</b><div class="sub">رحلاتي</div></div>
+    </div>
   </div>
-  <!-- Floor Map -->
+  <!-- Floor Map — شاشة كاملة 500 موقف -->
   <div class="screen" id="floorMap">
-    <div class="title">خريطة المواقف</div>
+    <div class="title">خريطة المواقف — 4 طوابق</div>
     <div class="card">
-      <div style="display:flex;gap:6px">
-        <span class="badge" style="background:#C9A86A;color:#000">الطابق 2 — 120 متاح</span>
-        <span class="badge">الطابق 1</span><span class="badge">الطابق 3</span><span class="badge">الطابق 4</span>
+      <div style="display:flex;gap:6px;flex-wrap:wrap">
+        <span class="badge" style="background:#C9A86A;color:#000">الطابق 2 — 120 متاح / 500</span>
+        <span class="badge">الطابق 1 — 80 متاح</span><span class="badge">الطابق 3 — 310 متاح</span><span class="badge">الطابق 4 — 385 متاح</span>
       </div>
-      <div style="display:flex;flex-wrap:wrap;gap:4px;margin-top:10px">
-        <script>for(let i=1;i<=40;i++){document.write('<span style="width:28px;height:18px;background:'+(i%3==0?'#ef4444':'#22c55e')+';border-radius:4px;display:inline-block;text-align:center;font-size:8px;line-height:18px">'+i+'</span>')}</script>
+      <div style="height:380px;overflow-y:auto;display:flex;flex-wrap:wrap;gap:3px;margin-top:10px;align-content:flex-start">
+        <script>for(let i=1;i<=500;i++){document.write('<span style="width:22px;height:14px;background:'+(i<=380?'#ef4444':'#22c55e')+';border-radius:3px;display:inline-block;text-align:center;font-size:6px;line-height:14px;opacity:'+(i<=380?0.5:1)+'">'+i+'</span>')}</script>
       </div>
+      <div class="sub" style="margin-top:8px">أخضر متاح — أحمر مشغول — اضغط لاختيار موقف</div>
     </div>
     <button class="btn" onclick="show('tracking')">تأكيد موقف 2-145 وطلب Valet</button>
     <button class="btn btn-sec" onclick="show('student')">رجوع</button>
