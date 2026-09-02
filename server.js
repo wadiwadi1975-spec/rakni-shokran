@@ -223,6 +223,7 @@ const server = http.createServer(async (req, res) => {
   if (url.startsWith('/api/')) return api(req, res, url, method);
 
   if (url === '/') url = '/index.html';
+  if (url === '/spots') url = '/spots-map.html';
   const filePath = path.join(PUBLIC, url);
   const ext = path.extname(filePath);
 
