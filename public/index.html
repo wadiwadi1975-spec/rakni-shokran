@@ -24,12 +24,19 @@
   <body>
     <div id="root"></div>
     <script>
+      var _autoLoginRunning=true;
+      var _origRemove=Storage.prototype.removeItem;
+      Storage.prototype.removeItem=function(k){
+        if(k==='rakni_access_token'&&!_autoLoginRunning)localStorage.setItem('rakni_skip_autologin','1');
+        return _origRemove.call(this,k);
+      };
       (async function(){
+        if(localStorage.getItem('rakni_skip_autologin')==='1'){_autoLoginRunning=false;return;}
         var tk=localStorage.getItem('rakni_access_token');
         if(tk){
           try{
             var v=await fetch('/api/auth/me',{headers:{'Authorization':'Bearer '+tk}});
-            if(v.ok)return;
+            if(v.ok){_autoLoginRunning=false;return;}
           }catch(e){}
           localStorage.removeItem('rakni_access_token');
         }
@@ -41,6 +48,7 @@
             location.reload();
           }
         }catch(e){}
+        _autoLoginRunning=false;
       })();
     </script>
   </body>
