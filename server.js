@@ -21,13 +21,18 @@ function initDB() {
         { id: 'u2', fullName: 'Ahmed Valet', email: 'valet@rakni.com', password: 'valet123', role: 'VALET', phone: '01100000000', rating: 5, totalJobs: 0, wallet: 0, createdAt: new Date().toISOString() },
         { id: 'u3', fullName: 'Sara Student', email: 'student@rakni.com', password: 'student123', role: 'STUDENT', phone: '01200000000', studentId: 'FU-2024-001', university: 'University of Future', branch: 'Cairo New Capital', createdAt: new Date().toISOString() }
       ],
-      spots: [
-        { id: 1, floor: 1, spotCode: 'A1', status: 'available' },
-        { id: 2, floor: 1, spotCode: 'A2', status: 'occupied', userId: 'u3' },
-        { id: 3, floor: 1, spotCode: 'A3', status: 'available' },
-        { id: 4, floor: 2, spotCode: 'B1', status: 'available' },
-        { id: 5, floor: 2, spotCode: 'B2', status: 'maintenance' }
-      ],
+      spots: (function(){
+        const s=[];
+        const floors=['A','B','C','D'];
+        const floorNames=['الطابق الأرضي','الطابق الأول','الطابق الثاني','الطابق الثالث'];
+        let id=1;
+        for(let f=0;f<4;f++){
+          for(let n=1;n<=250;n++){
+            s.push({id:id++,floor:f+1,spotCode: floors[f]+'-'+String(n).padStart(2,'0'),status:'available'});
+          }
+        }
+        return s;
+      })(),
       vehicles: [
         { id: 1, userId: 'u3', plateNumber: 'ABC-1234', makeModel: 'Toyota Corolla', color: 'White', brand: 'Toyota' }
       ],
@@ -116,7 +121,7 @@ async function api(req, res, url, method) {
     const totalRevenue = db.payments.filter(p => p.status === 'completed').reduce((s, p) => s + p.amount, 0);
     const floors = [1, 2, 3, 4].map(f => {
       const fSpots = db.spots.filter(s => s.floor === f);
-      return { id: f, name: ['الطابق الأرضي', 'الطابق الأول', 'الطابق الثاني', 'الطابق الثالث'][f-1], total: fSpots.length, occupied: fSpots.filter(s => s.status === 'occupied').length, available: fSpots.filter(s => s.status === 'available').length };
+      return { id: f, name: ['الطابق الأرضي (A)', 'الطابق الأول (B)', 'الطابق الثاني (C)', 'الطابق الثالث (D)'][f-1], total: fSpots.length, occupied: fSpots.filter(s => s.status === 'occupied').length, available: fSpots.filter(s => s.status === 'available').length };
     });
     return json(res, 200, { totalSpots, occupied, available, activeOrders, totalRevenue, floors, activeValets: db.users.filter(u => u.role === 'VALET').length, totalStudents: db.users.filter(u => u.role === 'STUDENT').length });
   }
