@@ -36,8 +36,8 @@
         try{
           var r=await fetch('/api/auth/login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email:'student@rakni.com',password:'student123'})});
           var d=await r.json();
-          if(d.token){
-            localStorage.setItem('rakni_access_token',d.token);
+          if(d.accessToken){
+            localStorage.setItem('rakni_access_token',d.accessToken);
             location.reload();
           }
         }catch(e){}

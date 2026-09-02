@@ -82,7 +82,7 @@ async function api(req, res, url, method) {
     user._token = 'tok_' + genId();
     save();
     const { password, _token, ...safe } = user;
-    return json(res, 200, { token: user._token, user: safe });
+    return json(res, 200, { accessToken: user._token, user: safe });
   }
 
   // Auth: Register
@@ -94,7 +94,7 @@ async function api(req, res, url, method) {
     user._token = 'tok_' + genId();
     save();
     const { password, _token, ...safe } = user;
-    return json(res, 201, { token: user._token, user: safe });
+    return json(res, 201, { accessToken: user._token, user: safe });
   }
 
   // Auth: Me
