@@ -138,7 +138,7 @@ async function api(req, res, url, method) {
   const spotPatch = url.match(/^\/api\/spots\/(.+)\/status$/);
   if (spotPatch && method === 'PATCH') {
     const body = await readBody(req);
-    const spot = db.spots.find(s => s.id === spotPatch[1]);
+    const spot = db.spots.find(s => String(s.id) === String(spotPatch[1]));
     if (!spot) return json(res, 404, { error: 'Spot not found' });
     spot.status = body.status;
     if (body.userId) spot.userId = body.userId;
@@ -186,7 +186,7 @@ async function api(req, res, url, method) {
   const oTrans = url.match(/^\/api\/orders\/(.+)\/transition$/);
   if (oTrans && method === 'POST') {
     const body = await readBody(req);
-    const order = db.orders.find(o => o.id === oTrans[1]);
+    const order = db.orders.find(o => String(o.id) === String(oTrans[1]));
     if (!order) return json(res, 404, { error: 'Order not found' });
     order.status = body.status;
     if (body.status === 'COMPLETED') order.completedAt = new Date().toISOString();
