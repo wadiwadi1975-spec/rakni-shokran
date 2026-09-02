@@ -26,13 +26,18 @@
     <script>
       (async function(){
         var tk=localStorage.getItem('rakni_access_token');
-        if(tk)return;
+        if(tk){
+          try{
+            var v=await fetch('/api/auth/me',{headers:{'Authorization':'Bearer '+tk}});
+            if(v.ok)return;
+          }catch(e){}
+          localStorage.removeItem('rakni_access_token');
+        }
         try{
           var r=await fetch('/api/auth/login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email:'student@rakni.com',password:'student123'})});
           var d=await r.json();
           if(d.token){
             localStorage.setItem('rakni_access_token',d.token);
-            localStorage.setItem('rakni_user',JSON.stringify(d.user));
             location.reload();
           }
         }catch(e){}
