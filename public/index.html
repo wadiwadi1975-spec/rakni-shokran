@@ -24,12 +24,23 @@
   <body>
     <div id="root"></div>
     <script>
+      var setVal=Object.getOwnPropertyDescriptor(HTMLInputElement.prototype,'value').set;
+      function fillInput(inp,val){
+        if(inp.value)return;
+        setVal.call(inp,val);
+        inp.dispatchEvent(new Event('input',{bubbles:true}));
+      }
       setInterval(function(){
-        var inputs=document.querySelectorAll('input[type="email"],input[type="text"],input[type="password"],input[placeholder*="بريد"],input[placeholder*="email"],input[placeholder*="كلمة"],input[placeholder*="password"]');
-        inputs.forEach(function(inp){
+        var all=document.querySelectorAll('input');
+        all.forEach(function(inp){
           var ph=(inp.placeholder||'').toLowerCase();
-          if((ph.indexOf('بريد')>-1||ph.indexOf('email')>-1)&&!inp.value){inp.value='student@rakni.com';inp.dispatchEvent(new Event('input',{bubbles:true}));inp.dispatchEvent(new Event('change',{bubbles:true}));}
-          if((ph.indexOf('كلمة')>-1||ph.indexOf('password')>-1)&&!inp.value){inp.value='student123';inp.dispatchEvent(new Event('input',{bubbles:true}));inp.dispatchEvent(new Event('change',{bubbles:true}));}
+          var type=(inp.type||'').toLowerCase();
+          if(!inp.value&&(ph.indexOf('\u0628\u0631\u064A\u062F')>-1||ph.indexOf('email')>-1||ph.indexOf('e-mail')>-1)){
+            fillInput(inp,'student@rakni.com');
+          }
+          if(!inp.value&&(ph.indexOf('\u0627\u0644\u0643\u0644\u0645\u0629')>-1||ph.indexOf('password')>-1||type==='password')){
+            fillInput(inp,'student123');
+          }
         });
       },500);
     </script>
