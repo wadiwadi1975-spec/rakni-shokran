@@ -1,0 +1,19 @@
+{
+  "name": "رَكْنِي شكراً",
+  "short_name": "رَكْنِي",
+  "description": "خدمة ذكية لصف السيارات واسترجاعها داخل الجامعة",
+  "start_url": "/",
+  "display": "standalone",
+  "dir": "rtl",
+  "lang": "ar",
+  "background_color": "#0A0A0A",
+  "theme_color": "#0A0A0A",
+  "icons": [
+    {
+      "src": "logo.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}

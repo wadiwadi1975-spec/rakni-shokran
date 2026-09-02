@@ -2,290 +2,294 @@
 <html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>RAKNI SHOKRAN — Smart Valet Parking</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no">
+  <title>رَكْنِي شكراً — Smart Valet Parking</title>
+  <meta name="description" content="رَكْنِي شكراً — خدمة ذكية لصف السيارات واسترجاعها داخل جامعة المستقبل. 4 طوابق × 500 سيارة = 2000 مركبة.">
+  <meta name="robots" content="index, follow">
+  <meta property="og:title" content="رَكْنِي شكراً">
+  <meta property="og:description" content="خدمة ذكية لصف السيارات واسترجاعها داخل الجامعة — New Cairo 30.025°N, 31.491°E">
+  <meta property="og:type" content="website">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="رَكْنِي شكراً">
+  <meta name="twitter:description" content="خدمة ذكية لصف السيارات واسترجاعها داخل الجامعة">
+  <meta name="theme-color" content="#0A0A0A">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="رَكْنِي">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <link rel="manifest" href="manifest.json">
+  <link rel="icon" type="image/png" href="logo.png">
+  <link rel="apple-touch-icon" href="logo.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&display=swap" rel="stylesheet">
-  <link rel="icon" type="image/png" href="logo.png">
   <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    :root {
-      --black: #0A0A0A; --card: #141414; --card2: #1A1A1A;
-      --gold: #C9A86A; --gold-d: #B8963D; --gold-l: #D4B87A;
-      --white: #FFF; --gray: #888; --gl: #CCC;
-      --green: #2ECC71; --red: #E74C3C; --blue: #3498DB;
-      --r: 14px;
+    *{margin:0;padding:0;box-sizing:border-box}
+    :root{
+      --bg:#0A0A0A;--bg2:#111827;--card:#141414;--card2:#1A1A1A;
+      --gold:#C9A86A;--gold-d:#B8963D;--gold-l:#D4B87A;
+      --text:#F9FAFB;--text2:#9CA3AF;--border:#1F2937;
+      --green:#10B981;--red:#EF4444;--blue:#3B82F6;
+      --r:14px;--shadow:0 4px 24px rgba(0,0,0,0.4);
     }
-    body { font-family: 'Cairo', sans-serif; background: var(--black); color: var(--white); min-height: 100vh; }
+    body{font-family:'Cairo',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;-webkit-font-smoothing:antialiased}
 
     /* ===== LOGIN ===== */
-    .login-wrap { display:flex; justify-content:center; align-items:center; min-height:100vh; background:radial-gradient(circle,#1A1A1A,#0A0A0A); }
-    .login-box { background:var(--card); border:1px solid var(--gold); border-radius:var(--r); padding:48px 40px; width:420px; text-align:center; box-shadow:0 0 60px rgba(201,168,106,0.15); }
-    .login-box img { width:110px; height:110px; border-radius:50%; border:3px solid var(--gold); object-fit:cover; margin-bottom:12px; }
-    .login-box h1 { color:var(--gold); font-size:26px; font-weight:900; letter-spacing:3px; }
-    .login-box .sub { color:var(--gray); font-size:13px; margin-top:4px; }
-    .login-box .loc { color:var(--gold-d); font-size:11px; margin-top:2px; }
-    .login-form { margin-top:28px; text-align:right; }
-    .f-group { margin-bottom:14px; }
-    .f-group label { display:block; color:var(--gold); font-size:12px; font-weight:600; margin-bottom:5px; }
-    .f-group input { width:100%; padding:12px 14px; background:var(--black); border:1px solid #333; border-radius:10px; color:var(--white); font-family:inherit; font-size:14px; }
-    .f-group input:focus { outline:none; border-color:var(--gold); }
-    .btn { width:100%; padding:14px; background:linear-gradient(135deg,var(--gold),var(--gold-d)); color:var(--black); border:none; border-radius:10px; font-family:inherit; font-size:16px; font-weight:800; cursor:pointer; letter-spacing:1px; }
-    .btn:hover { filter:brightness(1.05); transform:translateY(-1px); }
-    .btn-outline { background:transparent; border:1px solid var(--gold); color:var(--gold); }
-    .btn-outline:hover { background:var(--gold); color:var(--black); }
-    .login-hint { margin-top:14px; color:var(--gray); font-size:12px; }
+    .login-wrap{display:flex;justify-content:center;align-items:center;min-height:100vh;background:radial-gradient(ellipse at center,#111827 0%,#0A0A0A 70%);padding:20px}
+    .login-box{background:var(--card);border:1px solid var(--gold);border-radius:20px;padding:48px 36px;width:100%;max-width:400px;text-align:center;box-shadow:0 0 80px rgba(201,168,106,0.1)}
+    .login-box img{width:100px;height:100px;border-radius:50%;border:3px solid var(--gold);object-fit:cover;margin-bottom:16px}
+    .login-box h1{color:var(--gold);font-size:28px;font-weight:900;letter-spacing:2px}
+    .login-box .sub{color:var(--text2);font-size:13px;margin-top:6px}
+    .login-box .campus{color:var(--gold-d);font-size:11px;margin-top:4px;direction:ltr}
+    .login-form{margin-top:28px;text-align:right}
+    .fg{margin-bottom:16px}
+    .fg label{display:block;color:var(--gold);font-size:12px;font-weight:600;margin-bottom:6px}
+    .fg input,.fg select{width:100%;padding:13px 16px;background:var(--bg);border:1px solid var(--border);border-radius:12px;color:var(--text);font-family:inherit;font-size:14px;transition:border-color .2s}
+    .fg input:focus,.fg select:focus{outline:none;border-color:var(--gold)}
+    .fg select option{color:#000;background:#fff}
+    .btn{width:100%;padding:15px;background:linear-gradient(135deg,var(--gold),var(--gold-d));color:#000;border:none;border-radius:12px;font-family:inherit;font-size:16px;font-weight:800;cursor:pointer;transition:all .2s;letter-spacing:1px}
+    .btn:hover{filter:brightness(1.08);transform:translateY(-1px)}
+    .btn:active{transform:translateY(0)}
+    .btn-ghost{background:transparent;border:1px solid var(--gold);color:var(--gold)}
+    .btn-ghost:hover{background:var(--gold);color:#000}
+    .btn-sm{width:auto;padding:10px 20px;font-size:13px}
+    .login-hint{margin-top:16px;color:var(--text2);font-size:11px;line-height:1.6}
 
-    /* ===== NAVBAR ===== */
-    .topbar { display:flex; align-items:center; justify-content:space-between; padding:10px 24px; background:var(--card); border-bottom:1px solid var(--gold); position:sticky; top:0; z-index:100; }
-    .topbar-brand { display:flex; align-items:center; gap:8px; }
-    .topbar-brand img { width:34px; height:34px; border-radius:50%; border:2px solid var(--gold); }
-    .topbar-brand span { color:var(--gold); font-weight:900; font-size:16px; letter-spacing:2px; }
-    .topbar-nav { display:flex; gap:2px; }
-    .topbar-nav button { padding:8px 14px; background:transparent; border:none; color:var(--gray); font-family:inherit; font-size:12px; font-weight:600; cursor:pointer; border-radius:8px; transition:all .2s; }
-    .topbar-nav button:hover, .topbar-nav button.active { background:rgba(201,168,106,0.15); color:var(--gold); }
-    .topbar-nav .logout { color:var(--red); }
-    .topbar-user { color:var(--gold-l); font-size:12px; }
+    /* ===== TOPBAR ===== */
+    .topbar{display:flex;align-items:center;justify-content:space-between;padding:10px 20px;background:var(--card);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:100;backdrop-filter:blur(10px)}
+    .tb-brand{display:flex;align-items:center;gap:8px}
+    .tb-brand img{width:32px;height:32px;border-radius:50%;border:2px solid var(--gold)}
+    .tb-brand span{color:var(--gold);font-weight:900;font-size:15px;letter-spacing:1px}
+    .tb-nav{display:flex;gap:2px;flex-wrap:wrap}
+    .tb-nav button{padding:7px 12px;background:transparent;border:none;color:var(--text2);font-family:inherit;font-size:12px;font-weight:600;cursor:pointer;border-radius:8px;transition:all .2s;white-space:nowrap}
+    .tb-nav button:hover,.tb-nav button.on{background:rgba(201,168,106,0.12);color:var(--gold)}
+    .tb-nav .out{color:var(--red)}
+    .tb-user{color:var(--gold-l);font-size:11px;white-space:nowrap}
 
-    /* ===== LAYOUT ===== */
-    .app { display:none; }
-    .app.active { display:flex; flex-direction:column; min-height:100vh; }
-    .container { max-width:1100px; margin:0 auto; padding:20px 24px; width:100%; }
+    /* ===== CONTAINER ===== */
+    .app{display:none;flex-direction:column;min-height:100vh}
+    .app.on{display:flex}
+    .container{max-width:1100px;margin:0 auto;padding:20px;width:100%}
 
     /* ===== CARDS ===== */
-    .card { background:var(--card); border:1px solid #222; border-radius:var(--r); padding:24px; margin-bottom:20px; }
-    .card:hover { border-color:rgba(201,168,106,0.3); }
-    .card-title { color:var(--gold); font-size:18px; font-weight:800; margin-bottom:16px; padding-bottom:10px; border-bottom:1px solid #222; }
+    .card{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:24px;margin-bottom:16px;transition:border-color .2s}
+    .card:hover{border-color:rgba(201,168,106,0.25)}
+    .card-h{color:var(--gold);font-size:17px;font-weight:800;margin-bottom:14px;padding-bottom:10px;border-bottom:1px solid var(--border)}
 
-    /* ===== STATS ROW ===== */
-    .stats { display:grid; grid-template-columns:repeat(4,1fr); gap:14px; margin-bottom:20px; }
-    .stat { background:var(--card); border:1px solid #222; border-radius:var(--r); padding:20px; text-align:center; transition:all .3s; }
-    .stat:hover { border-color:var(--gold); transform:translateY(-2px); }
-    .stat.glow { border-color:var(--gold); box-shadow:0 0 30px rgba(201,168,106,0.08); }
-    .stat-icon { font-size:28px; margin-bottom:6px; }
-    .stat-val { font-size:32px; font-weight:900; color:var(--gold); }
-    .stat-lbl { color:var(--gray); font-size:12px; margin-top:4px; }
-
-    /* ===== FLOORS ===== */
-    .floors { display:grid; grid-template-columns:repeat(2,1fr); gap:14px; }
-    .floor { background:var(--card); border:1px solid #222; border-radius:var(--r); padding:20px; }
-    .floor:hover { border-color:var(--gold); }
-    .floor-head { display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; }
-    .floor-name { color:var(--gold); font-size:16px; font-weight:800; }
-    .floor-cnt { color:var(--gl); font-size:13px; }
-    .bar { height:10px; background:#222; border-radius:5px; overflow:hidden; margin-bottom:8px; }
-    .bar-fill { height:100%; background:linear-gradient(90deg,var(--gold),var(--gold-d)); border-radius:5px; transition:width .5s; }
-    .floor-stats { display:flex; justify-content:space-between; font-size:11px; color:var(--gray); }
-    .mini-grid { display:grid; grid-template-columns:repeat(20,1fr); gap:2px; margin-top:10px; }
-    .spot { width:100%; aspect-ratio:1; border-radius:3px; font-size:6px; display:flex; align-items:center; justify-content:center; cursor:pointer; transition:all .2s; }
-    .spot.e { background:#1A3320; border:1px solid var(--green); }
-    .spot.e:hover { background:var(--green); transform:scale(1.4); z-index:5; }
-    .spot.o { background:#3D1A1A; border:1px solid var(--red); }
-    .spot.o:hover { background:var(--red); transform:scale(1.4); z-index:5; }
+    /* ===== STATS ===== */
+    .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:16px}
+    .st{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:18px;text-align:center;transition:all .3s}
+    .st:hover{border-color:var(--gold);transform:translateY(-2px)}
+    .st.glow{border-color:var(--gold);box-shadow:0 0 40px rgba(201,168,106,0.06)}
+    .st-i{font-size:26px;margin-bottom:4px}
+    .st-v{font-size:30px;font-weight:900;color:var(--gold)}
+    .st-l{color:var(--text2);font-size:11px;margin-top:4px}
 
     /* ===== TABLE ===== */
-    .tbl { width:100%; border-collapse:collapse; margin-top:12px; }
-    .tbl th { color:var(--gold); font-size:12px; font-weight:600; padding:10px 12px; text-align:right; border-bottom:1px solid #333; }
-    .tbl td { padding:10px 12px; font-size:13px; border-bottom:1px solid #1A1A1A; }
-    .tbl tr:hover td { background:rgba(201,168,106,0.05); }
-    .badge { padding:4px 10px; border-radius:16px; font-size:11px; font-weight:700; }
-    .badge-active { background:rgba(46,204,113,0.15); color:var(--green); border:1px solid var(--green); }
-    .badge-done { background:rgba(136,136,136,0.15); color:var(--gray); border:1px solid var(--gray); }
-    .gold-text { color:var(--gold); font-weight:800; }
+    .tbl{width:100%;border-collapse:collapse}
+    .tbl th{color:var(--gold);font-size:11px;font-weight:600;padding:10px;text-align:right;border-bottom:1px solid var(--border);white-space:nowrap}
+    .tbl td{padding:10px;font-size:12px;border-bottom:1px solid #111;white-space:nowrap}
+    .tbl tr:hover td{background:rgba(201,168,106,0.03)}
+    .pill{display:inline-block;padding:3px 10px;border-radius:12px;font-size:10px;font-weight:700}
+    .pill-g{background:rgba(16,185,129,0.12);color:var(--green);border:1px solid rgba(16,185,129,0.3)}
+    .pill-r{background:rgba(239,68,68,0.12);color:var(--red);border:1px solid rgba(239,68,68,0.3)}
+    .pill-y{background:rgba(201,168,106,0.12);color:var(--gold);border:1px solid rgba(201,168,106,0.3)}
+    .gold{color:var(--gold);font-weight:800}
+
+    /* ===== FLOORS ===== */
+    .floors{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+    .fl{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:18px}
+    .fl:hover{border-color:var(--gold)}
+    .fl-h{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+    .fl-n{color:var(--gold);font-size:15px;font-weight:800}
+    .fl-c{color:var(--text2);font-size:12px}
+    .bar{height:8px;background:#1F2937;border-radius:4px;overflow:hidden;margin-bottom:8px}
+    .bar-f{height:100%;background:linear-gradient(90deg,var(--gold),var(--gold-d));border-radius:4px;transition:width .6s ease}
+    .fl-s{display:flex;justify-content:space-between;font-size:10px;color:var(--text2)}
+    .mg{display:grid;grid-template-columns:repeat(20,1fr);gap:2px;margin-top:8px}
+    .sp{width:100%;aspect-ratio:1;border-radius:2px;transition:all .15s;cursor:pointer}
+    .sp.e{background:rgba(16,185,129,0.15);border:1px solid rgba(16,185,129,0.3)}
+    .sp.e:hover{background:var(--green);transform:scale(1.5);z-index:5}
+    .sp.o{background:rgba(239,68,68,0.15);border:1px solid rgba(239,68,68,0.3)}
+    .sp.o:hover{background:var(--red);transform:scale(1.5);z-index:5}
 
     /* ===== PRICING ===== */
-    .pricing { display:grid; grid-template-columns:repeat(3,1fr); gap:14px; }
-    .plan { background:var(--card); border:1px solid #222; border-radius:var(--r); padding:28px 20px; text-align:center; transition:all .3s; }
-    .plan:hover { border-color:var(--gold); transform:translateY(-3px); }
-    .plan.feat { border-color:var(--gold); box-shadow:0 0 40px rgba(201,168,106,0.1); }
-    .plan-name { color:var(--gold); font-size:16px; font-weight:800; margin-bottom:6px; }
-    .plan-price { font-size:30px; font-weight:900; }
-    .plan-curr { color:var(--gold); font-size:14px; }
-    .plan-period { color:var(--gray); font-size:12px; margin-top:4px; }
+    .plans{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+    .pl{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:24px 16px;text-align:center;transition:all .3s}
+    .pl:hover{border-color:var(--gold);transform:translateY(-3px)}
+    .pl.feat{border-color:var(--gold);box-shadow:0 0 40px rgba(201,168,106,0.08)}
+    .pl-n{color:var(--gold);font-size:15px;font-weight:800;margin-bottom:4px}
+    .pl-p{font-size:28px;font-weight:900}
+    .pl-c{color:var(--gold);font-size:13px}
+    .pl-d{color:var(--text2);font-size:11px;margin-top:4px}
 
     /* ===== VALET ===== */
-    .valets { display:grid; grid-template-columns:repeat(2,1fr); gap:14px; }
-    .valet { background:var(--card); border:1px solid #222; border-radius:var(--r); padding:18px; }
-    .valet:hover { border-color:var(--gold); }
-    .valet-head { display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; }
-    .valet-name { font-weight:700; color:var(--gold); font-size:15px; }
-    .valet-stat { display:grid; grid-template-columns:repeat(2,1fr); gap:8px; margin-top:10px; }
-    .vs { text-align:center; padding:8px; background:var(--black); border-radius:8px; }
-    .vs-val { color:var(--gold); font-weight:800; font-size:16px; }
-    .vs-lbl { color:var(--gray); font-size:10px; }
+    .valets{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+    .vl{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:16px}
+    .vl:hover{border-color:var(--gold)}
+    .vl-h{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+    .vl-n{font-weight:700;color:var(--gold);font-size:14px}
+    .vl-g{display:grid;grid-template-columns:repeat(2,1fr);gap:6px;margin-top:8px}
+    .vs{text-align:center;padding:8px;background:var(--bg);border-radius:8px}
+    .vs-v{color:var(--gold);font-weight:800;font-size:15px}
+    .vs-l{color:var(--text2);font-size:9px}
 
     /* ===== CHART ===== */
-    .chart-row { display:grid; grid-template-columns:5fr 2fr; gap:14px; }
-    .live-item { display:flex; justify-content:space-between; align-items:center; padding:10px; background:var(--black); border-radius:8px; margin-bottom:8px; }
-    .live-lbl { color:var(--gl); font-size:12px; }
-    .live-val { color:var(--gold); font-weight:800; font-size:14px; }
-    .live-dot { width:7px; height:7px; border-radius:50%; background:var(--green); display:inline-block; margin-left:6px; animation:pulse 2s infinite; }
-    @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.3} }
+    .ch-row{display:grid;grid-template-columns:5fr 2fr;gap:12px}
+    .li{display:flex;justify-content:space-between;align-items:center;padding:9px;background:var(--bg);border-radius:8px;margin-bottom:6px}
+    .li-l{color:var(--text2);font-size:11px}
+    .li-v{color:var(--gold);font-weight:800;font-size:13px}
+    .dot{width:6px;height:6px;border-radius:50%;background:var(--green);display:inline-block;margin-left:5px;animation:pulse 2s infinite}
+    @keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
 
     /* ===== MODAL ===== */
-    .modal { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.85); justify-content:center; align-items:center; z-index:1000; }
-    .modal.active { display:flex; }
-    .modal-box { background:var(--card); border:1px solid var(--gold); border-radius:var(--r); padding:28px; width:420px; max-height:80vh; overflow-y:auto; }
-    .modal-box h3 { color:var(--gold); font-size:18px; margin-bottom:16px; text-align:center; }
-    .modal-acts { display:flex; gap:10px; margin-top:18px; }
-    .modal-acts .btn { flex:1; }
+    .modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.85);justify-content:center;align-items:center;z-index:1000;padding:20px}
+    .modal.on{display:flex}
+    .modal-b{background:var(--card);border:1px solid var(--gold);border-radius:var(--r);padding:28px;width:100%;max-width:420px;max-height:80vh;overflow-y:auto}
+    .modal-b h3{color:var(--gold);font-size:17px;margin-bottom:16px;text-align:center}
+    .modal-a{display:flex;gap:10px;margin-top:16px}
+    .modal-a .btn{flex:1}
 
     /* ===== FOOTER ===== */
-    .footer { text-align:center; color:var(--gray); padding:20px; font-size:11px; border-top:1px solid #1A1A1A; margin-top:auto; }
+    .footer{text-align:center;color:var(--text2);padding:16px;font-size:10px;border-top:1px solid var(--border);margin-top:auto}
 
-    @media(max-width:768px) {
-      .stats { grid-template-columns:repeat(2,1fr); }
-      .floors, .pricing, .valets, .chart-row { grid-template-columns:1fr; }
-      .topbar-nav { display:none; }
-      .mini-grid { grid-template-columns:repeat(10,1fr); }
+    /* ===== EMPTY ===== */
+    .empty{text-align:center;padding:40px;color:var(--text2);font-size:13px}
+
+    @media(max-width:768px){
+      .stats{grid-template-columns:repeat(2,1fr)}
+      .floors,.plans,.valets,.ch-row{grid-template-columns:1fr}
+      .tb-nav{display:none}
+      .mg{grid-template-columns:repeat(10,1fr)}
+      .tbl{font-size:10px}
+      .tbl th,.tbl td{padding:6px 4px}
     }
-    ::-webkit-scrollbar { width:6px; }
-    ::-webkit-scrollbar-track { background:var(--black); }
-    ::-webkit-scrollbar-thumb { background:var(--gold-d); border-radius:3px; }
+    ::-webkit-scrollbar{width:5px}
+    ::-webkit-scrollbar-track{background:var(--bg)}
+    ::-webkit-scrollbar-thumb{background:var(--gold-d);border-radius:3px}
   </style>
 </head>
 <body>
 
-  <!-- ===== LOGIN ===== -->
-  <div id="loginScreen" class="login-wrap" style="display:flex">
+  <!-- ===== شاشة الدخول ===== -->
+  <div id="loginScreen" class="login-wrap">
     <div class="login-box">
-      <img src="logo.png" alt="RAKNI SHOKRAN">
-      <h1>RAKNI SHOKRAN</h1>
-      <p class="sub">Faculty of Future University — New Cairo</p>
-      <p class="loc">30.025°N, 31.491°E</p>
+      <img src="logo.png" alt="رَكْنِي">
+      <h1>رَكْنِي شكراً</h1>
+      <p class="sub">خدمة ذكية لصف السيارات — جامعة المستقبل</p>
+      <p class="campus">New Cairo · 30.025°N, 31.491°E</p>
       <div class="login-form">
-        <div class="f-group"><label>البريد الإلكتروني</label><input type="email" id="loginEmail" placeholder="admin@rakni.com"></div>
-        <div class="f-group"><label>كلمة المرور</label><input type="password" id="loginPassword" placeholder="••••••••"></div>
+        <div class="fg"><label>البريد الإلكتروني</label><input type="email" id="loginEmail" placeholder="admin@rakni.com"></div>
+        <div class="fg"><label>كلمة المرور</label><input type="password" id="loginPassword" placeholder="••••••••"></div>
         <button class="btn" onclick="handleLogin()">تسجيل الدخول</button>
-        <p class="login-hint">admin@rakni.com / valet@rakni.com / student@rakni.com</p>
+        <p class="login-hint">
+          حسابات تجريبية:<br>
+          admin@rakni.com / admin123<br>
+          valet@rakni.com / valet123<br>
+          student@rakni.com / student123
+        </p>
       </div>
     </div>
   </div>
 
-  <!-- ===== DASHBOARD ===== -->
-  <div id="dashboardScreen" class="app">
+  <!-- ===== لوحة التحكم ===== -->
+  <div id="dash" class="app">
     <div class="topbar">
-      <div class="topbar-brand">
-        <img src="logo.png" alt="Logo">
-        <span>RAKNI SHOKRAN</span>
+      <div class="tb-brand"><img src="logo.png" alt="Logo"><span>رَكْنِي</span></div>
+      <div class="tb-nav">
+        <button onclick="go('overview')" class="on" data-s="overview">الرئيسية</button>
+        <button onclick="go('floors')" data-s="floors">الطوابق</button>
+        <button onclick="go('reservations')" data-s="reservations">الحجوزات</button>
+        <button onclick="go('valet')" data-s="valet">Valet</button>
+        <button onclick="go('students')" data-s="students">الطلاب</button>
+        <button onclick="go('pricing')" data-s="pricing">الأسعار</button>
+        <button onclick="logout()" class="out">خروج</button>
       </div>
-      <div class="topbar-nav">
-        <button onclick="show('overview')" class="active" data-s="overview">الرئيسية</button>
-        <button onclick="show('floors')" data-s="floors">الطوابق</button>
-        <button onclick="show('reservations')" data-s="reservations">الحجوزات</button>
-        <button onclick="show('valet')" data-s="valet"> Valet</button>
-        <button onclick="show('students')" data-s="students">الطلاب</button>
-        <button onclick="show('pricing')" data-s="pricing">الأسعار</button>
-        <button onclick="handleLogout()" class="logout">خروج</button>
-      </div>
-      <div class="topbar-user" id="navUser"></div>
+      <div class="tb-user" id="navUser"></div>
     </div>
 
     <div class="container">
 
-      <!-- ===== الرئيسية ===== -->
-      <div id="sec-overview" class="sec" style="display:block">
+      <!-- الرئيسية -->
+      <div id="s-overview" class="sec" style="display:block">
         <div class="stats">
-          <div class="stat glow"><div class="stat-icon">🅿️</div><div class="stat-val" id="sTotal">2,000</div><div class="stat-lbl">إجمالي الطاقة</div></div>
-          <div class="stat"><div class="stat-icon">🚗</div><div class="stat-val" id="sOccupied">0</div><div class="stat-lbl">المشغولة</div></div>
-          <div class="stat"><div class="stat-icon">✅</div><div class="stat-val" id="sAvailable">2,000</div><div class="stat-lbl">المتاحة</div></div>
-          <div class="stat glow"><div class="stat-icon">📊</div><div class="stat-val" id="sRate">0%</div><div class="stat-lbl">نسبة الإشغال</div></div>
+          <div class="st glow"><div class="st-i">🅿️</div><div class="st-v" id="sT">2,000</div><div class="st-l">إجمالي الطاقة</div></div>
+          <div class="st"><div class="st-i">🚗</div><div class="st-v" id="sO">0</div><div class="st-l">المشغولة</div></div>
+          <div class="st"><div class="st-i">✅</div><div class="st-v" id="sA">2,000</div><div class="st-l">المتاحة</div></div>
+          <div class="st glow"><div class="st-i">📊</div><div class="st-v" id="sR">0%</div><div class="st-l">نسبة الإشغال</div></div>
         </div>
-        <div class="chart-row">
-          <div class="card">
-            <div class="card-title">توزيع الطوابق</div>
-            <canvas id="floorChart" width="600" height="280"></canvas>
-          </div>
-          <div class="card">
-            <div class="card-title">الحالة اللحظية</div>
-            <div id="liveStatus"></div>
-          </div>
+        <div class="ch-row">
+          <div class="card"><div class="card-h">توزيع الطوابق</div><canvas id="chart" width="600" height="260"></canvas></div>
+          <div class="card"><div class="card-h">الحالة اللحظية</div><div id="live"></div></div>
         </div>
       </div>
 
-      <!-- ===== الطوابق ===== -->
-      <div id="sec-floors" class="sec" style="display:none">
-        <div class="card"><div class="card-title"> الطوابق — 4 طوابق × 500 سيارة</div></div>
-        <div id="floorsGrid" class="floors"></div>
+      <!-- الطوابق -->
+      <div id="s-floors" class="sec" style="display:none">
+        <div class="card"><div class="card-h">الطوابق — 4 × 500 = 2,000 مركبة</div></div>
+        <div id="floorsG" class="floors"></div>
       </div>
 
-      <!-- ===== الحجوزات ===== -->
-      <div id="sec-reservations" class="sec" style="display:none">
+      <!-- الحجوزات -->
+      <div id="s-reservations" class="sec" style="display:none">
         <div class="card">
-          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
-            <div class="card-title" style="margin:0;border:0;padding:0">الحجوزات</div>
-            <button class="btn" style="width:auto;padding:10px 20px;font-size:13px" onclick="showModal('reservationModal')">+ حجز جديد</button>
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">
+            <div class="card-h" style="margin:0;border:0;padding:0">الحجوزات</div>
+            <button class="btn btn-sm" onclick="openM('resM')">+ حجز جديد</button>
           </div>
-          <div id="reservationsList"></div>
+          <div id="resList"></div>
         </div>
       </div>
 
-      <!-- ===== Valet ===== -->
-      <div id="sec-valet" class="sec" style="display:none">
-        <div class="card"><div class="card-title">خدمة Valet</div></div>
-        <div id="valetGrid" class="valets"></div>
+      <!-- Valet -->
+      <div id="s-valet" class="sec" style="display:none">
+        <div class="card"><div class="card-h">خدمة Valet</div></div>
+        <div id="vlG" class="valets"></div>
       </div>
 
-      <!-- ===== الطلاب ===== -->
-      <div id="sec-students" class="sec" style="display:none">
+      <!-- الطلاب -->
+      <div id="s-students" class="sec" style="display:none">
         <div class="card">
-          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
-            <div class="card-title" style="margin:0;border:0;padding:0">الطلاب المسجلون</div>
-            <button class="btn" style="width:auto;padding:10px 20px;font-size:13px" onclick="showModal('studentModal')">+ تسجيل طالب</button>
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">
+            <div class="card-h" style="margin:0;border:0;padding:0">الطلاب المسجلون</div>
+            <button class="btn btn-sm" onclick="openM('stdM')">+ تسجيل طالب</button>
           </div>
-          <div id="studentsList"></div>
+          <div id="stdList"></div>
         </div>
       </div>
 
-      <!-- ===== الأسعار ===== -->
-      <div id="sec-pricing" class="sec" style="display:none">
-        <div class="card"><div class="card-title">خطط الاشتراك</div></div>
-        <div id="pricingGrid" class="pricing"></div>
+      <!-- الأسعار -->
+      <div id="s-pricing" class="sec" style="display:none">
+        <div class="card"><div class="card-h">خطط الاشتراك</div></div>
+        <div id="planG" class="plans"></div>
       </div>
-
     </div>
 
-    <div class="footer">RAKNI SHOKRAN — Smart Valet Parking · Faculty of Future University · New Cairo 30.025°N 31.491°E</div>
+    <div class="footer">رَكْنِي شكراً — خدمة ذكية لصف السيارات · جامعة المستقبل · New Cairo 30.025°N 31.491°E</div>
   </div>
 
-  <!-- ===== MODAL: حجز جديد ===== -->
-  <div id="reservationModal" class="modal">
-    <div class="modal-box">
+  <!-- MODAL: حجز -->
+  <div id="resM" class="modal">
+    <div class="modal-b">
       <h3>حجز جديد</h3>
-      <div class="f-group"><label>البريد الإلكتروني للطالب</label><input type="email" id="resEmail" placeholder="student@rakni.com"></div>
-      <div class="f-group"><label>رقم اللوحة</label><input type="text" id="resPlate" placeholder="ABC-1234"></div>
-      <div class="f-group"><label>نوع المركبة</label>
-        <select id="resVehicleType"><option value="sedan">سيدان</option><option value="suv">SUV</option><option value="coupe">كوبيه</option><option value="motorcycle">دراجة نارية</option></select>
-      </div>
-      <div class="f-group"><label>الطابق</label>
-        <select id="resFloor"><option value="1">الطابق الأرضي</option><option value="2">الطابق الأول</option><option value="3">الطابق الثاني</option><option value="4">الطابق الثالث</option></select>
-      </div>
-      <div class="f-group"><label>الاشتراك</label>
-        <select id="resSubscription"><option value="hourly">ساعة — 50 ج.م</option><option value="weekly">أسبوعي — 250 ج.م</option><option value="monthly" selected>شهري — 1,000 ج.م</option><option value="semester">فصل — 4,500 ج.م</option><option value="yearly">سنوي — 10,000 ج.م</option></select>
-      </div>
-      <div class="f-group"><label>طريقة الدفع</label>
-        <select id="resPayment"><option value="cash">نقدي</option><option value="paymob">Paymob</option><option value="wallet">محفظة</option></select>
-      </div>
-      <div class="modal-acts">
-        <button class="btn" onclick="createReservation()">تأكيد</button>
-        <button class="btn btn-outline" onclick="hideModal('reservationModal')">إلغاء</button>
-      </div>
+      <div class="fg"><label>بريد الطالب</label><input type="email" id="rEmail" placeholder="student@rakni.com"></div>
+      <div class="fg"><label>رقم اللوحة</label><input type="text" id="rPlate" placeholder="ABC-1234"></div>
+      <div class="fg"><label>نوع المركبة</label><select id="rType"><option value="sedan">سيدان</option><option value="suv">SUV</option><option value="coupe">كوبيه</option><option value="motorcycle">دراجة نارية</option></select></div>
+      <div class="fg"><label>الطابق</label><select id="rFloor"><option value="1">الأرضي</option><option value="2">الأول</option><option value="3">الثاني</option><option value="4">الثالث</option></select></div>
+      <div class="fg"><label>الاشتراك</label><select id="rSub"><option value="hourly">ساعة — 50 ج.م</option><option value="weekly">أسبوعي — 250 ج.م</option><option value="monthly" selected>شهري — 1,000 ج.م</option><option value="semester">فصل — 4,500 ج.م</option><option value="yearly">سنوي — 10,000 ج.م</option></select></div>
+      <div class="fg"><label>الدفع</label><select id="rPay"><option value="cash">نقدي</option><option value="paymob">Paymob</option><option value="wallet">محفظة</option></select></div>
+      <div class="modal-a"><button class="btn" onclick="createRes()">تأكيد</button><button class="btn btn-ghost" onclick="closeM('resM')">إلغاء</button></div>
     </div>
   </div>
 
-  <!-- ===== MODAL: تسجيل طالب ===== -->
-  <div id="studentModal" class="modal">
-    <div class="modal-box">
-      <h3>تسجيل طالب جديد</h3>
-      <div class="f-group"><label>الاسم الكامل</label><input type="text" id="stdName" placeholder="اسم الطالب"></div>
-      <div class="f-group"><label>البريد الإلكتروني</label><input type="email" id="stdEmail" placeholder="student@future.edu.eg"></div>
-      <div class="f-group"><label>رقم الهاتف</label><input type="tel" id="stdPhone" placeholder="01000000000"></div>
-      <div class="f-group"><label>رقم الطالب</label><input type="text" id="stdId" placeholder="FU-2024-XXX"></div>
-      <div class="f-group"><label>كلمة المرور</label><input type="password" id="stdPassword" placeholder="••••••••"></div>
-      <div class="modal-acts">
-        <button class="btn" onclick="registerStudent()">تسجيل</button>
-        <button class="btn btn-outline" onclick="hideModal('studentModal')">إلغاء</button>
-      </div>
+  <!-- MODAL: طالب -->
+  <div id="stdM" class="modal">
+    <div class="modal-b">
+      <h3>تسجيل طالب</h3>
+      <div class="fg"><label>الاسم</label><input type="text" id="stN" placeholder="اسم الطالب"></div>
+      <div class="fg"><label>البريد</label><input type="email" id="stE" placeholder="student@future.edu.eg"></div>
+      <div class="fg"><label>الهاتف</label><input type="tel" id="stP" placeholder="01000000000"></div>
+      <div class="fg"><label>رقم الطالب</label><input type="text" id="stI" placeholder="FU-2024-XXX"></div>
+      <div class="fg"><label>كلمة المرور</label><input type="password" id="stW" placeholder="••••••••"></div>
+      <div class="modal-a"><button class="btn" onclick="regStd()">تسجيل</button><button class="btn btn-ghost" onclick="closeM('stdM')">إلغاء</button></div>
     </div>
   </div>
 

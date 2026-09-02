@@ -3,7 +3,7 @@ const fs = require('fs');
 const path = require('path');
 const crypto = require('crypto');
 
-const PORT = 3001;
+const PORT = process.env.PORT || 3001;
 const DB_FILE = path.join(__dirname, 'data', 'db.json');
 
 // Pricing in EGP
@@ -300,7 +300,7 @@ const server = http.createServer(async (req, res) => {
   serveStatic(req, res);
 });
 
-server.listen(PORT, () => {
-  console.log(`🅿️  RAKNI SHOKRAN server running at http://localhost:${PORT}`);
+server.listen(PORT, '0.0.0.0', () => {
+  console.log(`🅿️  رَكْنِي شكراً server running at http://0.0.0.0:${PORT}`);
   console.log(`📊 Capacity: ${TOTAL_CAPACITY} cars (${FLOORS} floors × ${CARS_PER_FLOOR} slots)`);
 });
