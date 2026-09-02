@@ -10,6 +10,8 @@ const DB = path.join(__dirname, 'data', 'db.json');
 if (!fs.existsSync(path.join(__dirname, 'data'))) fs.mkdirSync(path.join(__dirname, 'data'), { recursive: true });
 
 function genId() { return crypto.randomBytes(8).toString('hex'); }
+let _idSeq = 100;
+function nextId() { return ++_idSeq; }
 
 function initDB() {
   if (!fs.existsSync(DB)) {
@@ -20,20 +22,20 @@ function initDB() {
         { id: 'u3', fullName: 'Sara Student', email: 'student@rakni.com', password: 'student123', role: 'STUDENT', phone: '01200000000', studentId: 'FU-2024-001', university: 'University of Future', branch: 'Cairo New Capital', createdAt: new Date().toISOString() }
       ],
       spots: [
-        { id: 's1', floor: 1, spotCode: 'A1', status: 'available' },
-        { id: 's2', floor: 1, spotCode: 'A2', status: 'occupied', userId: 'u3' },
-        { id: 's3', floor: 1, spotCode: 'A3', status: 'available' },
-        { id: 's4', floor: 2, spotCode: 'B1', status: 'available' },
-        { id: 's5', floor: 2, spotCode: 'B2', status: 'maintenance' }
+        { id: 1, floor: 1, spotCode: 'A1', status: 'available' },
+        { id: 2, floor: 1, spotCode: 'A2', status: 'occupied', userId: 'u3' },
+        { id: 3, floor: 1, spotCode: 'A3', status: 'available' },
+        { id: 4, floor: 2, spotCode: 'B1', status: 'available' },
+        { id: 5, floor: 2, spotCode: 'B2', status: 'maintenance' }
       ],
       vehicles: [
-        { id: 'v1', userId: 'u3', plateNumber: 'ABC-1234', makeModel: 'Toyota Corolla', color: 'White', brand: 'Toyota' }
+        { id: 1, userId: 'u3', plateNumber: 'ABC-1234', makeModel: 'Toyota Corolla', color: 'White', brand: 'Toyota' }
       ],
       orders: [
-        { id: 'o1', userId: 'u3', spotId: 's2', vehicleId: 'v1', status: 'PARKED', pickupLocation: 'Gate 3', createdAt: new Date().toISOString() }
+        { id: 1, userId: 'u3', spotId: 2, vehicleId: 1, status: 'PARKED', pickupLocation: 'Gate 3', createdAt: new Date().toISOString() }
       ],
       payments: [
-        { id: 'p1', userId: 'u3', amount: 1000, method: 'cash', type: 'monthly', status: 'completed', createdAt: new Date().toISOString() }
+        { id: 1, userId: 'u3', amount: 1000, method: 'cash', type: 'monthly', status: 'completed', createdAt: new Date().toISOString() }
       ]
     };
     fs.writeFileSync(DB, JSON.stringify(d, null, 2));
@@ -123,7 +125,7 @@ async function api(req, res, url, method) {
   if (url === '/api/spots' && method === 'GET') return json(res, 200, db.spots);
   if (url === '/api/spots' && method === 'POST') {
     const body = await readBody(req);
-    const spot = { id: 's' + genId(), floor: body.floor, spotCode: body.spotCode, status: body.status || 'available' };
+    const spot = { id: nextId(), floor: body.floor, spotCode: body.spotCode, status: body.status || 'available' };
     db.spots.push(spot); save();
     return json(res, 201, spot);
   }
@@ -148,7 +150,7 @@ async function api(req, res, url, method) {
   }
   if (url === '/api/vehicles' && method === 'POST') {
     const body = await readBody(req);
-    const v = { id: 'v' + genId(), userId: body.userId, plateNumber: body.plateNumber || body.plate, makeModel: body.makeModel || body.brand, color: body.color || '', brand: body.brand || '' };
+    const v = { id: nextId(), userId: body.userId, plateNumber: body.plateNumber || body.plate, makeModel: body.makeModel || body.brand, color: body.color || '', brand: body.brand || '' };
     db.vehicles.push(v); save();
     return json(res, 201, v);
   }
@@ -170,7 +172,8 @@ async function api(req, res, url, method) {
   }
   if (url === '/api/orders' && method === 'POST') {
     const body = await readBody(req);
-    const order = { id: 'o' + genId(), userId: body.userId, spotId: body.spotId, vehicleId: body.vehicleId, status: body.status || 'REQUESTED', pickupLocation: body.pickupLocation || '', createdAt: new Date().toISOString() };
+    const u = auth(req);
+    const order = { id: nextId(), userId: u?.id || body.userId, spotId: body.spotId, vehicleId: body.vehicleId, status: body.status || 'REQUESTED', pickupLocation: body.pickupLocation || '', createdAt: new Date().toISOString() };
     db.orders.push(order); save();
     return json(res, 201, order);
   }
@@ -189,7 +192,7 @@ async function api(req, res, url, method) {
   if (url === '/api/payments' && method === 'GET') return json(res, 200, db.payments);
   if (url === '/api/payments' && method === 'POST') {
     const body = await readBody(req);
-    const p = { id: 'p' + genId(), userId: body.userId, amount: body.amount, method: body.method, type: body.type, status: 'completed', createdAt: new Date().toISOString() };
+    const p = { id: nextId(), userId: body.userId, amount: body.amount, method: body.method, type: body.type, status: 'completed', createdAt: new Date().toISOString() };
     db.payments.push(p); save();
     return json(res, 201, p);
   }
