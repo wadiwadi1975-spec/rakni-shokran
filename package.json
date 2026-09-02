@@ -1,13 +1,7 @@
 {
-  "name": "rakni-shokran-app",
+  "name": "rakni-shokran",
   "version": "1.0.0",
-  "description": "Unified student parking, valet, payment, and admin platform built from import.docx.",
   "private": true,
-  "type": "commonjs",
-  "scripts": {
-    "start": "node server.js",
-    "dev": "node server.js"
-  },
   "engines": {
     "node": ">=18"
   }
