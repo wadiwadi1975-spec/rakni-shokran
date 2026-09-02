@@ -21,7 +21,7 @@
     <script type="module" crossorigin src="/assets/index-3l9n7s6w.js"></script>
     <link rel="stylesheet" crossorigin href="/assets/index-C7opIdPT.css">
     <style>
-      .rakni-parking-section{background:var(--card,#141414);border:1px solid var(--border,#262626);border-radius:1rem;padding:16px;margin-top:0}
+      .rakni-parking-section{background:var(--card,#141414);border:1px solid var(--border,#262626);border-radius:1rem;padding:16px}
       .rakni-parking-section .rp-title{font-size:10px;letter-spacing:.18em;color:var(--accent,#C9A86A);font-family:monospace;margin-bottom:6px}
       .rakni-parking-section .rp-subtitle{font-size:16px;font-weight:800;margin-bottom:12px}
       .rp-tabs{display:flex;gap:6px;margin-bottom:10px;flex-wrap:wrap}
@@ -39,7 +39,6 @@
       .rp-spot.available{background:#22c55e}
       .rp-spot.occupied{background:#ef4444}
       .rp-spot.maintenance{background:#eab308}
-      .rp-loading{text-align:center;padding:20px;color:#666;font-size:12px}
     </style>
   </head>
   <body>
@@ -75,6 +74,7 @@
       var FL={'1':'أرضي (A)','2':'أول (B)','3':'ثاني (C)','4':'ثالث (D)'};
       var FS={'1':'A','2':'B','3':'C','4':'D'};
       var curFloor=1, allSpots=[];
+      var injected=null;
       var tk=localStorage.getItem('rakni_access_token');
 
       function xSync(m,u,b){
@@ -102,54 +102,69 @@
         var occ=fs.filter(function(s){return s.status==='occupied'}).length;
         var maint=fs.filter(function(s){return s.status==='maintenance'}).length;
 
-        var html='<div class="rp-title">PARKING MAP</div>';
-        html+='<div class="rp-subtitle">التوفر داخل الحرم</div>';
-        html+='<div class="rp-tabs">';
+        var h='<div class="rp-title">PARKING MAP</div>';
+        h+='<div class="rp-subtitle">التوفر داخل الحرم</div>';
+        h+='<div class="rp-tabs">';
         [1,2,3,4].forEach(function(f){
-          html+='<button class="rp-tab'+(f===curFloor?' active':'')+'" data-floor="'+f+'">طابق '+FL[f]+'</button>';
+          h+='<button class="rp-tab'+(f===curFloor?' active':'')+'" data-floor="'+f+'">طابق '+FL[f]+'</button>';
         });
-        html+='</div>';
-        html+='<div class="rp-legend"><span><i style="background:#22c55e"></i> متاح '+avail+'</span><span><i style="background:#ef4444"></i> مشغول '+occ+'</span><span><i style="background:#eab308"></i> صيانة '+maint+'</span></div>';
-        html+='<div class="rp-grid-wrap"><div class="rp-grid">';
-        html+='<div class="rp-ramp">▼ مدخل طابق '+FS[curFloor]+'</div>';
+        h+='</div>';
+        h+='<div class="rp-legend"><span><i style="background:#22c55e"></i> متاح '+avail+'</span><span><i style="background:#ef4444"></i> مشغول '+occ+'</span><span><i style="background:#eab308"></i> صيانة '+maint+'</span></div>';
+        h+='<div class="rp-grid-wrap"><div class="rp-grid">';
+        h+='<div class="rp-ramp">▼ مدخل طابق '+FS[curFloor]+'</div>';
         var rsa=0;
         for(var i=0;i<fs.length;i+=10){
           var row=fs.slice(i,i+10);
           row.forEach(function(sp){
-            html+='<div class="rp-spot '+sp.status+'" data-id="'+sp.id+'" title="'+sp.spotCode+'">'+sp.spotCode+'</div>';
+            h+='<div class="rp-spot '+sp.status+'" data-id="'+sp.id+'" title="'+sp.spotCode+'">'+sp.spotCode+'</div>';
           });
           rsa++;
           if(rsa===2&&i+10<fs.length){
-            html+='<div class="rp-aisle">↔ ممر حركة ↔</div>';
+            h+='<div class="rp-aisle">↔ ممر حركة ↔</div>';
             rsa=0;
           }
         }
-        html+='<div class="rp-ramp">▲ مخرج طابق '+FS[curFloor]+'</div>';
-        html+='</div></div>';
-        return html;
+        h+='<div class="rp-ramp">▲ مخرج طابق '+FS[curFloor]+'</div>';
+        h+='</div></div>';
+        return h;
+      }
+
+      function findTargetSection(){
+        var sections=document.querySelectorAll('section');
+        for(var i=0;i<sections.length;i++){
+          var t=sections[i].textContent;
+          if(t.indexOf('التوافر داخل الحرم')>-1||t.indexOf('التوفر داخل الحرم')>-1||t.indexOf('CAMPUS MAP')>-1){
+            return sections[i];
+          }
+        }
+        return null;
       }
 
       function injectParking(){
-        var sections=document.querySelectorAll('section');
-        for(var i=0;i<sections.length;i++){
-          if(sections[i].textContent.indexOf('التوفر داخل الحرم')>-1){
-            sections[i].innerHTML=buildParkingHTML();
-            sections[i].className='rakni-parking-section';
-            bindEvents(sections[i]);
-            return true;
-          }
-        }
-        return false;
+        var target=findTargetSection();
+        if(!target)return false;
+        if(injected&&injected.parentNode===target.parentNode&&injected.nextSibling===target.nextSibling)return true;
+        var wrapper=document.createElement('section');
+        wrapper.className='rakni-parking-section';
+        wrapper.style.cssText='border-radius:1rem;padding:16px;background:var(--card,#141414);border:1px solid var(--border,#262626)';
+        wrapper.innerHTML=buildParkingHTML();
+        target.parentNode.insertBefore(wrapper,target);
+        target.style.display='none';
+        injected=wrapper;
+        bindEvents(wrapper);
+        return true;
       }
 
-      function bindEvents(section){
-        section.querySelectorAll('.rp-tab').forEach(function(btn){
+      function bindEvents(el){
+        el.querySelectorAll('.rp-tab').forEach(function(btn){
           btn.addEventListener('click',function(){
             curFloor=parseInt(btn.dataset.floor);
-            if(loadSpots())injectParking();
+            injected=null;
+            loadSpots();
+            injectParking();
           });
         });
-        section.querySelectorAll('.rp-spot').forEach(function(cell){
+        el.querySelectorAll('.rp-spot').forEach(function(cell){
           cell.addEventListener('click',function(){
             var id=parseInt(cell.dataset.id);
             var sp=allSpots.find(function(s){return s.id===id});
@@ -159,30 +174,45 @@
             if(updateSpot(id,next)){
               sp.status=next;
               loadSpots();
+              injected=null;
               injectParking();
             }
           });
         });
       }
 
-      function waitAndInject(){
+      function tryInject(){
         if(injectParking())return;
         var tries=0;
         var timer=setInterval(function(){
           tries++;
-          if(injectParking()||tries>50)clearInterval(timer);
-        },300);
+          if(injectParking()||tries>100)clearInterval(timer);
+        },200);
       }
 
       if(document.readyState==='loading'){
-        document.addEventListener('DOMContentLoaded',function(){if(loadSpots())waitAndInject()});
+        document.addEventListener('DOMContentLoaded',function(){
+          loadSpots();
+          tryInject();
+        });
       }else{
-        if(loadSpots())waitAndInject();
+        loadSpots();
+        tryInject();
       }
 
+      var lastUrl=location.href;
+      var navObs=new MutationObserver(function(){
+        if(location.href!==lastUrl){lastUrl=location.href;injected=null;tryInject()}
+      });
+      navObs.observe(document.body,{childList:true,subtree:true});
+
       setInterval(function(){
-        if(loadSpots())injectParking();
-      },15000);
+        if(!injected||!injected.parentNode){
+          injected=null;
+          loadSpots();
+          injectParking();
+        }
+      },3000);
     })();
     </script>
   </body>
