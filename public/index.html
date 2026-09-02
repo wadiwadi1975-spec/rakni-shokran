@@ -50,6 +50,15 @@
     <div id="root"></div>
     <script>
     (function(){
+      var tk=localStorage.getItem('rakni_access_token');
+      if(!tk)return;
+      var x=new XMLHttpRequest();x.open('GET','/api/auth/me',false);
+      x.setRequestHeader('Authorization','Bearer '+tk);x.send();
+      if(x.status!==200)localStorage.removeItem('rakni_access_token');
+    })();
+    </script>
+    <script>
+    (function(){
       var FL={'1':'أرضي (A)','2':'أول (B)','3':'ثاني (C)','4':'ثالث (D)'};
       var FS={'1':'A','2':'B','3':'C','4':'D'};
       var curFloor=1, allSpots=[];
