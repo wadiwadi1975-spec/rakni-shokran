@@ -35,7 +35,7 @@ function initDB() {
         { id: 1, userId: 'u3', spotId: 2, vehicleId: 1, status: 'PARKED', pickupLocation: 'Gate 3', createdAt: new Date().toISOString() }
       ],
       payments: [
-        { id: 1, userId: 'u3', amount: 1000, method: 'cash', type: 'monthly', status: 'completed', createdAt: new Date().toISOString() }
+        { id: 1, orderId: 1, userId: 'u3', amount: 50, method: 'KNET', status: 'completed', createdAt: new Date().toISOString() }
       ]
     };
     fs.writeFileSync(DB, JSON.stringify(d, null, 2));
@@ -189,10 +189,19 @@ async function api(req, res, url, method) {
   }
 
   // Payments
-  if (url === '/api/payments' && method === 'GET') return json(res, 200, db.payments);
+  if (url === '/api/payments' && method === 'GET') {
+    const enriched = db.payments.map(p => {
+      const order = db.orders.find(o => o.id === p.orderId) || null;
+      const vehicle = order ? db.vehicles.find(v => v.id === order.vehicleId) || null : null;
+      return { ...p, order, vehicle, plateNumber: vehicle?.plateNumber || '' };
+    });
+    return json(res, 200, enriched);
+  }
   if (url === '/api/payments' && method === 'POST') {
     const body = await readBody(req);
-    const p = { id: nextId(), userId: body.userId, amount: body.amount, method: body.method, type: body.type, status: 'completed', createdAt: new Date().toISOString() };
+    const u = auth(req);
+    const order = db.orders.find(o => o.id === body.orderId) || null;
+    const p = { id: nextId(), orderId: body.orderId, userId: u?.id || order?.userId, amount: 50, method: body.paymentMethod || body.method || 'KNET', status: 'completed', createdAt: new Date().toISOString() };
     db.payments.push(p); save();
     return json(res, 201, p);
   }
