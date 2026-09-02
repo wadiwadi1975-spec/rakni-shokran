@@ -15,16 +15,16 @@ function initDB() {
   if (!fs.existsSync(DB)) {
     const d = {
       users: [
-        { id: 'u1', name: 'Admin', email: 'admin@rakni.com', password: 'admin123', role: 'ADMIN', phone: '01000000000', createdAt: new Date().toISOString() },
-        { id: 'u2', name: 'Ahmed Valet', email: 'valet@rakni.com', password: 'valet123', role: 'VALET', phone: '01100000000', rating: 5, totalJobs: 0, wallet: 0, createdAt: new Date().toISOString() },
-        { id: 'u3', name: 'Sara Student', email: 'student@rakni.com', password: 'student123', role: 'STUDENT', phone: '01200000000', studentId: 'FU-2024-001', createdAt: new Date().toISOString() }
+        { id: 'u1', fullName: 'Admin', email: 'admin@rakni.com', password: 'admin123', role: 'ADMIN', phone: '01000000000', university: 'University of Future', branch: 'Cairo', createdAt: new Date().toISOString() },
+        { id: 'u2', fullName: 'Ahmed Valet', email: 'valet@rakni.com', password: 'valet123', role: 'VALET', phone: '01100000000', rating: 5, totalJobs: 0, wallet: 0, createdAt: new Date().toISOString() },
+        { id: 'u3', fullName: 'Sara Student', email: 'student@rakni.com', password: 'student123', role: 'STUDENT', phone: '01200000000', studentId: 'FU-2024-001', university: 'University of Future', branch: 'Cairo New Capital', createdAt: new Date().toISOString() }
       ],
       spots: [
-        { id: 's1', floor: 1, number: 1, status: 'available' },
-        { id: 's2', floor: 1, number: 2, status: 'occupied', userId: 'u3' },
-        { id: 's3', floor: 1, number: 3, status: 'available' },
-        { id: 's4', floor: 2, number: 1, status: 'available' },
-        { id: 's5', floor: 2, number: 2, status: 'maintenance' }
+        { id: 's1', floor: 1, spotCode: 'A1', status: 'available' },
+        { id: 's2', floor: 1, spotCode: 'A2', status: 'occupied', userId: 'u3' },
+        { id: 's3', floor: 1, spotCode: 'A3', status: 'available' },
+        { id: 's4', floor: 2, spotCode: 'B1', status: 'available' },
+        { id: 's5', floor: 2, spotCode: 'B2', status: 'maintenance' }
       ],
       vehicles: [
         { id: 'v1', userId: 'u3', plate: 'ABC-1234', type: 'sedan', color: 'White', brand: 'Toyota' }
@@ -89,7 +89,7 @@ async function api(req, res, url, method) {
   if (url === '/api/auth/register' && method === 'POST') {
     const body = await readBody(req);
     if (db.users.find(u => u.email === body.email)) return json(res, 409, { error: 'البريد مسجل مسبقاً' });
-    const user = { id: 'u' + genId(), name: body.name, email: body.email, password: body.password, role: body.role || 'STUDENT', phone: body.phone || '', studentId: body.studentId || '', createdAt: new Date().toISOString() };
+    const user = { id: 'u' + genId(), fullName: body.fullName || body.name, email: body.email, password: body.password, role: body.role || 'STUDENT', phone: body.phone || '', studentId: body.studentId || '', university: body.university || '', branch: body.branch || '', createdAt: new Date().toISOString() };
     db.users.push(user);
     user._token = 'tok_' + genId();
     save();
@@ -123,7 +123,7 @@ async function api(req, res, url, method) {
   if (url === '/api/spots' && method === 'GET') return json(res, 200, db.spots);
   if (url === '/api/spots' && method === 'POST') {
     const body = await readBody(req);
-    const spot = { id: 's' + genId(), floor: body.floor, number: body.number, status: body.status || 'available' };
+    const spot = { id: 's' + genId(), floor: body.floor, spotCode: body.spotCode, status: body.status || 'available' };
     db.spots.push(spot); save();
     return json(res, 201, spot);
   }
