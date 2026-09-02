@@ -179,7 +179,15 @@ async function api(req, res, url, method) {
   if (url === '/api/orders' && method === 'POST') {
     const body = await readBody(req);
     const u = auth(req);
-    const order = { id: nextId(), userId: u?.id || body.userId, spotId: body.spotId, vehicleId: body.vehicleId, status: body.status || 'REQUESTED', pickupLocation: body.pickupLocation || '', createdAt: new Date().toISOString() };
+    let spotId = body.spotId || null;
+    if (!spotId && body.preferredSpotCode) {
+      const found = db.spots.find(s => s.spotCode === body.preferredSpotCode && s.status === 'available');
+      if (found) {
+        spotId = found.id;
+        found.status = 'occupied';
+      }
+    }
+    const order = { id: nextId(), userId: u?.id || body.userId, spotId, vehicleId: body.vehicleId, preferredFloor: body.preferredFloor || null, preferredSpotCode: body.preferredSpotCode || null, status: body.status || 'REQUESTED', pickupLocation: body.pickupLocation || '', createdAt: new Date().toISOString() };
     db.orders.push(order); save();
     return json(res, 201, order);
   }
