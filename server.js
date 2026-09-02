@@ -27,10 +27,10 @@ function initDB() {
         { id: 's5', floor: 2, spotCode: 'B2', status: 'maintenance' }
       ],
       vehicles: [
-        { id: 'v1', userId: 'u3', plate: 'ABC-1234', type: 'sedan', color: 'White', brand: 'Toyota' }
+        { id: 'v1', userId: 'u3', plateNumber: 'ABC-1234', makeModel: 'Toyota Corolla', color: 'White', brand: 'Toyota' }
       ],
       orders: [
-        { id: 'o1', userId: 'u3', spotId: 's2', vehicleId: 'v1', status: 'PARKED', createdAt: new Date().toISOString() }
+        { id: 'o1', userId: 'u3', spotId: 's2', vehicleId: 'v1', status: 'PARKED', pickupLocation: 'Gate 3', createdAt: new Date().toISOString() }
       ],
       payments: [
         { id: 'p1', userId: 'u3', amount: 1000, method: 'cash', type: 'monthly', status: 'completed', createdAt: new Date().toISOString() }
@@ -139,10 +139,16 @@ async function api(req, res, url, method) {
   }
 
   // Vehicles
-  if (url === '/api/vehicles' && method === 'GET') return json(res, 200, db.vehicles);
+  if (url === '/api/vehicles' && method === 'GET') {
+    const enriched = db.vehicles.map(v => {
+      const user = db.users.find(u => u.id === v.userId) || null;
+      return { ...v, userName: user?.fullName || '' };
+    });
+    return json(res, 200, enriched);
+  }
   if (url === '/api/vehicles' && method === 'POST') {
     const body = await readBody(req);
-    const v = { id: 'v' + genId(), userId: body.userId, plate: body.plate, type: body.type, color: body.color || '', brand: body.brand || '' };
+    const v = { id: 'v' + genId(), userId: body.userId, plateNumber: body.plateNumber || body.plate, makeModel: body.makeModel || body.brand, color: body.color || '', brand: body.brand || '' };
     db.vehicles.push(v); save();
     return json(res, 201, v);
   }
@@ -153,10 +159,18 @@ async function api(req, res, url, method) {
   }
 
   // Orders
-  if (url === '/api/orders' && method === 'GET') return json(res, 200, db.orders);
+  if (url === '/api/orders' && method === 'GET') {
+    const enriched = db.orders.map(o => {
+      const vehicle = db.vehicles.find(v => v.id === o.vehicleId) || null;
+      const spot = db.spots.find(s => s.id === o.spotId) || null;
+      const user = db.users.find(u => u.id === o.userId) || null;
+      return { ...o, vehicle, spot, userName: user?.fullName || '' };
+    });
+    return json(res, 200, enriched);
+  }
   if (url === '/api/orders' && method === 'POST') {
     const body = await readBody(req);
-    const order = { id: 'o' + genId(), userId: body.userId, spotId: body.spotId, vehicleId: body.vehicleId, status: 'PENDING', createdAt: new Date().toISOString() };
+    const order = { id: 'o' + genId(), userId: body.userId, spotId: body.spotId, vehicleId: body.vehicleId, status: body.status || 'REQUESTED', pickupLocation: body.pickupLocation || '', createdAt: new Date().toISOString() };
     db.orders.push(order); save();
     return json(res, 201, order);
   }
