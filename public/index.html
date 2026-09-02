@@ -49,32 +49,6 @@
   <body>
     <div id="root"></div>
     <script>
-      (function(){
-        function doLogin(){
-          var x=new XMLHttpRequest();
-          x.open('POST','/api/auth/login',false);
-          x.setRequestHeader('Content-Type','application/json');
-          x.send(JSON.stringify({email:'student@rakni.com',password:'student123'}));
-          if(x.status===200){
-            var d=JSON.parse(x.responseText);
-            if(d.accessToken){localStorage.setItem('rakni_access_token',d.accessToken);return true;}
-          }
-          return false;
-        }
-        function checkToken(tk){
-          var x=new XMLHttpRequest();
-          x.open('GET','/api/auth/me',false);
-          x.setRequestHeader('Authorization','Bearer '+tk);
-          x.send();
-          return x.status===200;
-        }
-        var tk=localStorage.getItem('rakni_access_token');
-        if(tk&&checkToken(tk))return;
-        if(!doLogin())return;
-        location.replace(location.href);
-      })();
-    </script>
-    <script>
     (function(){
       var FL={'1':'أرضي (A)','2':'أول (B)','3':'ثاني (C)','4':'ثالث (D)'};
       var FS={'1':'A','2':'B','3':'C','4':'D'};
@@ -82,6 +56,13 @@
       var injected=null;
       var tk=localStorage.getItem('rakni_access_token');
       var injectedForm=false;
+
+      function isLoggedIn(){
+        if(!tk)return false;
+        var x=new XMLHttpRequest();x.open('GET','/api/auth/me',false);
+        x.setRequestHeader('Authorization','Bearer '+tk);x.send();
+        return x.status===200;
+      }
 
       function xSync(m,u,b){
         var x=new XMLHttpRequest();x.open(m,u,false);
@@ -294,6 +275,7 @@
       }
 
       function tryInject(){
+        if(!isLoggedIn())return;
         if(injectParking())return;
         var tries=0;
         var timer=setInterval(function(){
@@ -304,22 +286,21 @@
 
       if(document.readyState==='loading'){
         document.addEventListener('DOMContentLoaded',function(){
-          loadSpots();
-          tryInject();
+          if(isLoggedIn()){loadSpots();tryInject()}
         });
       }else{
-        loadSpots();
-        tryInject();
+        if(isLoggedIn()){loadSpots();tryInject()}
       }
 
       var lastUrl=location.href;
       var navObs=new MutationObserver(function(){
-        if(location.href!==lastUrl){lastUrl=location.href;injected=null;injectedForm=false;tryInject()}
-        injectSpotPicker();
+        if(location.href!==lastUrl){lastUrl=location.href;injected=null;injectedForm=false;if(isLoggedIn())tryInject()}
+        if(isLoggedIn())injectSpotPicker();
       });
       navObs.observe(document.body,{childList:true,subtree:true});
 
       setInterval(function(){
+        if(!isLoggedIn())return;
         if(!injected||!injected.parentNode){
           injected=null;
           loadSpots();
