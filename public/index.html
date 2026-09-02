@@ -23,5 +23,15 @@
   </head>
   <body>
     <div id="root"></div>
+    <script>
+      setInterval(function(){
+        var inputs=document.querySelectorAll('input[type="email"],input[type="text"],input[type="password"],input[placeholder*="بريد"],input[placeholder*="email"],input[placeholder*="كلمة"],input[placeholder*="password"]');
+        inputs.forEach(function(inp){
+          var ph=(inp.placeholder||'').toLowerCase();
+          if((ph.indexOf('بريد')>-1||ph.indexOf('email')>-1)&&!inp.value){inp.value='student@rakni.com';inp.dispatchEvent(new Event('input',{bubbles:true}));inp.dispatchEvent(new Event('change',{bubbles:true}));}
+          if((ph.indexOf('كلمة')>-1||ph.indexOf('password')>-1)&&!inp.value){inp.value='student123';inp.dispatchEvent(new Event('input',{bubbles:true}));inp.dispatchEvent(new Event('change',{bubbles:true}));}
+        });
+      },500);
+    </script>
   </body>
 </html>
