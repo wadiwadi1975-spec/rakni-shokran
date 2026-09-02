@@ -24,18 +24,19 @@
   <body>
     <div id="root"></div>
     <script>
-      var _set=Object.getOwnPropertyDescriptor(HTMLInputElement.prototype,'value').set;
-      function reactFill(inp,val){
-        if(!inp||inp.value)return;
-        _set.call(inp,val);
-        inp.dispatchEvent(new InputEvent('input',{bubbles:true,data:val,inputType:'insertText'}));
-      }
-      new MutationObserver(function(){
-        var em=document.querySelector('[data-testid="input-email"]');
-        var pw=document.querySelector('[data-testid="input-password"]');
-        if(em)reactFill(em,'student@rakni.com');
-        if(pw)reactFill(pw,'student123');
-      }).observe(document.body,{childList:true,subtree:true});
+      (async function(){
+        var tk=localStorage.getItem('rakni_access_token');
+        if(tk)return;
+        try{
+          var r=await fetch('/api/auth/login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email:'student@rakni.com',password:'student123'})});
+          var d=await r.json();
+          if(d.token){
+            localStorage.setItem('rakni_access_token',d.token);
+            localStorage.setItem('rakni_user',JSON.stringify(d.user));
+            location.reload();
+          }
+        }catch(e){}
+      })();
     </script>
   </body>
 </html>
