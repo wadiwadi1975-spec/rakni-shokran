@@ -311,30 +311,30 @@
     overflow-x: auto; background: #F8F6F0; border: 1px solid #E2E8F0;
     border-radius: 10px; padding: 14px;
   }
-  .grid { display: grid; grid-template-columns: repeat(10, 42px); gap: 4px; width: max-content; }
+  .grid { display: grid; grid-template-columns: repeat(10, 36px); gap: 3px; width: max-content; }
   .ramp {
     grid-column: 1 / -1;
-    background: repeating-linear-gradient(45deg, #E2E8F0, #E2E8F0 8px, #E2E8F0 8px, #E2E8F0 16px);
-    border-radius: 6px; padding: 8px 0; text-align: center;
-    font-weight: 700; font-size: 12px; color: #cfcfcf; margin-bottom: 2px;
+    background: repeating-linear-gradient(45deg,#333,#333 6px,#1a1a1a 6px,#1a1a1a 12px);
+    border-radius: 4px; padding: 6px 0; text-align: center;
+    font-weight: 700; font-size: 10px; color: #C9A86A; margin-bottom: 2px;
   }
   .ramp.exit { margin-bottom: 0; margin-top: 2px; }
   .aisle {
-    grid-column: 1 / -1; background: #E2E8F0;
-    border-top: 2px dashed #55565a; border-bottom: 2px dashed #55565a;
-    height: 24px; display: flex; align-items: center; justify-content: center;
-    color: #cfcfcf; font-size: 11px; letter-spacing: 2px;
+    grid-column: 1 / -1; background: #1a1a1a;
+    border-top: 1px dashed #333; border-bottom: 1px dashed #333;
+    height: 18px; display: flex; align-items: center; justify-content: center;
+    color: #666; font-size: 9px; letter-spacing: 1px;
   }
   .spot {
-    aspect-ratio: 1; border-radius: 4px; cursor: pointer;
+    aspect-ratio: 1; border-radius: 3px; cursor: pointer;
     display: flex; align-items: center; justify-content: center;
     line-height: 1; white-space: nowrap; overflow: hidden;
-    font-size: 8px; font-weight: 700; color: #fff; user-select: none;
+    font-size: 7px; font-weight: 700; color: #fff; user-select: none;
     direction: ltr;
   }
-  .spot.available { background: #2fbf71; }
-  .spot.occupied { background: #e5484d; }
-  .spot.reserved { background: #4098f1; }
+  .spot.available { background: #22c55e; }
+  .spot.occupied { background: #3b82f6; }
+  .spot.reserved { background: #ef4444; }
   .spot svg { width: 55%; height: 55%; fill: #fff; }
   .legend { display: flex; gap: 14px; margin-top: 14px; font-size: 12px; color: #9a9b9d; flex-wrap: wrap; }
   .legend-item { display: flex; align-items: center; gap: 4px; }
