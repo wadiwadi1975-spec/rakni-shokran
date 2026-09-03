@@ -17,7 +17,26 @@ const db = {
     return s;
   })(),
   vehicles: [
-    { id: 1, userId: 'u3', plateNumber: 'ABC-1234', makeModel: 'Toyota Corolla', color: 'White', brand: 'Toyota' }
+    { id: 1, userId: 'u3', plateNumber: 'ABC-1234', makeModel: 'Toyota Corolla', color: 'White', brand: 'Toyota' },
+    { id: 2, userId: 'u3', plateNumber: 'XYZ-5678', makeModel: 'Honda Civic', color: 'Black', brand: 'Honda' },
+    { id: 3, userId: 'u3', plateNumber: 'KWT-1122', makeModel: 'Hyundai Elantra', color: 'Silver', brand: 'Hyundai' },
+    { id: 4, userId: 'u3', plateNumber: 'KWT-3344', makeModel: 'Kia Sportage', color: 'Red', brand: 'Kia' },
+    { id: 5, userId: 'u3', plateNumber: 'EGY-9988', makeModel: 'Nissan Sunny', color: 'White', brand: 'Nissan' },
+    { id: 6, userId: 'u3', plateNumber: 'MNC-4455', makeModel: 'Mitsubishi Lancer', color: 'Grey', brand: 'Mitsubishi' },
+    { id: 7, userId: 'u3', plateNumber: 'CHV-7766', makeModel: 'Chevrolet Malibu', color: 'Blue', brand: 'Chevrolet' },
+    { id: 8, userId: 'u3', plateNumber: 'FRD-2233', makeModel: 'Ford Focus', color: 'White', brand: 'Ford' },
+    { id: 9, userId: 'u3', plateNumber: 'VW-8899', makeModel: 'Volkswagen Golf', color: 'Black', brand: 'Volkswagen' },
+    { id: 10, userId: 'u3', plateNumber: 'BMW-1010', makeModel: 'BMW 320i', color: 'Silver', brand: 'BMW' },
+    { id: 11, userId: 'u3', plateNumber: 'MBZ-2020', makeModel: 'Mercedes C200', color: 'Black', brand: 'Mercedes' },
+    { id: 12, userId: 'u3', plateNumber: 'AUD-3030', makeModel: 'Audi A4', color: 'White', brand: 'Audi' },
+    { id: 13, userId: 'u3', plateNumber: 'LEX-4040', makeModel: 'Lexus ES 350', color: 'Beige', brand: 'Lexus' },
+    { id: 14, userId: 'u3', plateNumber: 'MZD-5151', makeModel: 'Mazda 3', color: 'Red', brand: 'Mazda' },
+    { id: 15, userId: 'u3', plateNumber: 'SUZ-6262', makeModel: 'Suzuki Swift', color: 'Yellow', brand: 'Suzuki' },
+    { id: 16, userId: 'u3', plateNumber: 'PEU-7373', makeModel: 'Peugeot 3008', color: 'Blue', brand: 'Peugeot' },
+    { id: 17, userId: 'u3', plateNumber: 'REN-8484', makeModel: 'Renault Duster', color: 'White', brand: 'Renault' },
+    { id: 18, userId: 'u3', plateNumber: 'JEP-9595', makeModel: 'Jeep Cherokee', color: 'Green', brand: 'Jeep' },
+    { id: 19, userId: 'u3', plateNumber: 'SKD-1212', makeModel: 'Skoda Octavia', color: 'Grey', brand: 'Skoda' },
+    { id: 20, userId: 'u3', plateNumber: 'MG-3434', makeModel: 'MG ZS', color: 'Red', brand: 'MG' }
   ],
   orders: [
     { id: 1, userId: 'u3', spotId: 2, vehicleId: 1, status: 'PARKED', pickupLocation: 'Gate 3', createdAt: new Date().toISOString() }
