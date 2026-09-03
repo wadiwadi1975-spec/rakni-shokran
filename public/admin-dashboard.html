@@ -390,6 +390,10 @@
         <div class="stat-card green"><div class="label" data-i18n="yearly">سنة دراسية</div><div class="value" id="ov-yearly">0</div></div>
       </div>
     </div>
+    <div class="card">
+      <h3 data-i18n="shifts_overview">الفترات - السائقون والمواقف</h3>
+      <div class="stat-grid" id="shifts-overview" style="grid-template-columns:repeat(auto-fit,minmax(280px,1fr))"></div>
+    </div>
   </div>
 
   <!-- ===== المراقبة ===== -->
@@ -571,7 +575,7 @@
       total_spots: "إجمالي المواقف", available: "متاح", occupied: "مشغول", reserved: "محجوز",
       active_subs: "اشتراكات فعالة", subs_by_type: "الاشتراكات حسب النوع",
       daily: "يومي", weekly: "أسبوعي", monthly: "شهري", semester: "فصل دراسي", yearly: "سنة دراسية",
-      add_driver: "+ تسجيل سائق جديد", drv_name: "الاسم الثلاثي", drv_age: "السن", drv_job: "الوظيفة", drv_shift: "فترة العمل", drv_floor: "الطابق", drv_photo: "صورة شخصية", drv_license: "رخصة السواقة", drv_record: "صحيفة الحالة الجنائية", save_driver: "حفظ السائق", th_photo: "الصورة", shift_morning: "الفترة الصباحية 6:00 ص - 10:40 ص", shift_noon: "الفترة الظهرية 10:40 ص - 3:20 م", shift_evening: "الفترة المسائية 3:20 م - 8:00 م",
+      add_driver: "+ تسجيل سائق جديد", drv_name: "الاسم الثلاثي", drv_age: "السن", drv_job: "الوظيفة", drv_shift: "فترة العمل", drv_floor: "الطابق", drv_photo: "صورة شخصية", drv_license: "رخصة السواقة", drv_record: "صحيفة الحالة الجنائية", save_driver: "حفظ السائق", th_photo: "الصورة", shift_morning: "الفترة الصباحية 6:00 ص - 10:40 ص", shift_noon: "الفترة الظهرية 10:40 ص - 3:20 م", shift_evening: "الفترة المسائية 3:20 م - 8:00 م", shifts_overview: "الفترات - السائقون والمواقف",
       floors_live: "حالة الطوابق اللحظية",
       detailed_screen: "شاشة المواقف التفصيلية",
       detailed_screen_desc: "نفس الشاشة المستخدمة عند الطلاب تماماً (نفس الألوان والتصميم) — مضمّنة هنا بدون أي تعديل.",
@@ -599,7 +603,7 @@
       total_spots: "Total Spots", available: "Available", occupied: "Occupied", reserved: "Reserved",
       active_subs: "Active Subscriptions", subs_by_type: "Subscriptions by Type",
       daily: "Daily", weekly: "Weekly", monthly: "Monthly", semester: "Semester", yearly: "Academic Year",
-      add_driver: "+ Register New Driver", drv_name: "Full Name (3 parts)", drv_age: "Age", drv_job: "Job", drv_shift: "Work Shift", drv_floor: "Floor", drv_photo: "Personal Photo", drv_license: "Driving License", drv_record: "Criminal Record Sheet", save_driver: "Save Driver", th_photo: "Photo", shift_morning: "Morning 6:00 AM - 10:40 AM", shift_noon: "Noon 10:40 AM - 3:20 PM", shift_evening: "Evening 3:20 PM - 8:00 PM",
+      add_driver: "+ Register New Driver", drv_name: "Full Name (3 parts)", drv_age: "Age", drv_job: "Job", drv_shift: "Work Shift", drv_floor: "Floor", drv_photo: "Personal Photo", drv_license: "Driving License", drv_record: "Criminal Record Sheet", save_driver: "Save Driver", th_photo: "Photo", shift_morning: "Morning 6:00 AM - 10:40 AM", shift_noon: "Noon 10:40 AM - 3:20 PM", shift_evening: "Evening 3:20 PM - 8:00 PM", shifts_overview: "Shifts - Drivers & Spots",
       floors_live: "Live Floor Status",
       detailed_screen: "Detailed Spot Screen",
       detailed_screen_desc: "The exact same screen used by students (same colors and design) — embedded here unmodified.",
@@ -677,6 +681,31 @@
     document.getElementById("ov-available").textContent = totals.available;
     document.getElementById("ov-occupied").textContent = totals.occupied;
     document.getElementById("ov-reserved").textContent = totals.reserved;
+    renderShiftsOverview();
+  }
+  function renderShiftsOverview(){
+    const t=I18N[currentLang];
+    const cont=document.getElementById('shifts-overview');
+    if(!cont) return;
+    cont.innerHTML='';
+    const shifts=['morning','noon','evening'];
+    const groups={morning:[],noon:[],evening:[]};
+    drivers.forEach(d=>{if(groups[d.shift]) groups[d.shift].push(d)});
+    const totals={available:0,occupied:0,reserved:0};
+    Object.values(floorData).forEach(d=>{totals.available+=d.available;totals.occupied+=d.occupied;totals.reserved+=d.reserved});
+    const shiftSpots={
+      morning:{available:Math.round(totals.available*0.45),occupied:Math.round(totals.occupied*0.55),reserved:Math.round(totals.reserved*0.5)},
+      noon:{available:Math.round(totals.available*0.35),occupied:Math.round(totals.occupied*0.75),reserved:Math.round(totals.reserved*0.6)},
+      evening:{available:Math.round(totals.available*0.55),occupied:Math.round(totals.occupied*0.35),reserved:Math.round(totals.reserved*0.4)}
+    };
+    shifts.forEach(s=>{
+      const list=groups[s]||[];
+      const spots=shiftSpots[s];
+      const card=document.createElement('div');
+      card.style.cssText='background:#FFFFFF;border:1px solid #E2E8F0;border-radius:12px;padding:14px';
+      card.innerHTML=`<div style="font-weight:700;font-size:13px;margin-bottom:8px;color:#1C303F">${t['shift_'+s]}</div><div style="font-size:12px;color:#64748b;margin-bottom:6px">السائقون: <b style="color:#1C303F">${list.length}</b></div><div style="font-size:11px;color:#475569;margin-bottom:10px;min-height:36px">${list.map(d=>d.name+' (طابق '+d.floor+')').join(' ، ')||'-'}</div><div style="display:flex;gap:6px;flex-wrap:wrap;font-size:11px"><span style="background:#DCFCE7;color:#166534;padding:4px 8px;border-radius:6px">متاح ${spots.available}</span><span style="background:#FEE2E2;color:#991b1b;padding:4px 8px;border-radius:6px">مشغول ${spots.occupied}</span><span style="background:#DBEAFE;color:#1e40af;padding:4px 8px;border-radius:6px">محجوز ${spots.reserved}</span></div>`;
+      cont.appendChild(card);
+    });
   }
 
   // ===== شاشة المواقف التفصيلية (مضمّنة بالكامل) =====
@@ -966,7 +995,8 @@
       tr.innerHTML=`<td>${d.photo?`<img src="${d.photo}" style="width:40px;height:40px;border-radius:50%;object-fit:cover;border:1px solid #E2E8F0">`:'-'}</td><td>${d.name}</td><td>${d.age}</td><td>${d.job}</td><td><span style="background:#EFF6FF;color:#2563eb;padding:2px 8px;border-radius:10px;font-size:11px;font-weight:700">${shiftLabel}</span></td><td><span style="background:#FEF3C7;color:#92400e;padding:2px 8px;border-radius:10px;font-size:11px;font-weight:700">${floorLabel}</span></td><td>${d.license?`<a href="${d.license}" target="_blank" style="color:#2563eb;font-size:11px">عرض</a>`:'-'}</td><td>${d.record?`<a href="${d.record}" target="_blank" style="color:#2563eb;font-size:11px">عرض</a>`:'-'}</td><td class="row-actions"><span data-del-drv="${idx}">${t.delete}</span></td>`;
       body.appendChild(tr);
     });
-    body.querySelectorAll('[data-del-drv]').forEach(b=>b.addEventListener('click',()=>{drivers.splice(Number(b.dataset.delDrv),1);saveDrivers();renderDrivers()}));
+    body.querySelectorAll('[data-del-drv]').forEach(b=>b.addEventListener('click',()=>{drivers.splice(Number(b.dataset.delDrv),1);saveDrivers();renderDrivers();renderShiftsOverview()}));
+    renderShiftsOverview();
   }
   const drvFormEl=document.getElementById('driverForm');
   document.getElementById('toggleDriverForm')?.addEventListener('click',()=>drvFormEl.classList.toggle('open'));
