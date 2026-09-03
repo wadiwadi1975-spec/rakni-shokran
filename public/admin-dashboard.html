@@ -11,8 +11,8 @@
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body {
     font-family: 'Cairo', sans-serif;
-    background: #0A0A0A;
-    color: #fff;
+    background: hsl(42 33% 96%);
+    color: hsl(210 37% 17%);
     min-height: 100vh;
     padding: 20px;
   }
@@ -34,8 +34,8 @@
 
   .lang-switch {
     display: flex;
-    background: #141414;
-    border: 1px solid #262626;
+    background: #FFFFFF;
+    border: 1px solid #E2E8F0;
     border-radius: 20px;
     padding: 3px;
   }
@@ -50,13 +50,13 @@
     border: none;
     font-family: inherit;
   }
-  .lang-btn.active { background: #C9A86A; color: #0A0A0A; }
+  .lang-btn.active { background: #C9A86A; color: #1C303F; }
 
   .tabs {
     display: flex;
     gap: 8px;
     margin-bottom: 22px;
-    border-bottom: 1px solid #262626;
+    border-bottom: 1px solid #E2E8F0;
     flex-wrap: wrap;
   }
   .tab {
@@ -80,8 +80,8 @@
     margin-bottom: 24px;
   }
   .stat-card {
-    background: #141414;
-    border: 1px solid #262626;
+    background: #FFFFFF;
+    border: 1px solid #E2E8F0;
     border-radius: 12px;
     padding: 16px;
   }
@@ -93,8 +93,8 @@
   .stat-card.gold .value { color: #C9A86A; }
 
   .card {
-    background: #141414;
-    border: 1px solid #262626;
+    background: #FFFFFF;
+    border: 1px solid #E2E8F0;
     border-radius: 12px;
     padding: 18px;
     margin-bottom: 18px;
@@ -107,11 +107,11 @@
     align-items: center;
     gap: 14px;
     padding: 10px 0;
-    border-bottom: 1px solid #262626;
+    border-bottom: 1px solid #E2E8F0;
   }
   .floor-row:last-child { border-bottom: none; }
   .floor-name { width: 70px; font-weight: 700; }
-  .bar { flex: 1; height: 10px; border-radius: 6px; background: #2a2b2d; overflow: hidden; display: flex; }
+  .bar { flex: 1; height: 10px; border-radius: 6px; background: #E2E8F0; overflow: hidden; display: flex; }
   .bar span { height: 100%; }
   .bar .occupied { background: #e5484d; }
   .bar .reserved { background: #4098f1; }
@@ -123,17 +123,17 @@
   .sub-tab {
     padding: 7px 16px;
     border-radius: 20px;
-    background: #262626;
+    background: #E2E8F0;
     color: #cfcfcf;
     font-size: 13px;
     cursor: pointer;
     border: 1px solid transparent;
   }
-  .sub-tab.active { background: #C9A86A; color: #0A0A0A; font-weight: 700; }
+  .sub-tab.active { background: #C9A86A; color: #1C303F; font-weight: 700; }
 
   .add-btn {
     background: #C9A86A;
-    color: #0A0A0A;
+    color: #1C303F;
     border: none;
     border-radius: 8px;
     padding: 9px 16px;
@@ -148,8 +148,8 @@
     display: none;
     grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
     gap: 10px;
-    background: #141414;
-    border: 1px solid #262626;
+    background: #FFFFFF;
+    border: 1px solid #E2E8F0;
     border-radius: 12px;
     padding: 16px;
     margin-bottom: 18px;
@@ -158,8 +158,8 @@
   .sub-form label { font-size: 12px; color: #9a9b9d; display: block; margin-bottom: 4px; }
   .sub-form input, .sub-form select {
     width: 100%;
-    background: #0A0A0A;
-    border: 1px solid #2a2b2d;
+    background: #F8F6F0;
+    border: 1px solid #E2E8F0;
     border-radius: 8px;
     padding: 8px 10px;
     color: #fff;
@@ -169,7 +169,7 @@
   .sub-form .full { grid-column: 1 / -1; display: flex; gap: 10px; justify-content: flex-end; }
   .btn-secondary {
     background: transparent;
-    border: 1px solid #2a2b2d;
+    border: 1px solid #E2E8F0;
     color: #9a9b9d;
     border-radius: 8px;
     padding: 8px 16px;
@@ -179,7 +179,7 @@
   }
   .btn-primary {
     background: #C9A86A;
-    color: #0A0A0A;
+    color: #1C303F;
     border: none;
     border-radius: 8px;
     padding: 8px 16px;
@@ -195,10 +195,10 @@
     color: #9a9b9d;
     font-weight: 600;
     padding: 10px 8px;
-    border-bottom: 1px solid #262626;
+    border-bottom: 1px solid #E2E8F0;
     font-size: 12px;
   }
-  tbody td { padding: 10px 8px; border-bottom: 1px solid #1e1f21; }
+  tbody td { padding: 10px 8px; border-bottom: 1px solid #E2E8F0; }
   .plan-badge {
     padding: 3px 10px;
     border-radius: 12px;
@@ -232,15 +232,15 @@
   }
   .cam-floors-wrap { display: block; }
   .cam-card {
-    background: #0A0A0A;
-    border: 1px solid #262626;
+    background: #F8F6F0;
+    border: 1px solid #E2E8F0;
     border-radius: 12px;
     overflow: hidden;
     cursor: pointer;
   }
   .cam-feed {
     aspect-ratio: 16/10;
-    background: repeating-linear-gradient(45deg, #17181a, #17181a 10px, #141414 10px, #141414 20px);
+    background: repeating-linear-gradient(45deg, #17181a, #17181a 10px, #FFFFFF 10px, #FFFFFF 20px);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -262,7 +262,7 @@
     align-items: center;
     gap: 4px;
   }
-  .cam-feed .live-tag.off { background: #3a3b3d; }
+  .cam-feed .live-tag.off { background: #E2E8F0; }
   .cam-feed .dot {
     width: 6px; height: 6px; border-radius: 50%; background: #fff;
     animation: blink 1.4s infinite;
@@ -280,7 +280,7 @@
     color: #C9A86A;
     margin-bottom: 10px;
     padding-bottom: 8px;
-    border-bottom: 1px solid #262626;
+    border-bottom: 1px solid #E2E8F0;
   }
   .cam-floor-title span { color: #9a9b9d; font-weight: 400; font-size: 12px; }
 
@@ -292,7 +292,7 @@
     font-weight: 700;
     padding: 2px 8px;
     border-radius: 4px;
-    color: #0A0A0A;
+    color: #1C303F;
   }
   .type-tag.entrance { background: #4098f1; color: #fff; }
   .type-tag.exit { background: #e5484d; color: #fff; }
@@ -301,24 +301,24 @@
   /* ===== شاشة المواقف التفصيلية ===== */
   .spot-stats { display: flex; gap: 10px; margin-bottom: 14px; flex-wrap: wrap; }
   .spot-stats .chip {
-    background: #0A0A0A; border: 1px solid #262626; border-radius: 8px;
+    background: #F8F6F0; border: 1px solid #E2E8F0; border-radius: 8px;
     padding: 6px 12px; font-size: 12px;
   }
   .spot-stats .chip b { margin-inline-start: 4px; }
   .grid-scroll {
-    overflow-x: auto; background: #0A0A0A; border: 1px solid #262626;
+    overflow-x: auto; background: #F8F6F0; border: 1px solid #E2E8F0;
     border-radius: 10px; padding: 14px;
   }
   .grid { display: grid; grid-template-columns: repeat(10, 42px); gap: 4px; width: max-content; }
   .ramp {
     grid-column: 1 / -1;
-    background: repeating-linear-gradient(45deg, #2a2b2d, #2a2b2d 8px, #262626 8px, #262626 16px);
+    background: repeating-linear-gradient(45deg, #E2E8F0, #E2E8F0 8px, #E2E8F0 8px, #E2E8F0 16px);
     border-radius: 6px; padding: 8px 0; text-align: center;
     font-weight: 700; font-size: 12px; color: #cfcfcf; margin-bottom: 2px;
   }
   .ramp.exit { margin-bottom: 0; margin-top: 2px; }
   .aisle {
-    grid-column: 1 / -1; background: #3a3b3d;
+    grid-column: 1 / -1; background: #E2E8F0;
     border-top: 2px dashed #55565a; border-bottom: 2px dashed #55565a;
     height: 24px; display: flex; align-items: center; justify-content: center;
     color: #cfcfcf; font-size: 11px; letter-spacing: 2px;
@@ -347,7 +347,7 @@
 </head>
 <body>
 
-  <style>.back-btn{display:inline-flex;align-items:center;gap:6px;background:#C9A86A;color:#0A0A0A;padding:8px 14px;border-radius:8px;font-weight:700;font-size:13px;text-decoration:none;margin-bottom:14px}</style>
+  <style>.back-btn{display:inline-flex;align-items:center;gap:6px;background:#C9A86A;color:#1C303F;padding:8px 14px;border-radius:8px;font-weight:700;font-size:13px;text-decoration:none;margin-bottom:14px}</style>
 <div class="wrap">
   <a href="/" class="back-btn">← العودة للرئيسية</a>
   <header>
