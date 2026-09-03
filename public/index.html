@@ -71,12 +71,18 @@
         return false;
       }
       function fixUniversity(){
-        var els=document.querySelectorAll('span');
+        var els=document.querySelectorAll('*');
         for(var i=0;i<els.length;i++){
           var t=els[i].textContent.trim();
-          if(t==='جامعة الملك سعود - الرياض' || t==='جامعة الملك سعود- الرياض'){
-            els[i].style.display='none';
-            return true;
+          if(t.indexOf('الملك سعود')>-1){
+            // only leaf - not parent containing more text
+            if(els[i].children.length===0 || t.length<40){
+              els[i].style.display='none';
+              // also hide parent if it's just wrapper
+              var p=els[i].parentElement;
+              if(p && p.textContent.trim()===t) p.style.display='none';
+              return true;
+            }
           }
         }
         return false;
