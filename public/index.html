@@ -25,8 +25,6 @@
     <script type="module" crossorigin src="/assets/index-3l9n7s6w.js"></script>
     <link rel="stylesheet" crossorigin href="/assets/index-C7opIdPT.css">
     <style>
-      /* login right panel override - replace blue grid with parking image - vivid yellow */
-      .grid-paper{background:url('/rakni-login-bg.png') center/cover no-repeat !important; filter:brightness(1.12) saturate(1.35) contrast(1.08);}
       .rakni-parking-section{background:var(--card,#141414);border:1px solid var(--border,#262626);border-radius:1rem;padding:16px}
       .rakni-parking-section .rp-title{font-size:10px;letter-spacing:.18em;color:var(--accent,#C9A86A);font-family:monospace;margin-bottom:6px}
       .rakni-parking-section .rp-subtitle{font-size:16px;font-weight:800;margin-bottom:12px}
@@ -61,6 +59,7 @@
             if(bg){
               bg.style.background='url(/rakni-login-bg.png) center/cover no-repeat, #0a0a0a';
               bg.style.backgroundSize='cover';
+              bg.style.filter='brightness(1.12) saturate(1.35) contrast(1.08)';
               bg.classList.remove('grid-paper');
               bg.style.position='relative';
             }
