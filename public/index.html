@@ -435,6 +435,85 @@
         }
         tick();
       }
+      function injectLangSwitch(){
+        if(document.getElementById('rakni-lang')) return;
+        var header=document.querySelector('header');
+        if(!header) return;
+        var cur=localStorage.getItem('rakni_lang')||'ar';
+        var btn=document.createElement('div');
+        btn.id='rakni-lang';
+        btn.style.cssText='display:flex;background:#fff;border:1px solid #E2E8F0;border-radius:20px;padding:2px;gap:2px;margin-left:8px';
+        btn.innerHTML='<button data-lang="ar" style="padding:4px 10px;border-radius:16px;font-size:11px;font-weight:700;cursor:pointer;border:none;background:'+(cur==='ar'?'#1C303F':'transparent')+';color:'+(cur==='ar'?'#fff':'#64748b')+'">AR</button><button data-lang="en" style="padding:4px 10px;border-radius:16px;font-size:11px;font-weight:700;cursor:pointer;border:none;background:'+(cur==='en'?'#1C303F':'transparent')+';color:'+(cur==='en'?'#fff':'#64748b')+'">EN</button>';
+        header.insertBefore(btn, header.firstChild);
+        btn.querySelectorAll('button').forEach(function(b){
+          b.onclick=function(){
+            var lang=b.dataset.lang;
+            localStorage.setItem('rakni_lang', lang);
+            applyLang(lang);
+            btn.querySelectorAll('button').forEach(function(x){x.style.background=x.dataset.lang===lang?'#1C303F':'transparent';x.style.color=x.dataset.lang===lang?'#fff':'#64748b'});
+          };
+        });
+        applyLang(cur);
+      }
+      function applyLang(lang){
+        document.documentElement.lang=lang;
+        document.documentElement.dir=lang==='ar'?'rtl':'ltr';
+        var dict={
+          'أهلاً بك في رَكّنّي شكراً': lang==='en'?'Welcome to Rakni Shokran':'أهلاً بك في رَكّنّي شكراً',
+          'صباح الخير':'Good Morning',
+          'مساء الخير':'Good Evening',
+          'طلب صف جديد':'New Park Request',
+          'التوفر داخل الحرم':'Campus Availability',
+          'التوافر داخل الحرم':'Campus Availability',
+          'رحلة سيارتك':'Your Trip',
+          'مركباتك':'Your Vehicles',
+          'مركباتي':'My Vehicles',
+          'الطلبات':'Orders',
+          'المدفوعات':'Payments',
+          'مواقف متاحة':'Available Spots',
+          'الطلبات النشطة':'Active Orders',
+          'مركبات مكتملة':'Completed',
+          'المشغولة الآن':'Occupied Now',
+          'تحديث مباشر':'Live Update',
+          'لوحة المتابعة':'Dashboard',
+          'لوحة الإدارة':'Admin Panel',
+          'الخدمة تعمل الآن':'Service is live',
+          'سجّل الدخول لمتابعة سيارتك':'Login to track your car',
+          'أهلاً بك في رَكْني':'Welcome to Rakni',
+          'البريد الجامعي':'University Email',
+          'كلمة المرور':'Password',
+          'دخول إلى مواقفك':'Login to your spots',
+          'اختر طلباً':'Choose an order',
+          'اختر طلبا':'Choose an order',
+          'رقم اللوحة':'Plate Number',
+          'المبلغ المطلوب':'Amount Due',
+          'نوع الدفع':'Payment Type',
+          'يومي':'Daily',
+          'بالساعات':'Hourly'
+        };
+        // reverse for en->ar
+        if(lang==='ar'){
+          var rev={};
+          Object.keys(dict).forEach(function(k){ rev[dict[k]]=k; });
+          dict=rev;
+        }
+        // replace leaf text nodes
+        var walker=document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT, null);
+        var nodes=[];
+        while(walker.nextNode()) nodes.push(walker.currentNode);
+        nodes.forEach(function(n){
+          var t=n.textContent.trim();
+          if(dict[t]) n.textContent=dict[t];
+          else {
+            for(var k in dict){
+              if(t.indexOf(k)>-1 && t.length<60){
+                n.textContent=t.replace(k, dict[k]);
+                break;
+              }
+            }
+          }
+        });
+      }
       function injectNotifBell(){
         if(document.getElementById('rakni-notif-bell'))return;
         var header=document.querySelector('header')||document.querySelector('[class*=header]');
@@ -559,6 +638,7 @@
         injectAdminNav();
         injectNotifBell();
         injectDateTime();
+        injectLangSwitch();
         if(injectParking())return;
         var tries=0;
         var timer=setInterval(function(){
@@ -578,7 +658,7 @@
       var lastUrl=location.href;
       var navObs=new MutationObserver(function(){
         if(location.href!==lastUrl){lastUrl=location.href;injected=null;injectedForm=false;if(isLoggedIn())tryInject()}
-        if(isLoggedIn()){injectAdminNav();injectNotifBell();injectDateTime();injectSpotPicker();injectPaymentBilling();}
+        if(isLoggedIn()){injectAdminNav();injectNotifBell();injectDateTime();injectLangSwitch();injectSpotPicker();injectPaymentBilling();}
       });
       navObs.observe(document.body,{childList:true,subtree:true});
 
@@ -587,6 +667,7 @@
         injectAdminNav();
         injectNotifBell();
         injectDateTime();
+        injectLangSwitch();
         injectPaymentBilling();
         if(!injected||!injected.parentNode){
           injected=null;
@@ -595,6 +676,9 @@
         }
         injectSpotPicker();
       },3000);
+      // lang switch also for login page (no auth)
+      setTimeout(injectLangSwitch,600);
+      setInterval(injectLangSwitch,1500);
     })();
     </script>
   </body>
