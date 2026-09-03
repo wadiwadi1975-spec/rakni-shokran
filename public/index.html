@@ -309,26 +309,30 @@
       }
 
       function injectDateTime(){
+        var old=document.getElementById('rakni-datetime');
+        if(old) old.remove();
         var els=document.querySelectorAll('p,span,div');
         var target=null;
         for(var i=0;i<els.length;i++){
           var t=els[i].textContent.trim();
-          if(t.indexOf('TODAY')===0 || t.indexOf('TODAY /')===0){
+          if(t.indexOf('TODAY')>-1 && t.length<30){
             target=els[i];break;
           }
         }
         if(!target) return;
-        if(target.dataset.rakniPatched) return;
-        target.dataset.rakniPatched='1';
-        target.style.direction='ltr';
-        target.style.fontFamily='monospace';
         function tick(){
           var now=new Date();
           var dateStr=now.toLocaleDateString('en-US',{weekday:'long',year:'numeric',month:'long',day:'numeric'});
           var timeStr=now.toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit',second:'2-digit',hour12:true});
           target.textContent=dateStr+' • '+timeStr;
+          target.style.direction='ltr';
+          target.style.fontFamily='monospace';
         }
-        tick(); setInterval(tick,1000);
+        if(!target.dataset.rakniPatched){
+          target.dataset.rakniPatched='1';
+          setInterval(tick,1000);
+        }
+        tick();
       }
       function injectNotifBell(){
         if(document.getElementById('rakni-notif-bell'))return;
