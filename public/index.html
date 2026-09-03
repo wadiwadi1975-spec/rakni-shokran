@@ -70,6 +70,19 @@
         }
         return false;
       }
+      function fixWelcome(){
+        var els=document.querySelectorAll('h1,h2,p,div,span');
+        for(var i=0;i<els.length;i++){
+          var t=els[i].textContent.trim();
+          if(t.indexOf('أهلاً بك في')>-1 && t.indexOf('ركني')>-1){
+            if(els[i].children.length===0 || t.length<40){
+              els[i].textContent='أهلاً بك في رَكّنّي شكراً';
+              return true;
+            }
+          }
+        }
+        return false;
+      }
       function fixUniversity(){
         var els=document.querySelectorAll('*');
         for(var i=0;i<els.length;i++){
@@ -88,8 +101,8 @@
         return false;
       }
       var tries=0;
-      var t=setInterval(function(){tries++; var a=setLoginBg();var b=fixUniversity(); if((a&&b)||tries>50) clearInterval(t)},300);
-      new MutationObserver(function(){setLoginBg();fixUniversity()}).observe(document.body,{childList:true,subtree:true});
+      var t=setInterval(function(){tries++; var a=setLoginBg();var b=fixUniversity();var c=fixWelcome(); if((a&&b&&c)||tries>80) clearInterval(t)},300);
+      new MutationObserver(function(){setLoginBg();fixUniversity();fixWelcome()}).observe(document.body,{childList:true,subtree:true});
     })();
     </script>
     <script>
