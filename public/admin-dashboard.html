@@ -1,0 +1,879 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl" id="html-root">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>لوحة تحكم الموقف — رَكْني شكراً</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Cairo', sans-serif;
+    background: #101112;
+    color: #fff;
+    min-height: 100vh;
+    padding: 20px;
+  }
+  body.lang-en { font-family: 'Inter', sans-serif; }
+  .wrap { max-width: 1100px; margin: 0 auto; }
+
+  header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  header h1 { font-size: 20px; font-weight: 700; }
+  header h1 span { color: #F5C518; }
+  header .right { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
+  header .date { color: #9a9b9d; font-size: 13px; }
+
+  .lang-switch {
+    display: flex;
+    background: #1c1d1f;
+    border: 1px solid #232426;
+    border-radius: 20px;
+    padding: 3px;
+  }
+  .lang-btn {
+    padding: 6px 16px;
+    border-radius: 18px;
+    font-size: 12px;
+    font-weight: 700;
+    cursor: pointer;
+    color: #9a9b9d;
+    background: transparent;
+    border: none;
+    font-family: inherit;
+  }
+  .lang-btn.active { background: #F5C518; color: #171819; }
+
+  .tabs {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 22px;
+    border-bottom: 1px solid #232426;
+    flex-wrap: wrap;
+  }
+  .tab {
+    padding: 10px 18px;
+    cursor: pointer;
+    color: #9a9b9d;
+    font-size: 14px;
+    font-weight: 600;
+    border-bottom: 2px solid transparent;
+  }
+  .tab.active { color: #F5C518; border-bottom-color: #F5C518; }
+
+  .panel { display: none; }
+  .panel.active { display: block; }
+
+  /* ===== نظرة عامة ===== */
+  .stat-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 12px;
+    margin-bottom: 24px;
+  }
+  .stat-card {
+    background: #1c1d1f;
+    border: 1px solid #232426;
+    border-radius: 12px;
+    padding: 16px;
+  }
+  .stat-card .label { color: #9a9b9d; font-size: 12px; margin-bottom: 6px; }
+  .stat-card .value { font-size: 24px; font-weight: 700; }
+  .stat-card.green .value { color: #2fbf71; }
+  .stat-card.red .value { color: #e5484d; }
+  .stat-card.blue .value { color: #4098f1; }
+  .stat-card.gold .value { color: #F5C518; }
+
+  .card {
+    background: #1c1d1f;
+    border: 1px solid #232426;
+    border-radius: 12px;
+    padding: 18px;
+    margin-bottom: 18px;
+  }
+  .card h3 { font-size: 15px; margin-bottom: 14px; }
+
+  /* ===== المراقبة ===== */
+  .floor-row {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 10px 0;
+    border-bottom: 1px solid #232426;
+  }
+  .floor-row:last-child { border-bottom: none; }
+  .floor-name { width: 70px; font-weight: 700; }
+  .bar { flex: 1; height: 10px; border-radius: 6px; background: #2a2b2d; overflow: hidden; display: flex; }
+  .bar span { height: 100%; }
+  .bar .occupied { background: #e5484d; }
+  .bar .reserved { background: #4098f1; }
+  .bar .available { background: #2fbf71; }
+  .floor-counts { width: 210px; font-size: 12px; color: #9a9b9d; text-align: left; direction: ltr; }
+
+  /* ===== الاشتراكات ===== */
+  .sub-tabs { display: flex; gap: 8px; margin-bottom: 16px; flex-wrap: wrap; }
+  .sub-tab {
+    padding: 7px 16px;
+    border-radius: 20px;
+    background: #232426;
+    color: #cfcfcf;
+    font-size: 13px;
+    cursor: pointer;
+    border: 1px solid transparent;
+  }
+  .sub-tab.active { background: #F5C518; color: #171819; font-weight: 700; }
+
+  .add-btn {
+    background: #F5C518;
+    color: #171819;
+    border: none;
+    border-radius: 8px;
+    padding: 9px 16px;
+    font-weight: 700;
+    font-size: 13px;
+    cursor: pointer;
+    margin-bottom: 16px;
+    font-family: inherit;
+  }
+
+  .sub-form {
+    display: none;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 10px;
+    background: #1c1d1f;
+    border: 1px solid #232426;
+    border-radius: 12px;
+    padding: 16px;
+    margin-bottom: 18px;
+  }
+  .sub-form.open { display: grid; }
+  .sub-form label { font-size: 12px; color: #9a9b9d; display: block; margin-bottom: 4px; }
+  .sub-form input, .sub-form select {
+    width: 100%;
+    background: #101112;
+    border: 1px solid #2a2b2d;
+    border-radius: 8px;
+    padding: 8px 10px;
+    color: #fff;
+    font-size: 13px;
+    font-family: inherit;
+  }
+  .sub-form .full { grid-column: 1 / -1; display: flex; gap: 10px; justify-content: flex-end; }
+  .btn-secondary {
+    background: transparent;
+    border: 1px solid #2a2b2d;
+    color: #9a9b9d;
+    border-radius: 8px;
+    padding: 8px 16px;
+    cursor: pointer;
+    font-size: 13px;
+    font-family: inherit;
+  }
+  .btn-primary {
+    background: #F5C518;
+    color: #171819;
+    border: none;
+    border-radius: 8px;
+    padding: 8px 16px;
+    font-weight: 700;
+    cursor: pointer;
+    font-size: 13px;
+    font-family: inherit;
+  }
+
+  table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  thead th {
+    text-align: start;
+    color: #9a9b9d;
+    font-weight: 600;
+    padding: 10px 8px;
+    border-bottom: 1px solid #232426;
+    font-size: 12px;
+  }
+  tbody td { padding: 10px 8px; border-bottom: 1px solid #1e1f21; }
+  .plan-badge {
+    padding: 3px 10px;
+    border-radius: 12px;
+    font-size: 11px;
+    font-weight: 700;
+  }
+  .plan-badge.daily { background: rgba(64,152,241,0.15); color: #4098f1; }
+  .plan-badge.monthly { background: rgba(245,197,24,0.15); color: #F5C518; }
+  .plan-badge.yearly { background: rgba(47,191,113,0.15); color: #2fbf71; }
+  .status-badge {
+    padding: 3px 10px;
+    border-radius: 12px;
+    font-size: 11px;
+    font-weight: 700;
+  }
+  .status-badge.active { background: rgba(47,191,113,0.15); color: #2fbf71; }
+  .status-badge.expired { background: rgba(229,72,77,0.15); color: #e5484d; }
+  .row-actions span {
+    color: #9a9b9d;
+    cursor: pointer;
+    font-size: 12px;
+    margin-inline-start: 10px;
+  }
+  .row-actions span:hover { color: #F5C518; }
+
+  /* ===== الكاميرات ===== */
+  .cam-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 14px;
+  }
+  .cam-floors-wrap { display: block; }
+  .cam-card {
+    background: #101112;
+    border: 1px solid #232426;
+    border-radius: 12px;
+    overflow: hidden;
+    cursor: pointer;
+  }
+  .cam-feed {
+    aspect-ratio: 16/10;
+    background: repeating-linear-gradient(45deg, #17181a, #17181a 10px, #1c1d1f 10px, #1c1d1f 20px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .cam-feed svg { width: 34px; height: 34px; opacity: 0.5; }
+  .cam-feed .live-tag {
+    position: absolute;
+    top: 8px;
+    inset-inline-end: 8px;
+    background: #e5484d;
+    color: #fff;
+    font-size: 10px;
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+  .cam-feed .live-tag.off { background: #3a3b3d; }
+  .cam-feed .dot {
+    width: 6px; height: 6px; border-radius: 50%; background: #fff;
+    animation: blink 1.4s infinite;
+  }
+  @keyframes blink { 50% { opacity: 0.2; } }
+  .cam-info { padding: 10px 12px; }
+  .cam-info .name { font-size: 13px; font-weight: 700; margin-bottom: 2px; }
+  .cam-info .meta { font-size: 11px; color: #9a9b9d; display: flex; justify-content: space-between; }
+
+  .cam-floor-section { margin-bottom: 26px; }
+  .cam-floor-section:last-child { margin-bottom: 0; }
+  .cam-floor-title {
+    font-size: 14px;
+    font-weight: 700;
+    color: #F5C518;
+    margin-bottom: 10px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid #232426;
+  }
+  .cam-floor-title span { color: #9a9b9d; font-weight: 400; font-size: 12px; }
+
+  .type-tag {
+    position: absolute;
+    top: 8px;
+    inset-inline-start: 8px;
+    font-size: 10px;
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: 4px;
+    color: #171819;
+  }
+  .type-tag.entrance { background: #4098f1; color: #fff; }
+  .type-tag.exit { background: #e5484d; color: #fff; }
+  .type-tag.inside { background: #F5C518; }
+
+  /* ===== شاشة المواقف التفصيلية ===== */
+  .spot-stats { display: flex; gap: 10px; margin-bottom: 14px; flex-wrap: wrap; }
+  .spot-stats .chip {
+    background: #101112; border: 1px solid #232426; border-radius: 8px;
+    padding: 6px 12px; font-size: 12px;
+  }
+  .spot-stats .chip b { margin-inline-start: 4px; }
+  .grid-scroll {
+    overflow-x: auto; background: #101112; border: 1px solid #232426;
+    border-radius: 10px; padding: 14px;
+  }
+  .grid { display: grid; grid-template-columns: repeat(10, 42px); gap: 4px; width: max-content; }
+  .ramp {
+    grid-column: 1 / -1;
+    background: repeating-linear-gradient(45deg, #2a2b2d, #2a2b2d 8px, #232426 8px, #232426 16px);
+    border-radius: 6px; padding: 8px 0; text-align: center;
+    font-weight: 700; font-size: 12px; color: #cfcfcf; margin-bottom: 2px;
+  }
+  .ramp.exit { margin-bottom: 0; margin-top: 2px; }
+  .aisle {
+    grid-column: 1 / -1; background: #3a3b3d;
+    border-top: 2px dashed #55565a; border-bottom: 2px dashed #55565a;
+    height: 24px; display: flex; align-items: center; justify-content: center;
+    color: #cfcfcf; font-size: 11px; letter-spacing: 2px;
+  }
+  .spot {
+    aspect-ratio: 1; border-radius: 4px; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    line-height: 1; white-space: nowrap; overflow: hidden;
+    font-size: 8px; font-weight: 700; color: #fff; user-select: none;
+    direction: ltr;
+  }
+  .spot.available { background: #2fbf71; }
+  .spot.occupied { background: #e5484d; }
+  .spot.reserved { background: #4098f1; }
+  .spot svg { width: 55%; height: 55%; fill: #fff; }
+  .legend { display: flex; gap: 14px; margin-top: 14px; font-size: 12px; color: #9a9b9d; flex-wrap: wrap; }
+  .legend-item { display: flex; align-items: center; gap: 4px; }
+  .legend-swatch { width: 10px; height: 10px; border-radius: 2px; }
+
+  @media (max-width: 640px) {
+    .floor-counts { display: none; }
+    table { font-size: 12px; }
+    thead th:nth-child(2), tbody td:nth-child(2) { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <header>
+    <h1 id="hdr-title">لوحة تحكم <span>رَكْني شكراً</span></h1>
+    <div class="right">
+      <div class="date" id="today"></div>
+      <div class="lang-switch">
+        <button class="lang-btn active" id="btn-ar">AR</button>
+        <button class="lang-btn" id="btn-en">EN</button>
+      </div>
+    </div>
+  </header>
+
+  <div class="tabs">
+    <div class="tab active" data-tab="overview" data-i18n="tab_overview">نظرة عامة</div>
+    <div class="tab" data-tab="monitor" data-i18n="tab_monitor">المراقبة</div>
+    <div class="tab" data-tab="cameras" data-i18n="tab_cameras">الكاميرات</div>
+    <div class="tab" data-tab="subs" data-i18n="tab_subs">الاشتراكات</div>
+  </div>
+
+  <!-- ===== نظرة عامة ===== -->
+  <div class="panel active" id="panel-overview">
+    <div class="stat-grid">
+      <div class="stat-card gold"><div class="label" data-i18n="total_spots">إجمالي المواقف</div><div class="value" id="ov-total">0</div></div>
+      <div class="stat-card green"><div class="label" data-i18n="available">متاح</div><div class="value" id="ov-available">0</div></div>
+      <div class="stat-card red"><div class="label" data-i18n="occupied">مشغول</div><div class="value" id="ov-occupied">0</div></div>
+      <div class="stat-card blue"><div class="label" data-i18n="reserved">محجوز</div><div class="value" id="ov-reserved">0</div></div>
+      <div class="stat-card gold"><div class="label" data-i18n="active_subs">اشتراكات فعالة</div><div class="value" id="ov-subs">0</div></div>
+    </div>
+    <div class="card">
+      <h3 data-i18n="subs_by_type">الاشتراكات حسب النوع</h3>
+      <div class="stat-grid">
+        <div class="stat-card blue"><div class="label" data-i18n="daily">يومي</div><div class="value" id="ov-daily">0</div></div>
+        <div class="stat-card gold"><div class="label" data-i18n="monthly">شهري</div><div class="value" id="ov-monthly">0</div></div>
+        <div class="stat-card green"><div class="label" data-i18n="yearly">سنوي</div><div class="value" id="ov-yearly">0</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== المراقبة ===== -->
+  <div class="panel" id="panel-monitor">
+    <div class="card">
+      <h3 data-i18n="floors_live">حالة الطوابق اللحظية</h3>
+      <div id="floors-list"></div>
+    </div>
+
+    <div class="card">
+      <h3 data-i18n="detailed_screen">شاشة المواقف التفصيلية</h3>
+      <div class="tabs" id="spot-floor-tabs" style="margin-bottom:14px;border-bottom:none"></div>
+      <div class="spot-stats" id="spot-stats"></div>
+      <div class="grid-scroll">
+        <div class="grid" id="spot-grid"></div>
+      </div>
+      <div class="legend">
+        <div class="legend-item"><span class="legend-swatch" style="background:#2fbf71"></span><span data-i18n="available">متاح</span></div>
+        <div class="legend-item"><span class="legend-swatch" style="background:#e5484d"></span><span data-i18n="occupied">مشغول</span></div>
+        <div class="legend-item"><span class="legend-swatch" style="background:#4098f1"></span><span data-i18n="reserved">محجوز</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== الكاميرات ===== -->
+  <div class="panel" id="panel-cameras">
+    <div class="stat-grid" style="margin-bottom:18px">
+      <div class="stat-card gold"><div class="label" data-i18n="total_cams">إجمالي الكاميرات</div><div class="value" id="cam-total">0</div></div>
+      <div class="stat-card green"><div class="label" data-i18n="cams_online">تعمل</div><div class="value" id="cam-online">0</div></div>
+      <div class="stat-card red"><div class="label" data-i18n="cams_offline">لا تعمل</div><div class="value" id="cam-offline">0</div></div>
+    </div>
+    <div class="card">
+      <h3 data-i18n="cam_feed">بث الكاميرات</h3>
+      <div class="cam-floors-wrap" id="cam-grid"></div>
+    </div>
+  </div>
+
+  <!-- ===== الاشتراكات ===== -->
+  <div class="panel" id="panel-subs">
+    <div class="sub-tabs">
+      <div class="sub-tab active" data-plan="all" data-i18n="all">الكل</div>
+      <div class="sub-tab" data-plan="daily" data-i18n="daily">يومي</div>
+      <div class="sub-tab" data-plan="monthly" data-i18n="monthly">شهري</div>
+      <div class="sub-tab" data-plan="yearly" data-i18n="yearly">سنوي</div>
+    </div>
+
+    <button class="add-btn" id="toggleForm" data-i18n="add_sub">+ إضافة اشتراك جديد</button>
+
+    <div class="sub-form" id="subForm">
+      <div>
+        <label data-i18n="sub_name">اسم المشترك</label>
+        <input type="text" id="f-name" />
+      </div>
+      <div>
+        <label data-i18n="plate_no">رقم اللوحة</label>
+        <input type="text" id="f-plate" placeholder="12345 KWT" />
+      </div>
+      <div>
+        <label data-i18n="plan_type">نوع الاشتراك</label>
+        <select id="f-plan">
+          <option value="daily" data-i18n="daily">يومي</option>
+          <option value="monthly" data-i18n="monthly">شهري</option>
+          <option value="yearly" data-i18n="yearly">سنوي</option>
+        </select>
+      </div>
+      <div>
+        <label data-i18n="start_date">تاريخ البدء</label>
+        <input type="date" id="f-start" />
+      </div>
+      <div class="full">
+        <button class="btn-secondary" id="cancelForm" data-i18n="cancel">إلغاء</button>
+        <button class="btn-primary" id="saveForm" data-i18n="save_sub">حفظ الاشتراك</button>
+      </div>
+    </div>
+
+    <div class="card" style="overflow-x:auto">
+      <table>
+        <thead>
+          <tr>
+            <th data-i18n="th_name">الاسم</th>
+            <th data-i18n="th_plate">رقم اللوحة</th>
+            <th data-i18n="th_plan">نوع الاشتراك</th>
+            <th data-i18n="th_start">البداية</th>
+            <th data-i18n="th_end">النهاية</th>
+            <th data-i18n="th_status">الحالة</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody id="subs-body"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<script>
+  // ===== قاموس الترجمة =====
+  const I18N = {
+    ar: {
+      dir: "rtl", htmlLang: "ar", dateLocale: "ar-KW",
+      header_title: 'لوحة تحكم <span>رَكْني شكراً</span>',
+      tab_overview: "نظرة عامة", tab_monitor: "المراقبة", tab_cameras: "الكاميرات", tab_subs: "الاشتراكات",
+      total_spots: "إجمالي المواقف", available: "متاح", occupied: "مشغول", reserved: "محجوز",
+      active_subs: "اشتراكات فعالة", subs_by_type: "الاشتراكات حسب النوع",
+      daily: "يومي", monthly: "شهري", yearly: "سنوي",
+      floors_live: "حالة الطوابق اللحظية",
+      detailed_screen: "شاشة المواقف التفصيلية",
+      detailed_screen_desc: "نفس الشاشة المستخدمة عند الطلاب تماماً (نفس الألوان والتصميم) — مضمّنة هنا بدون أي تعديل.",
+      total_cams: "إجمالي الكاميرات", cams_online: "تعمل", cams_offline: "لا تعمل", cam_feed: "بث الكاميرات",
+      all: "الكل", add_sub: "+ إضافة اشتراك جديد",
+      sub_name: "اسم المشترك", plate_no: "رقم اللوحة", plan_type: "نوع الاشتراك", start_date: "تاريخ البدء",
+      cancel: "إلغاء", save_sub: "حفظ الاشتراك",
+      th_name: "الاسم", th_plate: "رقم اللوحة", th_plan: "نوع الاشتراك", th_start: "البداية", th_end: "النهاية", th_status: "الحالة",
+      floor: "طابق", status_active: "فعال", status_expired: "منتهي", delete: "حذف",
+      floor_counts: (a, o, r) => `متاح ${a} · مشغول ${o} · محجوز ${r}`,
+      floorNames: { A: "الطابق الأول", B: "الطابق الثاني", C: "الطابق الثالث", D: "الطابق الرابع" },
+      camType: { entrance: "مدخل", exit: "مخرج", inside: "داخل الموقف" },
+      live: "مباشر", offline_tag: "غير متصلة", connected: "متصلة", disconnected: "منقطعة",
+      alert_live: (label, name) => "عرض البث المباشر: " + label + " — " + name,
+      alert_offline: (label, name) => "الكاميرا غير متصلة حالياً: " + label + " — " + name,
+      form_required: "الرجاء تعبئة اسم المشترك ورقم اللوحة",
+      name_placeholder: "مثال: أحمد العلي",
+      entrance: "⬇ مدخل", exit: "⬆ مخرج", aisle: "↔ ممر حركة ↔"
+    },
+    en: {
+      dir: "ltr", htmlLang: "en", dateLocale: "en-US",
+      header_title: 'Parking Control Panel — <span>Rakni Shokran</span>',
+      tab_overview: "Overview", tab_monitor: "Monitoring", tab_cameras: "Cameras", tab_subs: "Subscriptions",
+      total_spots: "Total Spots", available: "Available", occupied: "Occupied", reserved: "Reserved",
+      active_subs: "Active Subscriptions", subs_by_type: "Subscriptions by Type",
+      daily: "Daily", monthly: "Monthly", yearly: "Yearly",
+      floors_live: "Live Floor Status",
+      detailed_screen: "Detailed Spot Screen",
+      detailed_screen_desc: "The exact same screen used by students (same colors and design) — embedded here unmodified.",
+      total_cams: "Total Cameras", cams_online: "Online", cams_offline: "Offline", cam_feed: "Camera Feed",
+      all: "All", add_sub: "+ Add New Subscription",
+      sub_name: "Subscriber Name", plate_no: "Plate Number", plan_type: "Plan Type", start_date: "Start Date",
+      cancel: "Cancel", save_sub: "Save Subscription",
+      th_name: "Name", th_plate: "Plate No.", th_plan: "Plan", th_start: "Start", th_end: "End", th_status: "Status",
+      floor: "Floor", status_active: "Active", status_expired: "Expired", delete: "Delete",
+      floor_counts: (a, o, r) => `Available ${a} · Occupied ${o} · Reserved ${r}`,
+      floorNames: { A: "Floor 1", B: "Floor 2", C: "Floor 3", D: "Floor 4" },
+      camType: { entrance: "Entrance", exit: "Exit", inside: "Inside" },
+      live: "Live", offline_tag: "Offline", connected: "Connected", disconnected: "Disconnected",
+      alert_live: (label, name) => "Viewing live feed: " + label + " — " + name,
+      alert_offline: (label, name) => "Camera currently offline: " + label + " — " + name,
+      form_required: "Please fill in the subscriber name and plate number",
+      name_placeholder: "e.g. John Smith",
+      entrance: "⬇ Entrance", exit: "⬆ Exit", aisle: "↔ Driving Aisle ↔"
+    }
+  };
+
+  let currentLang = "ar";
+
+  // ===== بيانات المراقبة (تجريبية — تُستبدل ببيانات حقيقية من النظام) =====
+  const FLOORS = ["A", "B", "C", "D"];
+  const SPOTS_PER_FLOOR = 250;
+  const floorData = {};
+  FLOORS.forEach(f => {
+    const spots = [];
+    let available = 0, occupied = 0, reserved = 0;
+    for (let i = 1; i <= SPOTS_PER_FLOOR; i++) {
+      const r = Math.random();
+      const status = r < 0.55 ? "available" : (r < 0.85 ? "occupied" : "reserved");
+      if (status === "available") available++;
+      else if (status === "occupied") occupied++;
+      else reserved++;
+      spots.push({ id: f + "-" + String(i).padStart(2, "0"), status });
+    }
+    floorData[f] = { spots, available, occupied, reserved, total: SPOTS_PER_FLOOR };
+  });
+
+  function renderFloors() {
+    const t = I18N[currentLang];
+    const listEl = document.getElementById("floors-list");
+    listEl.innerHTML = "";
+    let totals = { available: 0, occupied: 0, reserved: 0, total: 0 };
+
+    FLOORS.forEach(f => {
+      const d = floorData[f];
+      totals.available += d.available;
+      totals.occupied += d.occupied;
+      totals.reserved += d.reserved;
+      totals.total += d.total;
+
+      const pctOcc = (d.occupied / d.total) * 100;
+      const pctRes = (d.reserved / d.total) * 100;
+      const pctAva = (d.available / d.total) * 100;
+
+      const row = document.createElement("div");
+      row.className = "floor-row";
+      row.innerHTML = `
+        <div class="floor-name">${t.floor} ${f}</div>
+        <div class="bar">
+          <span class="occupied" style="width:${pctOcc}%"></span>
+          <span class="reserved" style="width:${pctRes}%"></span>
+          <span class="available" style="width:${pctAva}%"></span>
+        </div>
+        <div class="floor-counts">${t.floor_counts(d.available, d.occupied, d.reserved)}</div>
+      `;
+      listEl.appendChild(row);
+    });
+
+    document.getElementById("ov-total").textContent = totals.total;
+    document.getElementById("ov-available").textContent = totals.available;
+    document.getElementById("ov-occupied").textContent = totals.occupied;
+    document.getElementById("ov-reserved").textContent = totals.reserved;
+  }
+
+  // ===== شاشة المواقف التفصيلية (مضمّنة بالكامل) =====
+  const CAR_ICON = '<svg viewBox="0 0 24 24"><path d="M18.92 6.01C18.72 5.42 18.16 5 17.5 5h-11c-.66 0-1.22.42-1.42 1.01L3 12v8c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-1h12v1c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-8l-2.08-5.99zM6.5 16c-.83 0-1.5-.67-1.5-1.5S5.67 13 6.5 13s1.5.67 1.5 1.5S7.33 16 6.5 16zm11 0c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zM5 11l1.5-4.5h11L19 11H5z"/></svg>';
+  const SPOTS_PER_ROW = 10;
+  const ROWS_PER_BAY = 2;
+  let currentSpotFloor = FLOORS[0];
+
+  function renderSpotTabs() {
+    const t = I18N[currentLang];
+    const tabsEl = document.getElementById("spot-floor-tabs");
+    tabsEl.innerHTML = "";
+    FLOORS.forEach(f => {
+      const btn = document.createElement("div");
+      btn.className = "tab" + (f === currentSpotFloor ? " active" : "");
+      btn.textContent = t.floor + " " + f;
+      btn.style.cursor = "pointer";
+      btn.addEventListener("click", () => {
+        currentSpotFloor = f;
+        renderSpotTabs();
+        renderSpotGrid();
+      });
+      tabsEl.appendChild(btn);
+    });
+  }
+
+  function renderSpotGrid() {
+    const t = I18N[currentLang];
+    const gridEl = document.getElementById("spot-grid");
+    const statsEl = document.getElementById("spot-stats");
+    gridEl.innerHTML = "";
+    const d = floorData[currentSpotFloor];
+
+    statsEl.innerHTML = `
+      <div class="chip">${t.available} <b style="color:#2fbf71">${d.available}</b></div>
+      <div class="chip">${t.occupied} <b style="color:#e5484d">${d.occupied}</b></div>
+      <div class="chip">${t.reserved} <b style="color:#4098f1">${d.reserved}</b></div>
+    `;
+
+    const entrance = document.createElement("div");
+    entrance.className = "ramp";
+    entrance.textContent = t.entrance;
+    gridEl.appendChild(entrance);
+
+    let rowsSinceAisle = 0;
+    for (let i = 0; i < d.spots.length; i += SPOTS_PER_ROW) {
+      const rowSpots = d.spots.slice(i, i + SPOTS_PER_ROW);
+      rowSpots.forEach(spot => {
+        const cell = document.createElement("div");
+        cell.className = "spot " + spot.status;
+        cell.title = spot.id;
+        cell.innerHTML = spot.status === "available" ? spot.id : CAR_ICON;
+        cell.addEventListener("click", () => {
+          const label = spot.status === "available" ? t.available : (spot.status === "occupied" ? t.occupied : t.reserved);
+          alert(spot.id + " — " + label);
+        });
+        gridEl.appendChild(cell);
+      });
+
+      rowsSinceAisle++;
+      const isLastRow = i + SPOTS_PER_ROW >= d.spots.length;
+      if (rowsSinceAisle === ROWS_PER_BAY && !isLastRow) {
+        const aisle = document.createElement("div");
+        aisle.className = "aisle";
+        aisle.textContent = t.aisle;
+        gridEl.appendChild(aisle);
+        rowsSinceAisle = 0;
+      }
+    }
+
+    const exit = document.createElement("div");
+    exit.className = "ramp exit";
+    exit.textContent = t.exit;
+    gridEl.appendChild(exit);
+  }
+
+  // ===== بيانات الاشتراكات (تجريبية) =====
+  let subscriptions = [
+    { name: "أحمد العلي", plate: "12345 KWT", plan: "monthly", start: "2026-08-01", end: "2026-08-31" },
+    { name: "سارة الفهد", plate: "77120 KWT", plan: "yearly", start: "2026-01-15", end: "2027-01-15" },
+    { name: "محمد الرشيد", plate: "43871 KWT", plan: "daily", start: "2026-09-02", end: "2026-09-03" },
+    { name: "نورة العتيبي", plate: "99042 KWT", plan: "monthly", start: "2026-07-20", end: "2026-08-20" }
+  ];
+
+  let currentPlanFilter = "all";
+
+  function isExpired(endDateStr) {
+    return new Date(endDateStr) < new Date();
+  }
+
+  function renderSubs() {
+    const t = I18N[currentLang];
+    const body = document.getElementById("subs-body");
+    body.innerHTML = "";
+
+    const filtered = subscriptions.filter(s => currentPlanFilter === "all" || s.plan === currentPlanFilter);
+
+    filtered.forEach((s, idx) => {
+      const expired = isExpired(s.end);
+      const tr = document.createElement("tr");
+      tr.innerHTML = `
+        <td>${s.name}</td>
+        <td>${s.plate}</td>
+        <td><span class="plan-badge ${s.plan}">${t[s.plan]}</span></td>
+        <td>${s.start}</td>
+        <td>${s.end}</td>
+        <td><span class="status-badge ${expired ? "expired" : "active"}">${expired ? t.status_expired : t.status_active}</span></td>
+        <td class="row-actions"><span data-del="${idx}">${t.delete}</span></td>
+      `;
+      body.appendChild(tr);
+    });
+
+    const active = subscriptions.filter(s => !isExpired(s.end));
+    document.getElementById("ov-subs").textContent = active.length;
+    document.getElementById("ov-daily").textContent = subscriptions.filter(s => s.plan === "daily").length;
+    document.getElementById("ov-monthly").textContent = subscriptions.filter(s => s.plan === "monthly").length;
+    document.getElementById("ov-yearly").textContent = subscriptions.filter(s => s.plan === "yearly").length;
+
+    body.querySelectorAll("[data-del]").forEach(btn => {
+      btn.addEventListener("click", () => {
+        const item = filtered[Number(btn.dataset.del)];
+        subscriptions = subscriptions.filter(s => s !== item);
+        renderSubs();
+      });
+    });
+  }
+
+  function planEndDate(plan, startStr) {
+    const start = new Date(startStr);
+    const end = new Date(start);
+    if (plan === "daily") end.setDate(end.getDate() + 1);
+    else if (plan === "monthly") end.setMonth(end.getMonth() + 1);
+    else if (plan === "yearly") end.setFullYear(end.getFullYear() + 1);
+    return end.toISOString().slice(0, 10);
+  }
+
+  // ===== بيانات الكاميرات (تجريبية) — مجمّعة حسب الطابق =====
+  const cameraFloors = FLOORS.map(f => ({
+    floor: f,
+    cams: [
+      { nameKey: "cam_entrance", type: "entrance", status: "online" },
+      { nameKey: "cam_exit", type: "exit", status: Math.random() > 0.15 ? "online" : "offline" },
+      { nameKey: "cam_inside1", type: "inside", status: "online" },
+      { nameKey: "cam_inside2", type: "inside", status: Math.random() > 0.15 ? "online" : "offline" }
+    ]
+  }));
+  const CAM_NAME = {
+    ar: { cam_entrance: "كاميرا المدخل", cam_exit: "كاميرا المخرج", cam_inside1: "كاميرا داخلية 1", cam_inside2: "كاميرا داخلية 2" },
+    en: { cam_entrance: "Entrance Camera", cam_exit: "Exit Camera", cam_inside1: "Interior Camera 1", cam_inside2: "Interior Camera 2" }
+  };
+
+  const CAM_ICON = '<svg viewBox="0 0 24 24" fill="#fff"><path d="M17 10.5V7a1 1 0 0 0-1-1H4a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-3.5l4 4v-11l-4 4z"/></svg>';
+
+  function renderCameras() {
+    const t = I18N[currentLang];
+    const grid = document.getElementById("cam-grid");
+    grid.innerHTML = "";
+
+    let all = [];
+    cameraFloors.forEach(fl => {
+      all = all.concat(fl.cams);
+      const floorLabel = t.floorNames[fl.floor];
+
+      const section = document.createElement("div");
+      section.className = "cam-floor-section";
+      section.innerHTML = `<h4 class="cam-floor-title">${floorLabel} <span>(${t.floor} ${fl.floor})</span></h4>`;
+
+      const row = document.createElement("div");
+      row.className = "cam-grid";
+
+      fl.cams.forEach(cam => {
+        const isOnline = cam.status === "online";
+        const camName = CAM_NAME[currentLang][cam.nameKey];
+        const card = document.createElement("div");
+        card.className = "cam-card";
+        card.innerHTML = `
+          <div class="cam-feed">
+            <span class="live-tag ${isOnline ? "" : "off"}">
+              ${isOnline ? '<span class="dot"></span> ' + t.live : t.offline_tag}
+            </span>
+            <span class="type-tag ${cam.type}">${t.camType[cam.type]}</span>
+            ${CAM_ICON}
+          </div>
+          <div class="cam-info">
+            <div class="name">${camName}</div>
+            <div class="meta"><span>${floorLabel}</span><span>${isOnline ? t.connected : t.disconnected}</span></div>
+          </div>
+        `;
+        card.addEventListener("click", () => {
+          alert(isOnline ? t.alert_live(floorLabel, camName) : t.alert_offline(floorLabel, camName));
+        });
+        row.appendChild(card);
+      });
+
+      section.appendChild(row);
+      grid.appendChild(section);
+    });
+
+    document.getElementById("cam-total").textContent = all.length;
+    document.getElementById("cam-online").textContent = all.filter(c => c.status === "online").length;
+    document.getElementById("cam-offline").textContent = all.filter(c => c.status === "offline").length;
+  }
+
+  // ===== تبويبات رئيسية =====
+  document.querySelectorAll(".tab").forEach(tab => {
+    tab.addEventListener("click", () => {
+      document.querySelectorAll(".tab").forEach(x => x.classList.remove("active"));
+      document.querySelectorAll(".panel").forEach(p => p.classList.remove("active"));
+      tab.classList.add("active");
+      document.getElementById("panel-" + tab.dataset.tab).classList.add("active");
+    });
+  });
+
+  // ===== تبويبات نوع الاشتراك =====
+  document.querySelectorAll(".sub-tab").forEach(t => {
+    t.addEventListener("click", () => {
+      document.querySelectorAll(".sub-tab").forEach(x => x.classList.remove("active"));
+      t.classList.add("active");
+      currentPlanFilter = t.dataset.plan;
+      renderSubs();
+    });
+  });
+
+  // ===== نموذج إضافة اشتراك =====
+  const formEl = document.getElementById("subForm");
+  document.getElementById("toggleForm").addEventListener("click", () => {
+    formEl.classList.toggle("open");
+  });
+  document.getElementById("cancelForm").addEventListener("click", () => {
+    formEl.classList.remove("open");
+  });
+  document.getElementById("saveForm").addEventListener("click", () => {
+    const t = I18N[currentLang];
+    const name = document.getElementById("f-name").value.trim();
+    const plate = document.getElementById("f-plate").value.trim();
+    const plan = document.getElementById("f-plan").value;
+    const start = document.getElementById("f-start").value || new Date().toISOString().slice(0, 10);
+
+    if (!name || !plate) {
+      alert(t.form_required);
+      return;
+    }
+
+    subscriptions.push({ name, plate, plan, start, end: planEndDate(plan, start) });
+    document.getElementById("f-name").value = "";
+    document.getElementById("f-plate").value = "";
+    document.getElementById("f-start").value = "";
+    formEl.classList.remove("open");
+    renderSubs();
+  });
+
+  // ===== تطبيق النصوص الثابتة + تبديل اللغة =====
+  function applyStaticText() {
+    const t = I18N[currentLang];
+    document.getElementById("hdr-title").innerHTML = t.header_title;
+    document.querySelectorAll("[data-i18n]").forEach(el => {
+      const key = el.getAttribute("data-i18n");
+      if (t[key] !== undefined) el.textContent = t[key];
+    });
+    document.getElementById("f-name").placeholder = t.name_placeholder;
+    document.getElementById("today").textContent = new Date().toLocaleDateString(t.dateLocale, {
+      weekday: "long", year: "numeric", month: "long", day: "numeric"
+    });
+  }
+
+  function setLang(lang) {
+    currentLang = lang;
+    const t = I18N[lang];
+    document.getElementById("html-root").setAttribute("lang", t.htmlLang);
+    document.getElementById("html-root").setAttribute("dir", t.dir);
+    document.body.classList.toggle("lang-en", lang === "en");
+    document.getElementById("btn-ar").classList.toggle("active", lang === "ar");
+    document.getElementById("btn-en").classList.toggle("active", lang === "en");
+    applyStaticText();
+    renderFloors();
+    renderSpotTabs();
+    renderSpotGrid();
+    renderCameras();
+    renderSubs();
+  }
+
+  document.getElementById("btn-ar").addEventListener("click", () => setLang("ar"));
+  document.getElementById("btn-en").addEventListener("click", () => setLang("en"));
+
+  setLang("ar");
+</script>
+</body>
+</html>

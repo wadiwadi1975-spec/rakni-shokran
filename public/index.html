@@ -283,8 +283,32 @@
         }
       }
 
+      function injectAdminNav(){
+        if(document.getElementById('rakni-admin-link'))return;
+        var tk2=localStorage.getItem('rakni_access_token');
+        var role=null;
+        try{var x2=new XMLHttpRequest();x2.open('GET','/api/auth/me',false);x2.setRequestHeader('Authorization','Bearer '+tk2);x2.send();if(x2.status===200)role=JSON.parse(x2.responseText).role;}catch(e){}
+        // show for all roles for now, but highlight if admin
+        var nav=document.querySelector('aside nav')||document.querySelector('nav');
+        if(!nav){
+          var asides=document.querySelectorAll('aside');
+          if(asides.length) nav=asides[0];
+        }
+        if(!nav) return;
+        var a=document.createElement('a');
+        a.id='rakni-admin-link';
+        a.href='/admin-dashboard.html';
+        a.textContent='لوحة الإدارة';
+        a.style.cssText='display:flex;align-items:center;gap:8px;padding:10px 14px;border-radius:10px;margin-top:6px;font-size:13px;font-weight:700;background:#F5C518;color:#171819;cursor:pointer;text-decoration:none;';
+        a.innerHTML='🛡️ لوحة الإدارة';
+        // try append after last nav link
+        var links=nav.querySelectorAll('a,button');
+        if(links.length){links[links.length-1].parentNode.insertBefore(a,links[links.length-1].nextSibling);} else {nav.appendChild(a);}
+      }
+
       function tryInject(){
         if(!isLoggedIn())return;
+        injectAdminNav();
         if(injectParking())return;
         var tries=0;
         var timer=setInterval(function(){
@@ -304,12 +328,13 @@
       var lastUrl=location.href;
       var navObs=new MutationObserver(function(){
         if(location.href!==lastUrl){lastUrl=location.href;injected=null;injectedForm=false;if(isLoggedIn())tryInject()}
-        if(isLoggedIn())injectSpotPicker();
+        if(isLoggedIn()){injectAdminNav();injectSpotPicker();}
       });
       navObs.observe(document.body,{childList:true,subtree:true});
 
       setInterval(function(){
         if(!isLoggedIn())return;
+        injectAdminNav();
         if(!injected||!injected.parentNode){
           injected=null;
           loadSpots();
