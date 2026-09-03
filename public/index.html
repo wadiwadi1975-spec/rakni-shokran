@@ -290,7 +290,6 @@
         var tk2=localStorage.getItem('rakni_access_token');
         var role=null;
         try{var x2=new XMLHttpRequest();x2.open('GET','/api/auth/me',false);x2.setRequestHeader('Authorization','Bearer '+tk2);x2.send();if(x2.status===200)role=JSON.parse(x2.responseText).role;}catch(e){}
-        // show for all roles for now, but highlight if admin
         var nav=document.querySelector('aside nav')||document.querySelector('nav');
         if(!nav){
           var asides=document.querySelectorAll('aside');
@@ -300,12 +299,30 @@
         var a=document.createElement('a');
         a.id='rakni-admin-link';
         a.href='/admin-dashboard.html';
-        a.textContent='لوحة الإدارة';
         a.style.cssText='display:flex;align-items:center;gap:8px;padding:10px 14px;border-radius:10px;margin-top:6px;font-size:13px;font-weight:700;background:#F5C518;color:#171819;cursor:pointer;text-decoration:none;';
         a.innerHTML='🛡️ لوحة الإدارة';
-        // try append after last nav link
         var links=nav.querySelectorAll('a,button');
         if(links.length){links[links.length-1].parentNode.insertBefore(a,links[links.length-1].nextSibling);} else {nav.appendChild(a);}
+        injectClockWidget(a);
+      }
+      function injectClockWidget(afterEl){
+        if(document.getElementById('rakni-clock-wrap'))return;
+        var wrap=document.createElement('div');
+        wrap.id='rakni-clock-wrap';
+        wrap.style.cssText='margin-top:14px;padding:12px;background:linear-gradient(145deg,#1C303F,#0f202e);border:1px solid #C9A86A33;border-radius:16px;text-align:center';
+        wrap.innerHTML='<div style="font-size:10px;letter-spacing:.15em;color:#C9A86A;font-weight:700;margin-bottom:8px">TIME IS PRECIOUS</div><div id="rakni-clock" style="position:relative;width:140px;height:140px;margin:0 auto;border-radius:50%;background:radial-gradient(circle at 30% 30%, #243a4f, #0f202e);border:4px solid #C9A86A;box-shadow:0 4px 16px rgba(0,0,0,.4), inset 0 2px 8px rgba(201,168,106,.15)"><div style="position:absolute;inset:6px;border-radius:50%;border:1px solid #C9A86A33"></div><div id="rakni-hour" style="position:absolute;left:50%;bottom:50%;width:4px;height:36px;background:#C9A86A;margin-left:-2px;transform-origin:50% 100%;border-radius:4px"></div><div id="rakni-minute" style="position:absolute;left:50%;bottom:50%;width:3px;height:52px;background:#F8F6F0;margin-left:-1.5px;transform-origin:50% 100%;border-radius:3px"></div><div id="rakni-second" style="position:absolute;left:50%;bottom:50%;width:1.5px;height:58px;background:#ef4444;margin-left:-0.75px;transform-origin:50% 100%"></div><div style="position:absolute;left:50%;top:50%;width:10px;height:10px;background:#C9A86A;border:2px solid #F8F6F0;border-radius:50%;transform:translate(-50%,-50%)"></div><div style="position:absolute;top:8px;left:50%;transform:translateX(-50%);font-size:9px;color:#C9A86A;font-weight:700">12</div><div style="position:absolute;bottom:8px;left:50%;transform:translateX(-50%);font-size:9px;color:#C9A86A">6</div><div style="position:absolute;left:8px;top:50%;transform:translateY(-50%);font-size:9px;color:#C9A86A">9</div><div style="position:absolute;right:8px;top:50%;transform:translateY(-50%);font-size:9px;color:#C9A86A">3</div></div><div id="rakni-clock-digital" style="margin-top:8px;font-family:monospace;font-size:11px;color:#F8F6F0;letter-spacing:.05em"></div>';
+        afterEl.parentNode.insertBefore(wrap,afterEl.nextSibling);
+        function tick(){
+          var now=new Date();
+          var h=now.getHours()%12, m=now.getMinutes(), s=now.getSeconds();
+          var hd=(h + m/60)*30, md=(m + s/60)*6, sd=s*6;
+          var he=document.getElementById('rakni-hour'), me=document.getElementById('rakni-minute'), se=document.getElementById('rakni-second'), de=document.getElementById('rakni-clock-digital');
+          if(he) he.style.transform='translateX(-50%) rotate('+hd+'deg)';
+          if(me) me.style.transform='translateX(-50%) rotate('+md+'deg)';
+          if(se) se.style.transform='translateX(-50%) rotate('+sd+'deg)';
+          if(de) de.textContent=now.toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit',second:'2-digit',hour12:true});
+        }
+        tick(); setInterval(tick,1000);
       }
 
       function injectDateTime(){
