@@ -19,7 +19,7 @@ function initDB() {
       users: [
         { id: 'u1', fullName: 'Admin', email: 'admin@rakni.com', password: 'admin123', role: 'ADMIN', phone: '01000000000', university: 'University of Future', branch: 'Cairo', createdAt: new Date().toISOString() },
         { id: 'u2', fullName: 'Ahmed Valet', email: 'valet@rakni.com', password: 'valet123', role: 'VALET', phone: '01100000000', rating: 5, totalJobs: 0, wallet: 0, createdAt: new Date().toISOString() },
-        { id: 'u3', fullName: 'Sara Student', email: 'student@rakni.com', password: 'student123', role: 'STUDENT', phone: '01200000000', studentId: 'FU-2024-001', university: 'University of Future', branch: 'Cairo New Capital', createdAt: new Date().toISOString() }
+        { id: 'u3', fullName: 'خالد وادي', email: 'student@rakni.com', password: 'student123', role: 'STUDENT', phone: '01200000000', studentId: 'FU-2024-001', university: 'University of Future', branch: 'Cairo New Capital', createdAt: new Date().toISOString() }
       ],
       spots: (function(){
         const s=[];
