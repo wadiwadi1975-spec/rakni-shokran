@@ -477,6 +477,38 @@
         if(!sel || document.getElementById('rakni-billing')) return;
         var form=sel.closest('form');
         if(!form) return;
+        // plate lookup
+        if(!document.getElementById('rakni-plate-lookup')){
+          var plateWrap=document.createElement('div');
+          plateWrap.style.cssText='margin-top:12px';
+          plateWrap.innerHTML='<label style="font-size:12px;font-weight:600">رقم اللوحة<input id="rakni-plate-lookup" placeholder="مثال ABC-1234" style="margin-top:4px;width:100%;height:36px;border:1px solid #E2E8F0;border-radius:8px;padding:0 8px"></label><div id="rakni-amount-preview" style="margin-top:6px;font-size:12px;color:#1C303F;font-weight:700"></div>';
+          sel.parentElement.parentElement.insertBefore(plateWrap, sel.parentElement);
+          var plateInput=document.getElementById('rakni-plate-lookup');
+          plateInput.oninput=function(){
+            var val=plateInput.value.trim().toUpperCase();
+            if(!val) return;
+            var tk2=localStorage.getItem('rakni_access_token');
+            var x=new XMLHttpRequest();x.open('GET','/api/vehicles',false);x.setRequestHeader('Authorization','Bearer '+tk2);x.send();
+            var vehicles=[];
+            try{vehicles=JSON.parse(x.responseText)}catch(e){}
+            var v=vehicles.find(function(veh){return veh.plateNumber.toUpperCase()===val});
+            var preview=document.getElementById('rakni-amount-preview');
+            if(!v){preview.textContent='المركبة غير موجودة';preview.style.color='#ef4444';return}
+            // find order for this vehicle
+            var xo=new XMLHttpRequest();xo.open('GET','/api/orders',false);xo.setRequestHeader('Authorization','Bearer '+tk2);xo.send();
+            var orders=[];try{orders=JSON.parse(xo.responseText)}catch(e){}
+            var o=orders.find(function(ord){return String(ord.vehicleId)===String(v.id)});
+            if(o){
+              sel.value=String(o.id);
+              sel.dispatchEvent(new Event('change'));
+            }
+            var bt=document.getElementById('rakni-billing-type');
+            var hrs=document.getElementById('rakni-hours');
+            var amt = bt && bt.value==='hourly' ? 10*(Number(hrs && hrs.value||1)) : 50;
+            preview.textContent='المبلغ المطلوب: '+amt+' ج.م  للمركبة '+v.makeModel;
+            preview.style.color='#1C303F';
+          };
+        }
         var wrap=document.createElement('div');
         wrap.id='rakni-billing';
         wrap.style.cssText='margin-top:12px;display:grid;grid-template-columns:1fr 1fr;gap:8px';
@@ -484,7 +516,16 @@
         sel.parentElement.parentElement.insertBefore(wrap, sel.parentElement.nextSibling);
         var typeEl=document.getElementById('rakni-billing-type');
         var hoursWrap=document.getElementById('rakni-hours-wrap');
-        typeEl.onchange=function(){hoursWrap.style.display=typeEl.value==='hourly'?'block':'none'};
+        var hrsInput=document.getElementById('rakni-hours');
+        function updatePreview(){
+          var plateVal=(document.getElementById('rakni-plate-lookup')||{}).value;
+          if(!plateVal) return;
+          var amt=typeEl.value==='hourly'?10*(Number(hrsInput.value||1)):50;
+          var pv=document.getElementById('rakni-amount-preview');
+          if(pv) pv.textContent='المبلغ المطلوب: '+amt+' ج.م';
+        }
+        typeEl.onchange=function(){hoursWrap.style.display=typeEl.value==='hourly'?'block':'none'; updatePreview()};
+        if(hrsInput) hrsInput.oninput=updatePreview;
         // patch fetch to include billingType
         if(!window._rakniPayPatched){
           window._rakniPayPatched=true;
