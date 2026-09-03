@@ -69,9 +69,10 @@
         return false;
       }
       function fixUniversity(){
-        var els=document.querySelectorAll('span,div,p');
+        var els=document.querySelectorAll('span');
         for(var i=0;i<els.length;i++){
-          if(els[i].textContent.indexOf('جامعة الملك سعود')>-1){
+          var t=els[i].textContent.trim();
+          if(t==='جامعة الملك سعود - الرياض' || t==='جامعة الملك سعود- الرياض'){
             els[i].textContent='جامعة مصر للعلوم والتكنولوجيا ( MUST ) - CAIRO';
             els[i].style.color='#FFC00A';
             els[i].style.fontWeight='800';
