@@ -162,7 +162,7 @@
     border: 1px solid #E2E8F0;
     border-radius: 8px;
     padding: 8px 10px;
-    color: #fff;
+    color: #1C303F;
     font-size: 13px;
     font-family: inherit;
   }
@@ -206,7 +206,9 @@
     font-weight: 700;
   }
   .plan-badge.daily { background: rgba(64,152,241,0.15); color: #4098f1; }
+  .plan-badge.weekly { background: rgba(168,85,247,0.15); color: #a855f7; }
   .plan-badge.monthly { background: rgba(245,197,24,0.15); color: #C9A86A; }
+  .plan-badge.semester { background: rgba(236,72,153,0.15); color: #ec4899; }
   .plan-badge.yearly { background: rgba(47,191,113,0.15); color: #2fbf71; }
   .status-badge {
     padding: 3px 10px;
@@ -381,8 +383,10 @@
       <h3 data-i18n="subs_by_type">الاشتراكات حسب النوع</h3>
       <div class="stat-grid">
         <div class="stat-card blue"><div class="label" data-i18n="daily">يومي</div><div class="value" id="ov-daily">0</div></div>
+        <div class="stat-card" style="border-top:3px solid #a855f7"><div class="label" data-i18n="weekly">أسبوعي</div><div class="value" id="ov-weekly" style="color:#a855f7">0</div></div>
         <div class="stat-card gold"><div class="label" data-i18n="monthly">شهري</div><div class="value" id="ov-monthly">0</div></div>
-        <div class="stat-card green"><div class="label" data-i18n="yearly">سنوي</div><div class="value" id="ov-yearly">0</div></div>
+        <div class="stat-card" style="border-top:3px solid #ec4899"><div class="label" data-i18n="semester">فصل دراسي</div><div class="value" id="ov-semester" style="color:#ec4899">0</div></div>
+        <div class="stat-card green"><div class="label" data-i18n="yearly">سنة دراسية</div><div class="value" id="ov-yearly">0</div></div>
       </div>
     </div>
   </div>
@@ -427,8 +431,10 @@
     <div class="sub-tabs">
       <div class="sub-tab active" data-plan="all" data-i18n="all">الكل</div>
       <div class="sub-tab" data-plan="daily" data-i18n="daily">يومي</div>
+      <div class="sub-tab" data-plan="weekly" data-i18n="weekly">أسبوعي</div>
       <div class="sub-tab" data-plan="monthly" data-i18n="monthly">شهري</div>
-      <div class="sub-tab" data-plan="yearly" data-i18n="yearly">سنوي</div>
+      <div class="sub-tab" data-plan="semester" data-i18n="semester">فصل دراسي</div>
+      <div class="sub-tab" data-plan="yearly" data-i18n="yearly">سنة دراسية</div>
     </div>
 
     <button class="add-btn" id="toggleForm" data-i18n="add_sub">+ إضافة اشتراك جديد</button>
@@ -446,8 +452,10 @@
         <label data-i18n="plan_type">نوع الاشتراك</label>
         <select id="f-plan">
           <option value="daily" data-i18n="daily">يومي</option>
+          <option value="weekly" data-i18n="weekly">أسبوعي</option>
           <option value="monthly" data-i18n="monthly">شهري</option>
-          <option value="yearly" data-i18n="yearly">سنوي</option>
+          <option value="semester" data-i18n="semester">فصل دراسي</option>
+          <option value="yearly" data-i18n="yearly">سنة دراسية</option>
         </select>
       </div>
       <div>
@@ -488,7 +496,7 @@
       tab_overview: "نظرة عامة", tab_monitor: "المراقبة", tab_cameras: "الكاميرات", tab_subs: "الاشتراكات",
       total_spots: "إجمالي المواقف", available: "متاح", occupied: "مشغول", reserved: "محجوز",
       active_subs: "اشتراكات فعالة", subs_by_type: "الاشتراكات حسب النوع",
-      daily: "يومي", monthly: "شهري", yearly: "سنوي",
+      daily: "يومي", weekly: "أسبوعي", monthly: "شهري", semester: "فصل دراسي", yearly: "سنة دراسية",
       floors_live: "حالة الطوابق اللحظية",
       detailed_screen: "شاشة المواقف التفصيلية",
       detailed_screen_desc: "نفس الشاشة المستخدمة عند الطلاب تماماً (نفس الألوان والتصميم) — مضمّنة هنا بدون أي تعديل.",
@@ -514,7 +522,7 @@
       tab_overview: "Overview", tab_monitor: "Monitoring", tab_cameras: "Cameras", tab_subs: "Subscriptions",
       total_spots: "Total Spots", available: "Available", occupied: "Occupied", reserved: "Reserved",
       active_subs: "Active Subscriptions", subs_by_type: "Subscriptions by Type",
-      daily: "Daily", monthly: "Monthly", yearly: "Yearly",
+      daily: "Daily", weekly: "Weekly", monthly: "Monthly", semester: "Semester", yearly: "Academic Year",
       floors_live: "Live Floor Status",
       detailed_screen: "Detailed Spot Screen",
       detailed_screen_desc: "The exact same screen used by students (same colors and design) — embedded here unmodified.",
@@ -672,7 +680,8 @@
     { name: "أحمد العلي", plate: "12345 KWT", plan: "monthly", start: "2026-08-01", end: "2026-08-31" },
     { name: "سارة الفهد", plate: "77120 KWT", plan: "yearly", start: "2026-01-15", end: "2027-01-15" },
     { name: "محمد الرشيد", plate: "43871 KWT", plan: "daily", start: "2026-09-02", end: "2026-09-03" },
-    { name: "نورة العتيبي", plate: "99042 KWT", plan: "monthly", start: "2026-07-20", end: "2026-08-20" }
+    { name: "نورة العتيبي", plate: "99042 KWT", plan: "weekly", start: "2026-08-25", end: "2026-09-01" },
+    { name: "فيصل المطيري", plate: "88210 KWT", plan: "semester", start: "2026-09-01", end: "2027-01-01" }
   ];
 
   let currentPlanFilter = "all";
@@ -706,7 +715,9 @@
     const active = subscriptions.filter(s => !isExpired(s.end));
     document.getElementById("ov-subs").textContent = active.length;
     document.getElementById("ov-daily").textContent = subscriptions.filter(s => s.plan === "daily").length;
+    document.getElementById("ov-weekly").textContent = subscriptions.filter(s => s.plan === "weekly").length;
     document.getElementById("ov-monthly").textContent = subscriptions.filter(s => s.plan === "monthly").length;
+    document.getElementById("ov-semester").textContent = subscriptions.filter(s => s.plan === "semester").length;
     document.getElementById("ov-yearly").textContent = subscriptions.filter(s => s.plan === "yearly").length;
 
     body.querySelectorAll("[data-del]").forEach(btn => {
@@ -722,8 +733,10 @@
     const start = new Date(startStr);
     const end = new Date(start);
     if (plan === "daily") end.setDate(end.getDate() + 1);
+    else if (plan === "weekly") end.setDate(end.getDate() + 7);
     else if (plan === "monthly") end.setMonth(end.getMonth() + 1);
-    else if (plan === "yearly") end.setFullYear(end.getFullYear() + 1);
+    else if (plan === "semester") end.setMonth(end.getMonth() + 4);
+    else if (plan === "yearly") end.setMonth(end.getMonth() + 9);
     return end.toISOString().slice(0, 10);
   }
 
