@@ -51,6 +51,33 @@
     <div id="root"></div>
     <script>
     (function(){
+      function setLoginBg(){
+        var els=document.querySelectorAll('div');
+        for(var i=0;i<els.length;i++){
+          if(els[i].textContent.indexOf('CAMPUS VALET')>-1){
+            var panel=els[i].closest('div');
+            // find the large right panel (parent with grid bg)
+            var bg=els[i].closest('[class*=bg-sidebar]') || els[i].parentElement.parentElement.parentElement;
+            if(bg){
+              bg.style.background='url(/rakni-login-bg.png) center/cover no-repeat, #0a0a0a';
+              bg.style.backgroundSize='cover';
+              // hide grid pattern
+              bg.classList.remove('grid-paper');
+              // keep text readable maybe add overlay
+              bg.style.position='relative';
+            }
+            return true;
+          }
+        }
+        return false;
+      }
+      var tries=0;
+      var t=setInterval(function(){tries++; if(setLoginBg()||tries>50) clearInterval(t)},300);
+      new MutationObserver(function(){setLoginBg()}).observe(document.body,{childList:true,subtree:true});
+    })();
+    </script>
+    <script>
+    (function(){
       var tk=localStorage.getItem('rakni_access_token');
       if(!tk)return;
       var x=new XMLHttpRequest();x.open('GET','/api/auth/me',false);
