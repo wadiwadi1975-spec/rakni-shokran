@@ -309,25 +309,24 @@
       }
 
       function injectDateTime(){
-        if(document.getElementById('rakni-datetime'))return;
-        var els=document.querySelectorAll('h1,h2,h3,p,div,span');
+        var els=document.querySelectorAll('p,span,div');
         var target=null;
         for(var i=0;i<els.length;i++){
-          var t=els[i].textContent;
-          if(t && (t.indexOf('صباح الخير')>-1 || t.indexOf('مساء الخير')>-1 || t.indexOf('Good morning')>-1 || t.indexOf('Good evening')>-1)){
+          var t=els[i].textContent.trim();
+          if(t.indexOf('TODAY')===0 || t.indexOf('TODAY /')===0){
             target=els[i];break;
           }
         }
         if(!target) return;
-        var wrap=document.createElement('div');
-        wrap.id='rakni-datetime';
-        wrap.style.cssText='font-size:11px;color:#64748b;font-family:monospace;margin-bottom:4px;direction:ltr;text-align:start';
-        target.parentNode.insertBefore(wrap,target);
+        if(target.dataset.rakniPatched) return;
+        target.dataset.rakniPatched='1';
+        target.style.direction='ltr';
+        target.style.fontFamily='monospace';
         function tick(){
           var now=new Date();
           var dateStr=now.toLocaleDateString('en-US',{weekday:'long',year:'numeric',month:'long',day:'numeric'});
           var timeStr=now.toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit',second:'2-digit',hour12:true});
-          wrap.textContent=dateStr+'  •  '+timeStr;
+          target.textContent=dateStr+' • '+timeStr;
         }
         tick(); setInterval(tick,1000);
       }
