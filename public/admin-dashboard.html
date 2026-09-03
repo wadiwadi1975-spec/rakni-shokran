@@ -1085,6 +1085,14 @@
   });
 
   // ===== تطبيق النصوص الثابتة + تبديل اللغة =====
+  function updateToday(){
+    const el=document.getElementById("today");
+    if(!el) return;
+    const now=new Date();
+    el.textContent=now.toLocaleDateString('en-US',{weekday:'long',year:'numeric',month:'long',day:'numeric'})+' • '+now.toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit',second:'2-digit',hour12:true});
+    el.style.direction='ltr';
+  }
+  setInterval(updateToday,1000);
   function applyStaticText() {
     const t = I18N[currentLang];
     document.getElementById("hdr-title").innerHTML = t.header_title;
@@ -1093,9 +1101,7 @@
       if (t[key] !== undefined) el.textContent = t[key];
     });
     document.getElementById("f-name").placeholder = t.name_placeholder;
-    document.getElementById("today").textContent = new Date().toLocaleDateString(t.dateLocale, {
-      weekday: "long", year: "numeric", month: "long", day: "numeric"
-    });
+    updateToday();
   }
 
   function setLang(lang) {
