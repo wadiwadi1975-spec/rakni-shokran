@@ -308,6 +308,29 @@
         if(links.length){links[links.length-1].parentNode.insertBefore(a,links[links.length-1].nextSibling);} else {nav.appendChild(a);}
       }
 
+      function injectDateTime(){
+        if(document.getElementById('rakni-datetime'))return;
+        var els=document.querySelectorAll('h1,h2,h3,p,div,span');
+        var target=null;
+        for(var i=0;i<els.length;i++){
+          var t=els[i].textContent;
+          if(t && (t.indexOf('صباح الخير')>-1 || t.indexOf('مساء الخير')>-1 || t.indexOf('Good morning')>-1 || t.indexOf('Good evening')>-1)){
+            target=els[i];break;
+          }
+        }
+        if(!target) return;
+        var wrap=document.createElement('div');
+        wrap.id='rakni-datetime';
+        wrap.style.cssText='font-size:11px;color:#64748b;font-family:monospace;margin-bottom:4px;direction:ltr;text-align:start';
+        target.parentNode.insertBefore(wrap,target);
+        function tick(){
+          var now=new Date();
+          var dateStr=now.toLocaleDateString('en-US',{weekday:'long',year:'numeric',month:'long',day:'numeric'});
+          var timeStr=now.toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit',second:'2-digit',hour12:true});
+          wrap.textContent=dateStr+'  •  '+timeStr;
+        }
+        tick(); setInterval(tick,1000);
+      }
       function injectNotifBell(){
         if(document.getElementById('rakni-notif-bell'))return;
         var header=document.querySelector('header')||document.querySelector('[class*=header]');
@@ -349,6 +372,7 @@
         if(!isLoggedIn())return;
         injectAdminNav();
         injectNotifBell();
+        injectDateTime();
         if(injectParking())return;
         var tries=0;
         var timer=setInterval(function(){
@@ -368,7 +392,7 @@
       var lastUrl=location.href;
       var navObs=new MutationObserver(function(){
         if(location.href!==lastUrl){lastUrl=location.href;injected=null;injectedForm=false;if(isLoggedIn())tryInject()}
-        if(isLoggedIn()){injectAdminNav();injectNotifBell();injectSpotPicker();}
+        if(isLoggedIn()){injectAdminNav();injectNotifBell();injectDateTime();injectSpotPicker();}
       });
       navObs.observe(document.body,{childList:true,subtree:true});
 
@@ -376,6 +400,7 @@
         if(!isLoggedIn())return;
         injectAdminNav();
         injectNotifBell();
+        injectDateTime();
         if(!injected||!injected.parentNode){
           injected=null;
           loadSpots();
