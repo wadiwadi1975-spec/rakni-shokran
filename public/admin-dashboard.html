@@ -504,6 +504,14 @@
         <input type="text" id="d-job" placeholder="سائق" />
       </div>
       <div>
+        <label data-i18n="drv_shift">فترة العمل</label>
+        <select id="d-shift">
+          <option value="morning" data-i18n="shift_morning">الفترة الصباحية 6:00 AM - 10:40 AM</option>
+          <option value="noon" data-i18n="shift_noon">الفترة الظهرية 10:40 AM - 3:20 PM</option>
+          <option value="evening" data-i18n="shift_evening">الفترة المسائية 3:20 PM - 8:00 PM</option>
+        </select>
+      </div>
+      <div>
         <label data-i18n="drv_photo">صورة شخصية</label>
         <input type="file" id="d-photo" accept="image/*" />
         <img id="d-photo-preview" style="display:none;width:60px;height:60px;object-fit:cover;border-radius:50%;margin-top:6px;border:1px solid #E2E8F0" />
@@ -531,6 +539,7 @@
             <th data-i18n="th_name">الاسم الثلاثي</th>
             <th data-i18n="drv_age">السن</th>
             <th data-i18n="drv_job">الوظيفة</th>
+            <th data-i18n="drv_shift">فترة العمل</th>
             <th data-i18n="drv_license">الرخصة</th>
             <th data-i18n="drv_record">الصحيفة الجنائية</th>
             <th></th>
@@ -552,7 +561,7 @@
       total_spots: "إجمالي المواقف", available: "متاح", occupied: "مشغول", reserved: "محجوز",
       active_subs: "اشتراكات فعالة", subs_by_type: "الاشتراكات حسب النوع",
       daily: "يومي", weekly: "أسبوعي", monthly: "شهري", semester: "فصل دراسي", yearly: "سنة دراسية",
-      add_driver: "+ تسجيل سائق جديد", drv_name: "الاسم الثلاثي", drv_age: "السن", drv_job: "الوظيفة", drv_photo: "صورة شخصية", drv_license: "رخصة السواقة", drv_record: "صحيفة الحالة الجنائية", save_driver: "حفظ السائق", th_photo: "الصورة",
+      add_driver: "+ تسجيل سائق جديد", drv_name: "الاسم الثلاثي", drv_age: "السن", drv_job: "الوظيفة", drv_shift: "فترة العمل", drv_photo: "صورة شخصية", drv_license: "رخصة السواقة", drv_record: "صحيفة الحالة الجنائية", save_driver: "حفظ السائق", th_photo: "الصورة", shift_morning: "الفترة الصباحية 6:00 ص - 10:40 ص", shift_noon: "الفترة الظهرية 10:40 ص - 3:20 م", shift_evening: "الفترة المسائية 3:20 م - 8:00 م",
       floors_live: "حالة الطوابق اللحظية",
       detailed_screen: "شاشة المواقف التفصيلية",
       detailed_screen_desc: "نفس الشاشة المستخدمة عند الطلاب تماماً (نفس الألوان والتصميم) — مضمّنة هنا بدون أي تعديل.",
@@ -580,7 +589,7 @@
       total_spots: "Total Spots", available: "Available", occupied: "Occupied", reserved: "Reserved",
       active_subs: "Active Subscriptions", subs_by_type: "Subscriptions by Type",
       daily: "Daily", weekly: "Weekly", monthly: "Monthly", semester: "Semester", yearly: "Academic Year",
-      add_driver: "+ Register New Driver", drv_name: "Full Name (3 parts)", drv_age: "Age", drv_job: "Job", drv_photo: "Personal Photo", drv_license: "Driving License", drv_record: "Criminal Record Sheet", save_driver: "Save Driver", th_photo: "Photo",
+      add_driver: "+ Register New Driver", drv_name: "Full Name (3 parts)", drv_age: "Age", drv_job: "Job", drv_shift: "Work Shift", drv_photo: "Personal Photo", drv_license: "Driving License", drv_record: "Criminal Record Sheet", save_driver: "Save Driver", th_photo: "Photo", shift_morning: "Morning 6:00 AM - 10:40 AM", shift_noon: "Noon 10:40 AM - 3:20 PM", shift_evening: "Evening 3:20 PM - 8:00 PM",
       floors_live: "Live Floor Status",
       detailed_screen: "Detailed Spot Screen",
       detailed_screen_desc: "The exact same screen used by students (same colors and design) — embedded here unmodified.",
@@ -924,8 +933,9 @@
     if(!body) return;
     body.innerHTML='';
     drivers.forEach((d,idx)=>{
+      const shiftLabel = d.shift ? (t['shift_'+d.shift] || d.shift) : '-';
       const tr=document.createElement('tr');
-      tr.innerHTML=`<td>${d.photo?`<img src="${d.photo}" style="width:40px;height:40px;border-radius:50%;object-fit:cover;border:1px solid #E2E8F0">`:'-'}</td><td>${d.name}</td><td>${d.age}</td><td>${d.job}</td><td>${d.license?`<a href="${d.license}" target="_blank" style="color:#2563eb;font-size:11px">عرض</a>`:'-'}</td><td>${d.record?`<a href="${d.record}" target="_blank" style="color:#2563eb;font-size:11px">عرض</a>`:'-'}</td><td class="row-actions"><span data-del-drv="${idx}">${t.delete}</span></td>`;
+      tr.innerHTML=`<td>${d.photo?`<img src="${d.photo}" style="width:40px;height:40px;border-radius:50%;object-fit:cover;border:1px solid #E2E8F0">`:'-'}</td><td>${d.name}</td><td>${d.age}</td><td>${d.job}</td><td><span style="background:#EFF6FF;color:#2563eb;padding:2px 8px;border-radius:10px;font-size:11px;font-weight:700">${shiftLabel}</span></td><td>${d.license?`<a href="${d.license}" target="_blank" style="color:#2563eb;font-size:11px">عرض</a>`:'-'}</td><td>${d.record?`<a href="${d.record}" target="_blank" style="color:#2563eb;font-size:11px">عرض</a>`:'-'}</td><td class="row-actions"><span data-del-drv="${idx}">${t.delete}</span></td>`;
       body.appendChild(tr);
     });
     body.querySelectorAll('[data-del-drv]').forEach(b=>b.addEventListener('click',()=>{drivers.splice(Number(b.dataset.delDrv),1);saveDrivers();renderDrivers()}));
@@ -941,8 +951,9 @@
     const name=document.getElementById('d-name').value.trim();
     const age=document.getElementById('d-age').value.trim();
     const job=document.getElementById('d-job').value.trim();
+    const shift=document.getElementById('d-shift').value;
     if(!name||!age||!job){alert(t.driver_form_required);return}
-    drivers.push({name,age,job,photo:drvPhotoData,license:drvLicenseData,record:drvRecordData});
+    drivers.push({name,age,job,shift,photo:drvPhotoData,license:drvLicenseData,record:drvRecordData});
     saveDrivers();renderDrivers();
     document.getElementById('d-name').value='';document.getElementById('d-age').value='';document.getElementById('d-job').value='';document.getElementById('d-photo').value='';document.getElementById('d-license').value='';document.getElementById('d-record').value='';document.getElementById('d-license-name').textContent='';document.getElementById('d-record-name').textContent='';document.getElementById('d-photo-preview').style.display='none';drvPhotoData='';drvLicenseData='';drvRecordData='';
     drvFormEl.classList.remove('open');
