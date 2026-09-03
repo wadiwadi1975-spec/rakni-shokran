@@ -472,6 +472,47 @@
         }
       }
 
+      function injectPaymentBilling(){
+        var sel=document.querySelector('[data-testid="select-payment-order"]');
+        if(!sel || document.getElementById('rakni-billing')) return;
+        var form=sel.closest('form');
+        if(!form) return;
+        var wrap=document.createElement('div');
+        wrap.id='rakni-billing';
+        wrap.style.cssText='margin-top:12px;display:grid;grid-template-columns:1fr 1fr;gap:8px';
+        wrap.innerHTML='<label style="font-size:12px;font-weight:600">نوع الدفع<select id="rakni-billing-type" style="margin-top:4px;width:100%;height:36px;border:1px solid #E2E8F0;border-radius:8px;padding:0 8px"><option value="daily">يومي (50 ج.م)</option><option value="hourly">بالساعات (10 ج.م/ساعة)</option></select></label><label id="rakni-hours-wrap" style="font-size:12px;font-weight:600;display:none">عدد الساعات<input id="rakni-hours" type="number" min="1" value="1" style="margin-top:4px;width:100%;height:36px;border:1px solid #E2E8F0;border-radius:8px;padding:0 8px"></label>';
+        sel.parentElement.parentElement.insertBefore(wrap, sel.parentElement.nextSibling);
+        var typeEl=document.getElementById('rakni-billing-type');
+        var hoursWrap=document.getElementById('rakni-hours-wrap');
+        typeEl.onchange=function(){hoursWrap.style.display=typeEl.value==='hourly'?'block':'none'};
+        // patch fetch to include billingType
+        if(!window._rakniPayPatched){
+          window._rakniPayPatched=true;
+          var origFetch2=window.fetch;
+          window.fetch=function(){
+            var url=arguments[0], opts=arguments[1]||{};
+            if(typeof url==='string' && url.indexOf('/api/payments')>-1 && opts.method==='POST'){
+              try{
+                var b=JSON.parse(opts.body);
+                var bt=document.getElementById('rakni-billing-type');
+                var hr=document.getElementById('rakni-hours');
+                if(bt){b.billingType=bt.value; if(bt.value==='hourly') b.hours=Number(hr.value||1)}
+                opts.body=JSON.stringify(b);
+              }catch(e){}
+            }
+            return origFetch2.apply(this,arguments);
+          };
+        }
+        // show code after payment via observer on message
+        var msgObs=new MutationObserver(function(){
+          var msg=document.querySelector('[data-testid="payment-message"]');
+          if(msg && msg.textContent.indexOf('RAKNI-')===-1){
+            var notifs=JSON.parse(localStorage.getItem('rakni_notifs')||'[]');
+            // try fetch last payment code from table
+          }
+        });
+        msgObs.observe(document.body,{childList:true,subtree:true});
+      }
       function tryInject(){
         if(!isLoggedIn())return;
         injectAdminNav();
@@ -496,7 +537,7 @@
       var lastUrl=location.href;
       var navObs=new MutationObserver(function(){
         if(location.href!==lastUrl){lastUrl=location.href;injected=null;injectedForm=false;if(isLoggedIn())tryInject()}
-        if(isLoggedIn()){injectAdminNav();injectNotifBell();injectDateTime();injectSpotPicker();}
+        if(isLoggedIn()){injectAdminNav();injectNotifBell();injectDateTime();injectSpotPicker();injectPaymentBilling();}
       });
       navObs.observe(document.body,{childList:true,subtree:true});
 
@@ -505,6 +546,7 @@
         injectAdminNav();
         injectNotifBell();
         injectDateTime();
+        injectPaymentBilling();
         if(!injected||!injected.parentNode){
           injected=null;
           loadSpots();

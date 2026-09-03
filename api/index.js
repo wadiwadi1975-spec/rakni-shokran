@@ -149,7 +149,11 @@ module.exports = async (req, res) => {
     const body = req.body;
     const u = auth(req);
     const order = db.orders.find(o => o.id === body.orderId) || null;
-    const p = { id: nextId(), orderId: body.orderId, userId: u?.id || order?.userId, amount: 50, method: body.paymentMethod || body.method || 'KNET', status: 'completed', createdAt: new Date().toISOString() };
+    let amount = 50;
+    if(body.billingType==='hourly') amount = 10 * (Number(body.hours)||1);
+    else if(body.billingType==='daily') amount = 50;
+    const code = 'RAKNI-' + String(nextId()).padStart(6,'0');
+    const p = { id: nextId(), orderId: body.orderId, userId: u?.id || order?.userId, amount, method: body.paymentMethod || body.method || 'KNET', billingType: body.billingType||'daily', hours: body.hours||null, code, gatewayRef: code, status: 'completed', createdAt: new Date().toISOString() };
     db.payments.push(p);
     return json(res, 201, p);
   }
