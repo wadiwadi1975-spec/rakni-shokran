@@ -757,7 +757,7 @@
         const cell = document.createElement("div");
         cell.className = "spot " + spot.status;
         cell.title = spot.id;
-        cell.innerHTML = spot.status === "available" ? spot.id : CAR_ICON;
+        cell.textContent = spot.id;
         cell.addEventListener("click", () => {
           const label = spot.status === "available" ? t.available : (spot.status === "occupied" ? t.occupied : t.reserved);
           alert(spot.id + " — " + label);
