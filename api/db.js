@@ -39,7 +39,16 @@ const db = {
     { id: 20, userId: 'u3', plateNumber: 'MG-3434', makeModel: 'MG ZS', color: 'Red', brand: 'MG' }
   ],
   orders: [
-    { id: 1, userId: 'u3', spotId: 2, vehicleId: 1, status: 'PARKED', pickupLocation: 'Gate 3', createdAt: new Date().toISOString() }
+    { id: 1, userId: 'u3', spotId: 2, vehicleId: 1, status: 'PARKED', pickupLocation: 'Gate 3', createdAt: new Date().toISOString() },
+    { id: 2, userId: 'u3', spotId: 15, vehicleId: 2, status: 'REQUESTED', pickupLocation: 'Gate 1', createdAt: new Date().toISOString() },
+    { id: 3, userId: 'u3', spotId: 23, vehicleId: 3, status: 'VALET_ASSIGNED', pickupLocation: 'Gate 2', createdAt: new Date().toISOString() },
+    { id: 4, userId: 'u3', spotId: 34, vehicleId: 4, status: 'RECEIVED', pickupLocation: 'Gate 3', createdAt: new Date().toISOString() },
+    { id: 5, userId: 'u3', spotId: 45, vehicleId: 5, status: 'RETRIEVING', pickupLocation: 'Gate 1', createdAt: new Date().toISOString() },
+    { id: 6, userId: 'u3', spotId: 56, vehicleId: 6, status: 'COMPLETED', pickupLocation: 'Gate 2', createdAt: new Date(Date.now()-86400000).toISOString(), completedAt: new Date().toISOString() },
+    { id: 7, userId: 'u3', spotId: 67, vehicleId: 7, status: 'PARKED', pickupLocation: 'Gate 3', createdAt: new Date().toISOString() },
+    { id: 8, userId: 'u3', spotId: 78, vehicleId: 8, status: 'REQUESTED', pickupLocation: 'Gate 1', createdAt: new Date().toISOString() },
+    { id: 9, userId: 'u3', spotId: 89, vehicleId: 9, status: 'PARKED', pickupLocation: 'Gate 2', createdAt: new Date().toISOString() },
+    { id: 10, userId: 'u3', spotId: 90, vehicleId: 10, status: 'RETRIEVAL_REQUESTED', pickupLocation: 'Gate 3', createdAt: new Date().toISOString() }
   ],
   payments: [
     { id: 1, orderId: 1, userId: 'u3', amount: 50, method: 'KNET', status: 'completed', createdAt: new Date().toISOString() }
