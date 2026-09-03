@@ -104,6 +104,13 @@
             return true;
           }
         }
+        // fix payment placeholder اختر طلبا -> اختر طلباً
+        var opts=document.querySelectorAll('option');
+        for(var j=0;j<opts.length;j++){
+          if(opts[j].textContent.trim()==='اختر طلبا'){
+            opts[j].textContent='اختر طلباً';
+          }
+        }
         return false;
       }
       function fixUniversity(){
