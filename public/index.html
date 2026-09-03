@@ -70,6 +70,29 @@
         }
         return false;
       }
+      function fixCurrency(){
+        var els=document.querySelectorAll('p,span,div');
+        var changed=false;
+        for(var i=0;i<els.length;i++){
+          if(els[i].children.length>0) continue;
+          var t=els[i].textContent;
+          if(t.indexOf('?.?')>-1 || t.indexOf('SAR')>-1 || t.indexOf('ر.س')>-1){
+            els[i].textContent=t.replace(/SAR/g,'EGP').replace(/ر\.س/g,'ج.م').replace(/\?\.\?/g,'ج.م');
+            changed=true;
+          }
+          if(t.match(/\d+\.\d+\s*ج\.م/) || t.match(/\d+\.\d+\s*EGP/)) continue;
+          // also handle amounts like 50.00
+          if(t.trim().match(/^\d+\.\d{2}$/)){
+            // likely amount without currency, append
+            // check parent context is payment
+            if(els[i].closest && els[i].closest('[data-testid*=payment]')){
+              els[i].textContent=t+' ج.م';
+              changed=true;
+            }
+          }
+        }
+        return changed;
+      }
       function fixWelcome(){
         var target='أهلاً بك في رَكّنّي شكراً';
         var els=document.querySelectorAll('h1,h2');
@@ -101,8 +124,8 @@
         return false;
       }
       var tries=0;
-      var t=setInterval(function(){tries++; var a=setLoginBg();var b=fixUniversity();var c=fixWelcome(); if((a&&b&&c)||tries>80) clearInterval(t)},300);
-      new MutationObserver(function(){setLoginBg();fixUniversity();fixWelcome()}).observe(document.body,{childList:true,subtree:true});
+      var t=setInterval(function(){tries++; var a=setLoginBg();var b=fixUniversity();var c=fixWelcome();var d=fixCurrency(); if((a&&b&&c&&d)||tries>80) clearInterval(t)},300);
+      new MutationObserver(function(){setLoginBg();fixUniversity();fixWelcome();fixCurrency()}).observe(document.body,{childList:true,subtree:true});
     })();
     </script>
     <script>
