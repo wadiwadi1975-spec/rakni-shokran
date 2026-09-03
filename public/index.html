@@ -389,26 +389,11 @@
         var wrap=document.createElement('div');
         wrap.id='rakni-clock-wrap';
         wrap.style.cssText='margin-top:14px;padding:12px;background:linear-gradient(145deg,#1C303F,#0f202e);border:1px solid #C9A86A33;border-radius:16px;text-align:center';
-        wrap.innerHTML='<img src="/rakni-watch.png" style="width:150px;height:150px;margin:0 auto;display:block;border-radius:50%;border:4px solid #C9A86A;box-shadow:0 8px 32px rgba(0,0,0,.5);object-fit:cover"><div id="rakni-markers" style="display:none"></div><div id="rakni-hour" style="position:absolute;left:50%;bottom:50%;width:6px;height:38px;background:linear-gradient(to top,#8a6d2b,#C9A86A 50%,#f0d48a);margin-left:-3px;transform-origin:50% 100%;border-radius:4px;box-shadow:0 1px 4px rgba(0,0,0,.6)"></div><div id="rakni-minute" style="position:absolute;left:50%;bottom:50%;width:4px;height:56px;background:linear-gradient(to top,#8a6d2b,#C9A86A 50%,#f0d48a);margin-left:-2px;transform-origin:50% 100%;border-radius:3px;box-shadow:0 1px 4px rgba(0,0,0,.5)"></div><div id="rakni-second" style="position:absolute;left:50%;bottom:50%;width:1.5px;height:62px;background:#f0d48a;margin-left:-0.75px;transform-origin:50% 100%"></div><div style="position:absolute;left:50%;top:50%;width:14px;height:14px;background:radial-gradient(circle,#f0d48a 0%,#C9A86A 60%,#8a6d2b 100%);border:1px solid #5a4a1a;border-radius:50%;transform:translate(-50%,-50%);box-shadow:0 1px 6px rgba(0,0,0,.7)"></div></div><div style="margin-top:12px;text-align:center;filter:drop-shadow(0 2px 4px rgba(0,0,0,.8))"><div style="font-family:Cairo,sans-serif;font-size:11px;font-weight:800;color:#C9A86A;letter-spacing:.02em;text-shadow:0 1px 2px rgba(0,0,0,.8), 0 0 8px rgba(201,168,106,.3)">جامعة مصر للعلوم والتكنولوجيا</div><div style="display:flex;align-items:center;justify-content:center;gap:8px;margin-top:4px"><span style="flex:1;height:1px;background:linear-gradient(to right,transparent,#C9A86A)"></span><span style="font-size:14px;font-weight:800;color:#f0d48a;letter-spacing:.2em;text-shadow:0 1px 3px rgba(0,0,0,.8)">( MUST )</span><span style="flex:1;height:1px;background:linear-gradient(to left,transparent,#C9A86A)"></span></div></div><div id="rakni-clock-digital" style="margin-top:6px;font-family:monospace;font-size:11px;color:#C9A86A;letter-spacing:.05em;text-align:center"></div>';
+        wrap.innerHTML='<img src="/rakni-watch.png" style="width:150px;height:150px;margin:0 auto;display:block;border-radius:50%;border:4px solid #C9A86A;box-shadow:0 8px 32px rgba(0,0,0,.5);object-fit:cover"></div><div style="margin-top:12px;text-align:center;filter:drop-shadow(0 2px 4px rgba(0,0,0,.8))"><div style="font-family:Cairo,sans-serif;font-size:11px;font-weight:800;color:#C9A86A;letter-spacing:.02em;text-shadow:0 1px 2px rgba(0,0,0,.8), 0 0 8px rgba(201,168,106,.3)">جامعة مصر للعلوم والتكنولوجيا</div><div style="display:flex;align-items:center;justify-content:center;gap:8px;margin-top:4px"><span style="flex:1;height:1px;background:linear-gradient(to right,transparent,#C9A86A)"></span><span style="font-size:14px;font-weight:800;color:#f0d48a;letter-spacing:.2em;text-shadow:0 1px 3px rgba(0,0,0,.8)">( MUST )</span><span style="flex:1;height:1px;background:linear-gradient(to left,transparent,#C9A86A)"></span></div></div><div id="rakni-clock-digital" style="margin-top:6px;font-family:monospace;font-size:11px;color:#C9A86A;letter-spacing:.05em;text-align:center"></div>';
         afterEl.parentNode.insertBefore(wrap,afterEl.nextSibling);
-        (function(){
-          var mc=document.getElementById('rakni-markers');
-          if(!mc) return;
-          for(var i=0;i<12;i++){
-            var major=i%3===0;
-            var el=document.createElement('div');
-            el.style.cssText='position:absolute;left:50%;top:50%;width:'+(major?'4px':'2px')+';height:'+(major?'16px':'7px')+';background:'+(major?'linear-gradient(to bottom,#f0d48a,#C9A86A)':'#C9A86A')+';border-radius:1px;transform:translate(-50%,-50%) rotate('+(i*30)+'deg) translateY(-62px);box-shadow:0 1px 2px rgba(0,0,0,.5)';
-            mc.appendChild(el);
-          }
-        })();
         function tick(){
           var now=new Date();
-          var h=now.getHours()%12, m=now.getMinutes(), s=now.getSeconds();
-          var hd=(h + m/60)*30, md=(m + s/60)*6, sd=s*6;
-          var he=document.getElementById('rakni-hour'), me=document.getElementById('rakni-minute'), se=document.getElementById('rakni-second'), de=document.getElementById('rakni-clock-digital');
-          if(he) he.style.transform='translateX(-50%) rotate('+hd+'deg)';
-          if(me) me.style.transform='translateX(-50%) rotate('+md+'deg)';
-          if(se) se.style.transform='translateX(-50%) rotate('+sd+'deg)';
+          var de=document.getElementById('rakni-clock-digital');
           if(de) de.textContent=now.toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit',second:'2-digit',hour12:true});
         }
         tick(); setInterval(tick,1000);
