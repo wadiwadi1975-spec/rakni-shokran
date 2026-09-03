@@ -25,6 +25,7 @@
     <script type="module" crossorigin src="/assets/index-3l9n7s6w.js"></script>
     <link rel="stylesheet" crossorigin href="/assets/index-C7opIdPT.css">
     <style>
+      body.login-page .grid-paper{background:url('/rakni-login-bg.png') center/cover no-repeat !important; filter:brightness(1.12) saturate(1.35) contrast(1.08);}
       .rakni-parking-section{background:var(--card,#141414);border:1px solid var(--border,#262626);border-radius:1rem;padding:16px}
       .rakni-parking-section .rp-title{font-size:10px;letter-spacing:.18em;color:var(--accent,#C9A86A);font-family:monospace;margin-bottom:6px}
       .rakni-parking-section .rp-subtitle{font-size:16px;font-weight:800;margin-bottom:12px}
@@ -57,6 +58,7 @@
           if(els[i].textContent.indexOf('CAMPUS VALET')>-1){
             var bg=els[i].closest('[class*=bg-sidebar]') || els[i].parentElement.parentElement.parentElement;
             if(bg){
+              document.body.classList.add('login-page');
               bg.style.background='url(/rakni-login-bg.png) center/cover no-repeat, #0a0a0a';
               bg.style.backgroundSize='cover';
               bg.style.filter='brightness(1.12) saturate(1.35) contrast(1.08)';
