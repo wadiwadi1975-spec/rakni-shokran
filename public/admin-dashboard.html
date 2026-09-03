@@ -369,6 +369,7 @@
     <div class="tab" data-tab="cameras" data-i18n="tab_cameras">الكاميرات</div>
     <div class="tab" data-tab="subs" data-i18n="tab_subs">الاشتراكات</div>
     <div class="tab" data-tab="drivers" data-i18n="tab_drivers">السائقون في حرم المواقف</div>
+    <div class="tab" data-tab="notifs" data-i18n="tab_notifs">الإشعارات</div>
   </div>
 
   <!-- ===== نظرة عامة ===== -->
@@ -563,6 +564,39 @@
       </table>
     </div>
   </div>
+
+  <!-- ===== الإشعارات ===== -->
+  <div class="panel" id="panel-notifs">
+    <div class="sub-form open" style="display:grid">
+      <div>
+        <label data-i18n="notif_to">إلى</label>
+        <select id="n-to"><option value="all" data-i18n="notif_all">الكل</option></select>
+      </div>
+      <div>
+        <label data-i18n="notif_type">نوع الإشعار</label>
+        <select id="n-type">
+          <option value="expiry" data-i18n="notif_expiry">انتهاء الاشتراك</option>
+          <option value="renewal" data-i18n="notif_renewal">تجديد الاشتراك</option>
+          <option value="paid" data-i18n="notif_paid">تم الدفع</option>
+          <option value="fine" data-i18n="notif_fine">غرامات مواقف</option>
+          <option value="offer" data-i18n="notif_offer">عروض اشتراكات</option>
+        </select>
+      </div>
+      <div style="grid-column:1/-1">
+        <label data-i18n="notif_msg">نص الرسالة</label>
+        <input type="text" id="n-msg" placeholder="اكتب نص الإشعار..." />
+      </div>
+      <div class="full">
+        <button class="btn-primary" id="sendNotif" data-i18n="send_notif">إرسال الإشعار</button>
+      </div>
+    </div>
+    <div class="card" style="overflow-x:auto;margin-top:16px">
+      <table>
+        <thead><tr><th data-i18n="notif_type">النوع</th><th data-i18n="notif_to">إلى</th><th data-i18n="notif_msg">الرسالة</th><th>الوقت</th><th></th></tr></thead>
+        <tbody id="notifs-body"></tbody>
+      </table>
+    </div>
+  </div>
 </div>
 
 <script>
@@ -575,7 +609,7 @@
       total_spots: "إجمالي المواقف", available: "متاح", occupied: "مشغول", reserved: "محجوز",
       active_subs: "اشتراكات فعالة", subs_by_type: "الاشتراكات حسب النوع",
       daily: "يومي", weekly: "أسبوعي", monthly: "شهري", semester: "فصل دراسي", yearly: "سنة دراسية",
-      add_driver: "+ تسجيل سائق جديد", drv_name: "الاسم الثلاثي", drv_age: "السن", drv_job: "الوظيفة", drv_shift: "فترة العمل", drv_floor: "الطابق", drv_photo: "صورة شخصية", drv_license: "رخصة السواقة", drv_record: "صحيفة الحالة الجنائية", save_driver: "حفظ السائق", th_photo: "الصورة", shift_morning: "الفترة الصباحية 6:00 ص - 10:40 ص", shift_noon: "الفترة الظهرية 10:40 ص - 3:20 م", shift_evening: "الفترة المسائية 3:20 م - 8:00 م", shifts_overview: "الفترات - السائقون والمواقف",
+      add_driver: "+ تسجيل سائق جديد", drv_name: "الاسم الثلاثي", drv_age: "السن", drv_job: "الوظيفة", drv_shift: "فترة العمل", drv_floor: "الطابق", drv_photo: "صورة شخصية", drv_license: "رخصة السواقة", drv_record: "صحيفة الحالة الجنائية", save_driver: "حفظ السائق", th_photo: "الصورة", shift_morning: "الفترة الصباحية 6:00 ص - 10:40 ص", shift_noon: "الفترة الظهرية 10:40 ص - 3:20 م", shift_evening: "الفترة المسائية 3:20 م - 8:00 م", shifts_overview: "الفترات - السائقون والمواقف", tab_notifs: "الإشعارات", notif_to: "إلى", notif_all: "الكل", notif_type: "نوع الإشعار", notif_expiry: "انتهاء الاشتراك", notif_renewal: "تجديد الاشتراك", notif_paid: "تم الدفع", notif_fine: "غرامات مواقف", notif_offer: "عروض اشتراكات", notif_msg: "نص الرسالة", send_notif: "إرسال الإشعار",
       floors_live: "حالة الطوابق اللحظية",
       detailed_screen: "شاشة المواقف التفصيلية",
       detailed_screen_desc: "نفس الشاشة المستخدمة عند الطلاب تماماً (نفس الألوان والتصميم) — مضمّنة هنا بدون أي تعديل.",
@@ -603,7 +637,7 @@
       total_spots: "Total Spots", available: "Available", occupied: "Occupied", reserved: "Reserved",
       active_subs: "Active Subscriptions", subs_by_type: "Subscriptions by Type",
       daily: "Daily", weekly: "Weekly", monthly: "Monthly", semester: "Semester", yearly: "Academic Year",
-      add_driver: "+ Register New Driver", drv_name: "Full Name (3 parts)", drv_age: "Age", drv_job: "Job", drv_shift: "Work Shift", drv_floor: "Floor", drv_photo: "Personal Photo", drv_license: "Driving License", drv_record: "Criminal Record Sheet", save_driver: "Save Driver", th_photo: "Photo", shift_morning: "Morning 6:00 AM - 10:40 AM", shift_noon: "Noon 10:40 AM - 3:20 PM", shift_evening: "Evening 3:20 PM - 8:00 PM", shifts_overview: "Shifts - Drivers & Spots",
+      add_driver: "+ Register New Driver", drv_name: "Full Name (3 parts)", drv_age: "Age", drv_job: "Job", drv_shift: "Work Shift", drv_floor: "Floor", drv_photo: "Personal Photo", drv_license: "Driving License", drv_record: "Criminal Record Sheet", save_driver: "Save Driver", th_photo: "Photo", shift_morning: "Morning 6:00 AM - 10:40 AM", shift_noon: "Noon 10:40 AM - 3:20 PM", shift_evening: "Evening 3:20 PM - 8:00 PM", shifts_overview: "Shifts - Drivers & Spots", tab_notifs: "Notifications", notif_to: "To", notif_all: "All", notif_type: "Type", notif_expiry: "Subscription End", notif_renewal: "Renewal", notif_paid: "Payment Done", notif_fine: "Parking Fines", notif_offer: "Subscription Offers", notif_msg: "Message", send_notif: "Send",
       floors_live: "Live Floor Status",
       detailed_screen: "Detailed Spot Screen",
       detailed_screen_desc: "The exact same screen used by students (same colors and design) — embedded here unmodified.",
@@ -1004,6 +1038,38 @@
   document.getElementById('d-photo')?.addEventListener('change',e=>{const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{drvPhotoData=r.result;const img=document.getElementById('d-photo-preview');img.src=drvPhotoData;img.style.display='block'};r.readAsDataURL(f)});
   document.getElementById('d-license')?.addEventListener('change',e=>{const f=e.target.files[0];if(!f)return;document.getElementById('d-license-name').textContent=f.name;const r=new FileReader();r.onload=()=>drvLicenseData=r.result;r.readAsDataURL(f)});
   document.getElementById('d-record')?.addEventListener('change',e=>{const f=e.target.files[0];if(!f)return;document.getElementById('d-record-name').textContent=f.name;const r=new FileReader();r.onload=()=>drvRecordData=r.result;r.readAsDataURL(f)});
+  // ===== الإشعارات =====
+  let notifs=JSON.parse(localStorage.getItem('rakni_notifs')||'[]');
+  function saveNotifs(){localStorage.setItem('rakni_notifs',JSON.stringify(notifs))}
+  function renderNotifs(){
+    const body=document.getElementById('notifs-body');
+    if(!body) return;
+    const t=I18N[currentLang];
+    body.innerHTML='';
+    notifs.slice().reverse().forEach((n,idx)=>{
+      const realIdx=notifs.length-1-idx;
+      const tr=document.createElement('tr');
+      tr.innerHTML=`<td><span class="plan-badge ${n.type==='fine'?'daily':n.type==='offer'?'yearly':n.type==='paid'?'weekly':''}">${t['notif_'+n.type]||n.type}</span></td><td>${n.to}</td><td>${n.msg}</td><td>${new Date(n.time).toLocaleString(t.dateLocale)}</td><td class="row-actions"><span data-del-notif="${realIdx}">${t.delete}</span></td>`;
+      body.appendChild(tr);
+    });
+    body.querySelectorAll('[data-del-notif]').forEach(b=>b.addEventListener('click',()=>{notifs.splice(Number(b.dataset.delNotif),1);saveNotifs();renderNotifs()}));
+    // populate recipients
+    const sel=document.getElementById('n-to');
+    if(sel && sel.options.length===1){
+      subscriptions.forEach(s=>{const o=document.createElement('option');o.value=s.name;o.textContent=s.name;sel.appendChild(o)})
+    }
+  }
+  document.getElementById('sendNotif')?.addEventListener('click',()=>{
+    const to=document.getElementById('n-to').value;
+    const type=document.getElementById('n-type').value;
+    const msg=document.getElementById('n-msg').value.trim();
+    if(!msg){alert('اكتب نص الإشعار');return}
+    notifs.push({to,type,msg,time:new Date().toISOString()});
+    saveNotifs();renderNotifs();
+    document.getElementById('n-msg').value='';
+    alert('تم إرسال الإشعار');
+  });
+
   document.getElementById('saveDriverForm')?.addEventListener('click',()=>{
     const t=I18N[currentLang];
     const name=document.getElementById('d-name').value.trim();
@@ -1047,6 +1113,7 @@
     renderCameras();
     renderSubs();
     renderDrivers();
+    renderNotifs();
   }
 
   document.getElementById("btn-ar").addEventListener("click", () => setLang("ar"));

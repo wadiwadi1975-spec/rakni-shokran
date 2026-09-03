@@ -308,9 +308,47 @@
         if(links.length){links[links.length-1].parentNode.insertBefore(a,links[links.length-1].nextSibling);} else {nav.appendChild(a);}
       }
 
+      function injectNotifBell(){
+        if(document.getElementById('rakni-notif-bell'))return;
+        var header=document.querySelector('header')||document.querySelector('[class*=header]');
+        if(!header) return;
+        var bell=document.createElement('div');
+        bell.id='rakni-notif-bell';
+        bell.style.cssText='position:relative;cursor:pointer;font-size:20px;padding:6px';
+        bell.innerHTML='🔔<span id="rakni-notif-count" style="position:absolute;top:0;right:0;background:#ef4444;color:#fff;font-size:10px;font-weight:700;border-radius:10px;padding:1px 5px;display:none">0</span>';
+        var box=document.createElement('div');
+        box.id='rakni-notif-box';
+        box.style.cssText='display:none;position:absolute;top:36px;right:0;width:300px;max-height:360px;overflow:auto;background:#fff;border:1px solid #E2E8F0;border-radius:12px;box-shadow:0 8px 24px rgba(0,0,0,.15);z-index:9999;padding:8px';
+        bell.appendChild(box);
+        bell.onclick=function(e){
+          e.stopPropagation();
+          box.style.display=box.style.display==='none'?'block':'none';
+          if(box.style.display==='block') renderNotifBox();
+        };
+        document.addEventListener('click',function(){box.style.display='none'});
+        header.appendChild(bell);
+        setInterval(renderNotifBox,5000);
+        renderNotifBox();
+        function renderNotifBox(){
+          var notifs=JSON.parse(localStorage.getItem('rakni_notifs')||'[]');
+          var countEl=document.getElementById('rakni-notif-count');
+          if(countEl){countEl.textContent=notifs.length;countEl.style.display=notifs.length?'block':'none'}
+          box.innerHTML='';
+          if(!notifs.length){box.innerHTML='<div style="padding:12px;text-align:center;color:#64748b;font-size:12px">لا توجد إشعارات</div>';return}
+          var icons={expiry:'⏰',renewal:'🔄',paid:'✅',fine:'⚠️',offer:'🎁'};
+          notifs.slice().reverse().forEach(function(n){
+            var div=document.createElement('div');
+            div.style.cssText='padding:8px;border-bottom:1px solid #F1F5F9;font-size:12px';
+            div.innerHTML='<div style="font-weight:700;margin-bottom:2px">'+(icons[n.type]||'🔔')+' '+(n.type||'')+'</div><div style="color:#334155">'+n.msg+'</div><div style="color:#94a3b8;font-size:10px;margin-top:2px">'+new Date(n.time).toLocaleString()+' - إلى: '+n.to+'</div>';
+            box.appendChild(div);
+          });
+        }
+      }
+
       function tryInject(){
         if(!isLoggedIn())return;
         injectAdminNav();
+        injectNotifBell();
         if(injectParking())return;
         var tries=0;
         var timer=setInterval(function(){
@@ -330,13 +368,14 @@
       var lastUrl=location.href;
       var navObs=new MutationObserver(function(){
         if(location.href!==lastUrl){lastUrl=location.href;injected=null;injectedForm=false;if(isLoggedIn())tryInject()}
-        if(isLoggedIn()){injectAdminNav();injectSpotPicker();}
+        if(isLoggedIn()){injectAdminNav();injectNotifBell();injectSpotPicker();}
       });
       navObs.observe(document.body,{childList:true,subtree:true});
 
       setInterval(function(){
         if(!isLoggedIn())return;
         injectAdminNav();
+        injectNotifBell();
         if(!injected||!injected.parentNode){
           injected=null;
           loadSpots();
