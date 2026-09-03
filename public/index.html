@@ -71,11 +71,13 @@
         return false;
       }
       function fixWelcome(){
+        var target='أهلاً بك في رَكّنّي شكراً';
         var els=document.querySelectorAll('h1,h2');
         for(var i=0;i<els.length;i++){
           var t=els[i].textContent.trim();
+          if(t===target) return false;
           if(t.indexOf('أهلاً بك في')>-1){
-            els[i].textContent='أهلاً بك في رَكّنّي شكراً';
+            els[i].textContent=target;
             return true;
           }
         }
