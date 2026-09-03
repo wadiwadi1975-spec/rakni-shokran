@@ -64,6 +64,15 @@
               bg.style.filter='brightness(1.12) saturate(1.35) contrast(1.08)';
               bg.classList.remove('grid-paper');
               bg.style.position='relative';
+              // show on mobile (was hidden lg:flex)
+              bg.style.display='block';
+              bg.style.height='220px';
+              bg.style.marginBottom='16px';
+              bg.style.borderRadius='16px';
+              // ensure parent flex shows it on mobile top
+              var parentFlex=bg.parentElement;
+              if(parentFlex) parentFlex.style.display='flex';
+              if(parentFlex) parentFlex.style.flexDirection='column';
             }
             return true;
           }
