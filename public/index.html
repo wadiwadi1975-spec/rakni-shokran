@@ -75,10 +75,7 @@
         for(var i=0;i<els.length;i++){
           var t=els[i].textContent.trim();
           if(t==='جامعة الملك سعود - الرياض' || t==='جامعة الملك سعود- الرياض'){
-            els[i].textContent='جامعة مصر للعلوم والتكنولوجيا ( MUST ) - CAIRO';
-            els[i].style.color='#FFC00A';
-            els[i].style.fontWeight='800';
-            els[i].style.letterSpacing='.02em';
+            els[i].style.display='none';
             return true;
           }
         }
