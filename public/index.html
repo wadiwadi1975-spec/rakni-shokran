@@ -409,9 +409,35 @@
         if(!nav) return;
         var a=document.createElement('a');
         a.id='rakni-admin-link';
-        a.href='/admin-dashboard.html';
+        a.href='#';
         a.style.cssText='display:flex;align-items:center;gap:8px;padding:10px 14px;border-radius:10px;margin-top:6px;font-size:13px;font-weight:700;background:#F97316;color:#fff;cursor:pointer;text-decoration:none;';
         a.innerHTML='🛡️ لوحة الإدارة';
+        a.onclick=function(e){
+          e.preventDefault();
+          var overlay=document.createElement('div');
+          overlay.id='rakni-admin-overlay';
+          overlay.style.cssText='position:fixed;inset:0;z-index:99998;background:rgba(0,0,0,.6);display:flex;align-items:center;justify-content:center;padding:10px';
+          var wrapper=document.createElement('div');
+          wrapper.style.cssText='width:100%;max-width:1200px;height:90vh;background:#0a0a0a;border-radius:16px;overflow:hidden;position:relative;display:flex;flex-direction:column';
+          var topBar=document.createElement('div');
+          topBar.style.cssText='display:flex;align-items:center;justify-content:space-between;padding:10px 16px;background:#141414;border-bottom:1px solid #262626';
+          topBar.innerHTML='<span style="color:#F97316;font-weight:700;font-size:14px">🛡️ لوحة الإدارة</span>';
+          var closeBtn=document.createElement('button');
+          closeBtn.textContent='✕';
+          closeBtn.style.cssText='background:none;border:none;color:#fff;font-size:20px;cursor:pointer;padding:4px 8px;border-radius:8px';
+          closeBtn.onmouseover=function(){closeBtn.style.background='#ef4444'};
+          closeBtn.onmouseout=function(){closeBtn.style.background='none'};
+          closeBtn.onclick=function(){document.body.removeChild(overlay)};
+          topBar.appendChild(closeBtn);
+          var frame=document.createElement('iframe');
+          frame.src='/admin-dashboard.html';
+          frame.style.cssText='flex:1;width:100%;border:none;background:#0a0a0a';
+          wrapper.appendChild(topBar);
+          wrapper.appendChild(frame);
+          overlay.appendChild(wrapper);
+          overlay.onclick=function(ev){if(ev.target===overlay)document.body.removeChild(overlay)};
+          document.body.appendChild(overlay);
+        };
         var links=nav.querySelectorAll('a,button');
         if(links.length){links[links.length-1].parentNode.insertBefore(a,links[links.length-1].nextSibling);} else {nav.appendChild(a);}
         injectClockWidget(a);
