@@ -398,7 +398,7 @@
 
       function injectAdminNav(){
         if(document.getElementById('rakni-admin-link'))return;
-        var nav=document.querySelector('aside nav')||document.querySelector('nav');
+        var nav=document.querySelector('aside nav')||document.querySelector('nav')||document.querySelector('[class*="space-y-1"]');
         if(!nav){
           var asides=document.querySelectorAll('aside');
           if(asides.length) nav=asides[0];
@@ -445,8 +445,11 @@
             main.innerHTML='<div style="padding:40px;text-align:center;color:#ef4444">خطأ في تحميل لوحة الإدارة: '+err.message+'</div>';
           });
         };
-        var logoutBtn=nav.querySelector('[data-testid="button-logout"]');
-        if(logoutBtn){logoutBtn.parentNode.insertBefore(a,logoutBtn);} else {nav.appendChild(a);}
+        var logoutBtn=nav.querySelector('[data-testid="button-logout"]')||document.querySelector('[data-testid="button-logout"]');
+        if(logoutBtn){logoutBtn.parentNode.insertBefore(a,logoutBtn);} else {
+          var lastChild=nav.lastElementChild;
+          if(lastChild){lastChild.parentNode.insertBefore(a,lastChild.nextSibling)}else{nav.appendChild(a)}
+        }
         injectClockWidget(a);
       }
       function injectClockWidget(afterEl){
