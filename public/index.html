@@ -171,17 +171,6 @@
     </script>
     <script>
     (function(){
-      if(localStorage.getItem('rakni_access_token'))return;
-      var x=new XMLHttpRequest();x.open('POST','/api/auth/login',false);
-      x.setRequestHeader('Content-Type','application/json');
-      x.send(JSON.stringify({email:'admin@rakni.com',password:'admin123'}));
-      if(x.status===200){
-        try{var r=JSON.parse(x.responseText);localStorage.setItem('rakni_access_token',r.accessToken||r.token)}catch(e){}
-      }
-    })();
-    </script>
-    <script>
-    (function(){
       var FL={'1':'أرضي (A)','2':'أول (B)','3':'ثاني (C)','4':'ثالث (D)'};
       var FS={'1':'A','2':'B','3':'C','4':'D'};
       var curFloor=1, allSpots=[];
