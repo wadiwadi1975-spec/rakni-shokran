@@ -411,29 +411,39 @@
         a.innerHTML='<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>لوحة الإدارة';
         a.onclick=function(e){
           e.preventDefault();
-          var overlay=document.createElement('div');
-          overlay.id='rakni-admin-overlay';
-          overlay.style.cssText='position:fixed;inset:0;z-index:99998;background:rgba(0,0,0,.6);display:flex;align-items:center;justify-content:center;padding:10px';
-          var wrapper=document.createElement('div');
-          wrapper.style.cssText='width:100%;max-width:1200px;height:90vh;background:#0a0a0a;border-radius:16px;overflow:hidden;position:relative;display:flex;flex-direction:column';
-          var topBar=document.createElement('div');
-          topBar.style.cssText='display:flex;align-items:center;justify-content:space-between;padding:10px 16px;background:#141414;border-bottom:1px solid #262626';
-          topBar.innerHTML='<span style="color:#F97316;font-weight:700;font-size:14px">🛡️ لوحة الإدارة</span>';
-          var closeBtn=document.createElement('button');
-          closeBtn.textContent='✕';
-          closeBtn.style.cssText='background:none;border:none;color:#fff;font-size:20px;cursor:pointer;padding:4px 8px;border-radius:8px';
-          closeBtn.onmouseover=function(){closeBtn.style.background='#ef4444'};
-          closeBtn.onmouseout=function(){closeBtn.style.background='none'};
-          closeBtn.onclick=function(){document.body.removeChild(overlay)};
-          topBar.appendChild(closeBtn);
-          var frame=document.createElement('iframe');
-          frame.src='/admin-dashboard.html';
-          frame.style.cssText='flex:1;width:100%;border:none;background:#0a0a0a';
-          wrapper.appendChild(topBar);
-          wrapper.appendChild(frame);
-          overlay.appendChild(wrapper);
-          overlay.onclick=function(ev){if(ev.target===overlay)document.body.removeChild(overlay)};
-          document.body.appendChild(overlay);
+          var main=document.querySelector('main');
+          if(!main) return;
+          main.setAttribute('data-rakni-prev',main.innerHTML);
+          main.style.cssText='padding:0;margin:0;max-width:100%';
+          main.innerHTML='<div id="rakni-admin-loading" style="display:flex;align-items:center;justify-content:center;height:60vh;color:#F97316;font-size:16px;font-weight:700">جاري تحميل لوحة الإدارة...</div>';
+          fetch('/admin-dashboard.html').then(function(r){return r.text()}).then(function(html){
+            var parser=new DOMParser();
+            var doc=parser.parseFromString(html,'text/html');
+            var styles=doc.querySelectorAll('style');
+            var scripts=doc.querySelectorAll('script');
+            var body=doc.body;
+            var container=document.createElement('div');
+            container.id='rakni-admin-inline';
+            container.style.cssText='background:hsl(42 33% 96%);min-height:100vh;padding:16px;color:hsl(210 37% 17%)';
+            styles.forEach(function(s){container.appendChild(s.cloneNode(true))});
+            var backBtn=document.createElement('button');
+            backBtn.textContent='← العودة للرئيسية';
+            backBtn.style.cssText='display:inline-flex;align-items:center;gap:6px;background:#F97316;color:#1C303F;padding:8px 14px;border-radius:8px;font-weight:700;font-size:13px;text-decoration:none;margin-bottom:14px;cursor:pointer;border:none;font-family:inherit';
+            backBtn.onclick=function(){main.innerHTML=main.getAttribute('data-rakni-prev');main.style.cssText=''};
+            container.appendChild(backBtn);
+            var contentDiv=document.createElement('div');
+            contentDiv.innerHTML=body.innerHTML;
+            container.appendChild(contentDiv);
+            main.innerHTML='';
+            main.appendChild(container);
+            scripts.forEach(function(s){
+              var ns=document.createElement('script');
+              if(s.src){ns.src=s.src}else{ns.textContent=s.textContent}
+              container.appendChild(ns);
+            });
+          }).catch(function(err){
+            main.innerHTML='<div style="padding:40px;text-align:center;color:#ef4444">خطأ في تحميل لوحة الإدارة: '+err.message+'</div>';
+          });
         };
         var logoutBtn=nav.querySelector('[data-testid="button-logout"]');
         if(logoutBtn){logoutBtn.parentNode.insertBefore(a,logoutBtn);} else {nav.appendChild(a);}
