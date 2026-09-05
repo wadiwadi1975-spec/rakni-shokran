@@ -178,16 +178,26 @@
       var tk=localStorage.getItem('rakni_access_token');
       var injectedForm=false;
 
+      var _authCache={t:0,ok:false};
       function isLoggedIn(){
-        if(!tk)return false;
-        var x=new XMLHttpRequest();x.open('GET','/api/auth/me',false);
-        x.setRequestHeader('Authorization','Bearer '+tk);x.send();
-        return x.status===200;
+        var now=Date.now();
+        if(now-_authCache.t<5000) return _authCache.ok;
+        var t=localStorage.getItem('rakni_access_token');
+        if(!t){_authCache={t:now,ok:false};return false;}
+        try{
+          var x=new XMLHttpRequest();x.open('GET','/api/auth/me',false);
+          x.setRequestHeader('Authorization','Bearer '+t);x.send();
+          var ok=(x.status===200);
+          if(ok)tk=t;
+          _authCache={t:now,ok:ok};
+          return ok;
+        }catch(e){_authCache={t:now,ok:false};return false;}
       }
 
       function xSync(m,u,b){
+        var t=localStorage.getItem('rakni_access_token')||tk;
         var x=new XMLHttpRequest();x.open(m,u,false);
-        x.setRequestHeader('Authorization','Bearer '+tk);
+        x.setRequestHeader('Authorization','Bearer '+t);
         if(b)x.setRequestHeader('Content-Type','application/json');
         x.send(b?JSON.stringify(b):null);
         if(x.status>=200&&x.status<300)return JSON.parse(x.responseText);
