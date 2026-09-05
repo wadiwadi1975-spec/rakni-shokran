@@ -27,17 +27,17 @@
     <style>
       .grid-paper{background:url('/rakni-login-bg.png') center/cover no-repeat !important; filter:brightness(1.22) saturate(1.55) contrast(1.15);}
       .rakni-parking-section{background:var(--card,#141414);border:1px solid var(--border,#262626);border-radius:1rem;padding:16px}
-      .rakni-parking-section .rp-title{font-size:10px;letter-spacing:.18em;color:var(--accent,#C9A86A);font-family:monospace;margin-bottom:6px}
+      .rakni-parking-section .rp-title{font-size:10px;letter-spacing:.18em;color:var(--accent,#F97316);font-family:monospace;margin-bottom:6px}
       .rakni-parking-section .rp-subtitle{font-size:16px;font-weight:800;margin-bottom:12px}
       .rp-tabs{display:flex;gap:6px;margin-bottom:10px;flex-wrap:wrap}
       .rp-tab{flex:1;min-width:70px;padding:8px 10px;border:1px solid var(--border,#262626);border-radius:8px;background:var(--card,#141414);color:var(--muted,#a3a3a3);font-size:12px;font-weight:600;cursor:pointer;text-align:center}
-      .rp-tab.active{background:var(--accent,#C9A86A);color:#0a0a0a;border-color:var(--accent,#C9A86A)}
+      .rp-tab.active{background:var(--accent,#F97316);color:#0a0a0a;border-color:var(--accent,#F97316)}
       .rp-legend{display:flex;gap:12px;font-size:11px;color:var(--muted,#a3a3a3);margin-bottom:8px;flex-wrap:wrap}
       .rp-legend span{display:flex;align-items:center;gap:4px}
       .rp-legend i{width:10px;height:10px;border-radius:3px;display:inline-block}
       .rp-grid-wrap{overflow-x:auto;border-radius:8px}
       .rp-grid{display:grid;grid-template-columns:repeat(10,36px);gap:3px;width:max-content}
-      .rp-ramp{grid-column:1/-1;background:repeating-linear-gradient(45deg,#333,#333 6px,#1a1a1a 6px,#1a1a1a 12px);border-radius:4px;padding:6px 0;text-align:center;font-weight:700;font-size:10px;color:var(--accent,#C9A86A)}
+      .rp-ramp{grid-column:1/-1;background:repeating-linear-gradient(45deg,#333,#333 6px,#1a1a1a 6px,#1a1a1a 12px);border-radius:4px;padding:6px 0;text-align:center;font-weight:700;font-size:10px;color:var(--accent,#F97316)}
       .rp-aisle{grid-column:1/-1;background:#1a1a1a;border-top:1px dashed #333;border-bottom:1px dashed #333;height:18px;display:flex;align-items:center;justify-content:center;color:#666;font-size:9px;letter-spacing:1px}
       .rp-spot{aspect-ratio:1;border-radius:3px;display:flex;align-items:center;justify-content:center;font-size:7px;font-weight:700;color:#fff;cursor:pointer;transition:transform .1s}
       .rp-spot:hover{transform:scale(1.4);z-index:5}
@@ -308,10 +308,10 @@
 
         var pickerDiv=document.createElement('div');
         pickerDiv.style.cssText='background:#1a1a1a;border:1px solid #333;border-radius:12px;padding:12px;margin-top:4px';
-        pickerDiv.innerHTML='<div style="font-size:12px;font-weight:700;margin-bottom:8px;color:#C9A86A">اختر الطابق والموقف</div>'+
+        pickerDiv.innerHTML='<div style="font-size:12px;font-weight:700;margin-bottom:8px;color:#F97316">اختر الطابق والموقف</div>'+
           '<div id="rp-order-tabs" style="display:flex;gap:4px;margin-bottom:8px"></div>'+
           '<div id="rp-order-spots" style="display:grid;grid-template-columns:repeat(10,1fr);gap:2px;max-height:160px;overflow-y:auto"></div>'+
-          '<div style="margin-top:8px;font-size:11px;color:#888">الموقف المختار: <span id="rp-order-selected" style="color:#C9A86A;font-weight:700">-</span></div>';
+          '<div style="margin-top:8px;font-size:11px;color:#888">الموقف المختار: <span id="rp-order-selected" style="color:#F97316;font-weight:700">-</span></div>';
 
         var label2=form.querySelectorAll('label')[1];
         if(label2){label2.parentNode.insertBefore(pickerDiv,label2)}
@@ -325,7 +325,7 @@
           [1,2,3,4].forEach(function(f){
             var btn=document.createElement('button');
             btn.type='button';
-            btn.style.cssText='flex:1;padding:6px;border:1px solid #333;border-radius:6px;background:'+(f===orderFloor?'#C9A86A':'#141414')+';color:'+(f===orderFloor?'#0a0a0a':'#a3a3a3')+';font-size:11px;font-weight:600;cursor:pointer;text-align:center';
+            btn.style.cssText='flex:1;padding:6px;border:1px solid #333;border-radius:6px;background:'+(f===orderFloor?'#F97316':'#141414')+';color:'+(f===orderFloor?'#0a0a0a':'#a3a3a3')+';font-size:11px;font-weight:600;cursor:pointer;text-align:center';
             btn.textContent='طابق '+FL[f];
             btn.onclick=function(){orderFloor=f;selectedSpotCode=null;renderOrderTabs();renderOrderSpots()};
             tabsDiv.appendChild(btn);
@@ -351,7 +351,7 @@
               selectedSpotCode=sp.spotCode;
               document.getElementById('rp-order-selected').textContent=sp.spotCode;
               spotsDiv.querySelectorAll('div').forEach(function(c){c.style.outline='none';c.style.outlineOffset='0'});
-              cell.style.outline='2px solid #C9A86A';
+              cell.style.outline='2px solid #F97316';
               cell.style.outlineOffset='2px';
             };
             spotsDiv.appendChild(cell);
@@ -415,8 +415,8 @@
         if(document.getElementById('rakni-clock-wrap'))return;
         var wrap=document.createElement('div');
         wrap.id='rakni-clock-wrap';
-        wrap.style.cssText='margin-top:14px;padding:12px;background:linear-gradient(145deg,#1C303F,#0f202e);border:1px solid #C9A86A33;border-radius:16px;text-align:center';
-        wrap.innerHTML='<img src="/rakni-watch.png" style="width:150px;height:150px;margin:0 auto;display:block;border-radius:50%;border:4px solid #C9A86A;box-shadow:0 8px 32px rgba(0,0,0,.5);object-fit:cover"></div><div style="margin-top:12px;text-align:center;filter:drop-shadow(0 2px 4px rgba(0,0,0,.8))"><div style="font-family:Cairo,sans-serif;font-size:11px;font-weight:800;color:#C9A86A;letter-spacing:.02em;text-shadow:0 1px 2px rgba(0,0,0,.8), 0 0 8px rgba(201,168,106,.3)">جامعة مصر للعلوم والتكنولوجيا</div><div style="display:flex;align-items:center;justify-content:center;gap:8px;margin-top:4px"><span style="flex:1;height:1px;background:linear-gradient(to right,transparent,#C9A86A)"></span><span style="font-size:14px;font-weight:800;color:#f0d48a;letter-spacing:.2em;text-shadow:0 1px 3px rgba(0,0,0,.8)">( MUST )</span><span style="flex:1;height:1px;background:linear-gradient(to left,transparent,#C9A86A)"></span></div></div><div id="rakni-clock-digital" style="margin-top:6px;font-family:monospace;font-size:11px;color:#C9A86A;letter-spacing:.05em;text-align:center"></div>';
+        wrap.style.cssText='margin-top:14px;padding:12px;background:linear-gradient(145deg,#1C303F,#0f202e);border:1px solid #F9731633;border-radius:16px;text-align:center';
+        wrap.innerHTML='<img src="/rakni-watch.png" style="width:150px;height:150px;margin:0 auto;display:block;border-radius:50%;border:4px solid #F97316;box-shadow:0 8px 32px rgba(0,0,0,.5);object-fit:cover"></div><div style="margin-top:12px;text-align:center;filter:drop-shadow(0 2px 4px rgba(0,0,0,.8))"><div style="font-family:Cairo,sans-serif;font-size:11px;font-weight:800;color:#F97316;letter-spacing:.02em;text-shadow:0 1px 2px rgba(0,0,0,.8), 0 0 8px rgba(249,115,22,.3)">جامعة مصر للعلوم والتكنولوجيا</div><div style="display:flex;align-items:center;justify-content:center;gap:8px;margin-top:4px"><span style="flex:1;height:1px;background:linear-gradient(to right,transparent,#F97316)"></span><span style="font-size:14px;font-weight:800;color:#fb923c;letter-spacing:.2em;text-shadow:0 1px 3px rgba(0,0,0,.8)">( MUST )</span><span style="flex:1;height:1px;background:linear-gradient(to left,transparent,#F97316)"></span></div></div><div id="rakni-clock-digital" style="margin-top:6px;font-family:monospace;font-size:11px;color:#F97316;letter-spacing:.05em;text-align:center"></div>';
         afterEl.parentNode.insertBefore(wrap,afterEl.nextSibling);
         function tick(){
           var now=new Date();
