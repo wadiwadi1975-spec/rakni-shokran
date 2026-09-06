@@ -1,4 +1,4 @@
-const { db, auth, nextId } = require('../db');
+const { db, auth, nextId, planPrices } = require('../db');
 function cors(res){
   res.setHeader('Access-Control-Allow-Origin','*');
   res.setHeader('Access-Control-Allow-Headers','Content-Type, Authorization');
@@ -19,7 +19,9 @@ module.exports = (req, res) => {
     const body = req.body;
     const u = auth(req);
     const order = db.orders.find(o => o.id === body.orderId) || null;
-    const p = { id: nextId(), orderId: body.orderId, userId: u?.id || order?.userId, amount: 50, method: body.paymentMethod || body.method || 'KNET', status: 'completed', createdAt: new Date().toISOString() };
+    const legacyPlan = body.billingType === 'monthly' ? 'MONTHLY' : body.billingType === 'annual' ? 'ANNUAL' : 'DAILY';
+    const plan = planPrices[body.plan] ? body.plan : legacyPlan;
+    const p = { id: nextId(), orderId: body.orderId, userId: u?.id || order?.userId, amount: planPrices[plan], plan, method: body.paymentMethod || body.method || 'KNET', billingType: plan.toLowerCase(), status: 'completed', createdAt: new Date().toISOString() };
     db.payments.push(p);
     return res.status(201).json(p);
   }
