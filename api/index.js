@@ -1,4 +1,4 @@
-const { db, auth, nextId } = require('./db');
+const { db, auth, nextId, planPrices, parkingDurationMinutes } = require('./db');
 
 function cors(res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -104,11 +104,11 @@ module.exports = async (req, res) => {
 
   // Orders
   if (url === '/api/orders' && method === 'GET') {
-    return json(res, 200, db.orders.map(o => {
+      return json(res, 200, db.orders.map(o => {
       const vehicle = db.vehicles.find(v => v.id === o.vehicleId) || null;
       const spot = db.spots.find(s => s.id === o.spotId) || null;
       const user = db.users.find(u => u.id === o.userId) || null;
-      return { ...o, vehicle, spot, userName: user?.fullName || '' };
+      return { ...o, vehicle, spot, userName: user?.fullName || '', parkingDurationMinutes: parkingDurationMinutes(o) };
     }));
   }
   if (url === '/api/orders' && method === 'POST') {
@@ -122,7 +122,13 @@ module.exports = async (req, res) => {
         found.status = 'occupied';
       }
     }
-    const order = { id: nextId(), userId: u?.id || body.userId, spotId, vehicleId: body.vehicleId, preferredFloor: body.preferredFloor || null, preferredSpotCode: body.preferredSpotCode || null, status: body.status || 'REQUESTED', pickupLocation: body.pickupLocation || '', createdAt: new Date().toISOString() };
+    const status = body.status || 'REQUESTED';
+    const now = new Date().toISOString();
+    const order = { id: nextId(), userId: u?.id || body.userId, spotId, vehicleId: body.vehicleId, preferredFloor: body.preferredFloor || null, preferredSpotCode: body.preferredSpotCode || null, status, pickupLocation: body.pickupLocation || '', createdAt: now, parkingStartedAt: status === 'PARKED' ? now : null, parkingEndedAt: null, parkingDurationMinutes: 0 };
+    if (spotId && status === 'PARKED') {
+      const selectedSpot = db.spots.find(s => s.id === spotId);
+      if (selectedSpot) selectedSpot.status = 'occupied';
+    }
     db.orders.push(order);
     return json(res, 201, order);
   }
@@ -133,8 +139,16 @@ module.exports = async (req, res) => {
     if (!order) return json(res, 404, { error: 'Order not found' });
     order.status = body.status;
     if (body.spotId) order.spotId = body.spotId;
-    if (body.status === 'COMPLETED') order.completedAt = new Date().toISOString();
-    return json(res, 200, order);
+    const now = new Date().toISOString();
+    if (body.status === 'PARKED' && !order.parkingStartedAt) order.parkingStartedAt = now;
+    if (['COMPLETED', 'CANCELLED'].includes(body.status)) {
+      order.parkingEndedAt = now;
+      order.parkingDurationMinutes = parkingDurationMinutes(order, new Date(now).getTime());
+      if (body.status === 'COMPLETED') order.completedAt = now;
+      const parkedSpot = db.spots.find(s => s.id === order.spotId);
+      if (parkedSpot) parkedSpot.status = 'available';
+    }
+    return json(res, 200, { ...order, parkingDurationMinutes: parkingDurationMinutes(order) });
   }
 
   // Payments
@@ -149,11 +163,11 @@ module.exports = async (req, res) => {
     const body = req.body;
     const u = auth(req);
     const order = db.orders.find(o => o.id === body.orderId) || null;
-    let amount = 50;
-    if(body.billingType==='hourly') amount = 10 * (Number(body.hours)||1);
-    else if(body.billingType==='daily') amount = 50;
+    const legacyPlan = body.billingType === 'monthly' ? 'MONTHLY' : body.billingType === 'annual' ? 'ANNUAL' : 'DAILY';
+    const plan = planPrices[body.plan] ? body.plan : legacyPlan;
+    const amount = planPrices[plan];
     const code = 'RAKNI-' + String(nextId()).padStart(6,'0');
-    const p = { id: nextId(), orderId: body.orderId, userId: u?.id || order?.userId, amount, method: body.paymentMethod || body.method || 'KNET', billingType: body.billingType||'daily', hours: body.hours||null, code, gatewayRef: code, status: 'completed', createdAt: new Date().toISOString() };
+    const p = { id: nextId(), orderId: body.orderId, userId: u?.id || order?.userId, amount, plan, method: body.paymentMethod || body.method || 'KNET', billingType: plan.toLowerCase(), code, gatewayRef: code, status: 'completed', createdAt: new Date().toISOString() };
     db.payments.push(p);
     return json(res, 201, p);
   }
