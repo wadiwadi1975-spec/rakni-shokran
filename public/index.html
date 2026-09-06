@@ -75,12 +75,46 @@
         document.body.classList.add('login-page');
         sec.classList.remove('hidden');
         sec.style.display='flex';
-        sec.style.background="url('/rakni-login-bg.png') center/cover no-repeat, #0a0a0a";
-        sec.style.minHeight='240px';
+        sec.style.flexDirection='column';
         sec.style.borderRadius='16px';
         sec.style.overflow='hidden';
         sec.style.marginBottom='16px';
+        if(window.innerWidth<1024){
+          // mobile: full car, no crop
+          sec.style.background="#0a0a0a url('/rakni-login-bg.png') center top / contain no-repeat";
+          sec.style.minHeight='430px';
+          if(!window._rakniLoginArranged){
+            window._rakniLoginArranged=true;
+            var els=sec.querySelectorAll('p, h1');
+            for(var i=0;i<els.length;i++){
+              var t=els[i].textContent;
+              if(t.indexOf('CAMPUS VALET')>-1){els[i].style.display='none';continue;}
+              if(t.indexOf('سيارتك')>-1){els[i].style.display='none';continue;}
+              if(t.indexOf('نرتب الوقوف')>-1){
+                var tag=els[i];
+                sec.appendChild(tag);
+                tag.style.display='block';
+                tag.style.textAlign='center';
+                tag.style.color='#f5f5f5';
+                tag.style.fontSize='13px';
+                tag.style.lineHeight='1.9';
+                tag.style.padding='0 24px 18px';
+                tag.style.marginTop='auto';
+              }
+            }
+          }
+        } else {
+          sec.style.background="url('/rakni-login-bg.png') center/cover no-repeat, #0a0a0a";
+          sec.style.minHeight='240px';
+        }
         return true;
+      }
+      function fixTrial(){
+        var els=document.querySelectorAll('span');
+        for(var i=0;i<els.length;i++){
+          if(els[i].textContent.trim()==='نسخة تجريبية'){els[i].style.display='none';return true;}
+        }
+        return false;
       }
       function fixCurrency(){
         var els=document.querySelectorAll('p,span,div');
@@ -143,8 +177,8 @@
         return false;
       }
       var tries=0;
-      var t=setInterval(function(){tries++; var a=setLoginBg();var b=fixUniversity();var c=fixWelcome();var d=fixCurrency(); if((a&&b&&c&&d)||tries>80) clearInterval(t)},300);
-      new MutationObserver(function(){setLoginBg();fixUniversity();fixWelcome();fixCurrency()}).observe(document.body,{childList:true,subtree:true});
+      var t=setInterval(function(){tries++; var a=setLoginBg();var b=fixUniversity();var c=fixWelcome();var d=fixCurrency();var e=fixTrial(); if((a&&b&&c&&d&&e)||tries>80) clearInterval(t)},300);
+      new MutationObserver(function(){setLoginBg();fixUniversity();fixWelcome();fixCurrency();fixTrial()}).observe(document.body,{childList:true,subtree:true});
     })();
     </script>
     <script>
