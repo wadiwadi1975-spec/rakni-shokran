@@ -2,6 +2,12 @@ const crypto = require('crypto');
 let _idSeq = 100;
 function nextId() { return ++_idSeq; }
 function genId() { return crypto.randomBytes(8).toString('hex'); }
+const planPrices = { DAILY: 1.5, MONTHLY: 30, ANNUAL: 270 };
+function parkingDurationMinutes(order, now = Date.now()) {
+  if (!order?.parkingStartedAt) return order?.parkingDurationMinutes || 0;
+  const end = order.parkingEndedAt ? new Date(order.parkingEndedAt).getTime() : now;
+  return Math.max(0, Math.floor((end - new Date(order.parkingStartedAt).getTime()) / 60000));
+}
 
 const db = {
   users: [
@@ -13,7 +19,11 @@ const db = {
     const s=[];
     const floors=['A','B','C','D'];
     let id=1;
-    for(let f=0;f<4;f++){for(let n=1;n<=250;n++){s.push({id:id++,floor:f+1,spotCode:floors[f]+'-'+String(n).padStart(2,'0'),status:'available'});}}
+    for(let f=0;f<4;f++){for(let n=1;n<=500;n++){s.push({id:id++,floor:f+1,spotCode:floors[f]+'-'+n,status:'available'});}}
+    s[1].status = 'occupied';
+    s[14].status = 'reserved';
+    s[22].status = 'maintenance';
+    s[33].status = 'occupied';
     return s;
   })(),
   vehicles: [
@@ -39,19 +49,19 @@ const db = {
     { id: 20, userId: 'u3', plateNumber: 'MG-3434', makeModel: 'MG ZS', color: 'Red', brand: 'MG' }
   ],
   orders: [
-    { id: 1, userId: 'u3', spotId: 2, vehicleId: 1, status: 'PARKED', pickupLocation: 'Gate 3', createdAt: new Date().toISOString() },
+    { id: 1, userId: 'u3', spotId: 2, vehicleId: 1, status: 'PARKED', pickupLocation: 'Gate 3', createdAt: new Date().toISOString(), parkingStartedAt: new Date(Date.now() - 48 * 60000).toISOString() },
     { id: 2, userId: 'u3', spotId: 15, vehicleId: 2, status: 'REQUESTED', pickupLocation: 'Gate 1', createdAt: new Date().toISOString() },
     { id: 3, userId: 'u3', spotId: 23, vehicleId: 3, status: 'VALET_ASSIGNED', pickupLocation: 'Gate 2', createdAt: new Date().toISOString() },
     { id: 4, userId: 'u3', spotId: 34, vehicleId: 4, status: 'RECEIVED', pickupLocation: 'Gate 3', createdAt: new Date().toISOString() },
     { id: 5, userId: 'u3', spotId: 45, vehicleId: 5, status: 'RETRIEVING', pickupLocation: 'Gate 1', createdAt: new Date().toISOString() },
-    { id: 6, userId: 'u3', spotId: 56, vehicleId: 6, status: 'COMPLETED', pickupLocation: 'Gate 2', createdAt: new Date(Date.now()-86400000).toISOString(), completedAt: new Date().toISOString() },
+    { id: 6, userId: 'u3', spotId: 56, vehicleId: 6, status: 'COMPLETED', pickupLocation: 'Gate 2', createdAt: new Date(Date.now()-86400000).toISOString(), completedAt: new Date().toISOString(), parkingStartedAt: new Date(Date.now() - 26 * 3600000).toISOString(), parkingEndedAt: new Date(Date.now() - 24 * 3600000).toISOString(), parkingDurationMinutes: 120 },
     { id: 7, userId: 'u3', spotId: 67, vehicleId: 7, status: 'PARKED', pickupLocation: 'Gate 3', createdAt: new Date().toISOString() },
     { id: 8, userId: 'u3', spotId: 78, vehicleId: 8, status: 'REQUESTED', pickupLocation: 'Gate 1', createdAt: new Date().toISOString() },
     { id: 9, userId: 'u3', spotId: 89, vehicleId: 9, status: 'PARKED', pickupLocation: 'Gate 2', createdAt: new Date().toISOString() },
     { id: 10, userId: 'u3', spotId: 90, vehicleId: 10, status: 'RETRIEVAL_REQUESTED', pickupLocation: 'Gate 3', createdAt: new Date().toISOString() }
   ],
   payments: [
-    { id: 1, orderId: 1, userId: 'u3', amount: 50, method: 'KNET', status: 'completed', createdAt: new Date().toISOString() }
+    { id: 1, orderId: 1, userId: 'u3', amount: 1.5, plan: 'DAILY', method: 'KNET', status: 'completed', gatewayRef: 'RAKNI-000001', createdAt: new Date().toISOString() }
   ]
 };
 
@@ -62,4 +72,4 @@ function auth(req) {
   return db.users.find(u => u._token === token) || null;
 }
 
-module.exports = { db, auth, nextId, genId };
+module.exports = { db, auth, nextId, genId, planPrices, parkingDurationMinutes };
