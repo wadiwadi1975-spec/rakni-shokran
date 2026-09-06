@@ -1,4 +1,4 @@
-const { db } = require('../../../db');
+const { db, parkingDurationMinutes } = require('../../../db');
 function cors(res){
   res.setHeader('Access-Control-Allow-Origin','*');
   res.setHeader('Access-Control-Allow-Headers','Content-Type, Authorization');
@@ -14,8 +14,16 @@ module.exports = (req, res) => {
     if (!order) return res.status(404).json({ error: 'Order not found' });
     order.status = body.status;
     if (body.spotId) order.spotId = body.spotId;
-    if (body.status === 'COMPLETED') order.completedAt = new Date().toISOString();
-    return res.status(200).json(order);
+    const now = new Date().toISOString();
+    if (body.status === 'PARKED' && !order.parkingStartedAt) order.parkingStartedAt = now;
+    if (['COMPLETED', 'CANCELLED'].includes(body.status)) {
+      order.parkingEndedAt = now;
+      order.parkingDurationMinutes = parkingDurationMinutes(order, new Date(now).getTime());
+      if (body.status === 'COMPLETED') order.completedAt = now;
+      const spot = db.spots.find(s => s.id === order.spotId);
+      if (spot) spot.status = 'available';
+    }
+    return res.status(200).json({ ...order, parkingDurationMinutes: parkingDurationMinutes(order) });
   }
   res.status(405).json({ error: 'Method not allowed' });
 };
