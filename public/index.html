@@ -85,12 +85,17 @@
           sec.style.minHeight='430px';
           if(!window._rakniLoginArranged){
             window._rakniLoginArranged=true;
+            var kids=sec.children;
+            for(var k=0;k<kids.length;k++){
+              if((' '+kids[k].className+' ').indexOf(' absolute ')>-1){kids[k].style.display='none';}
+            }
+            var wrap=sec.querySelector('div[class*=mt-32]');
             var els=sec.querySelectorAll('p, h1');
             for(var i=0;i<els.length;i++){
               var t=els[i].textContent;
               if(t.indexOf('CAMPUS VALET')>-1){els[i].style.display='none';continue;}
               if(t.indexOf('سيارتك')>-1){els[i].style.display='none';continue;}
-              if(t.indexOf('نرتب الوقوف')>-1){
+              if(t.indexOf('الوقوف')>-1){
                 var tag=els[i];
                 sec.appendChild(tag);
                 tag.style.display='block';
@@ -102,6 +107,7 @@
                 tag.style.marginTop='auto';
               }
             }
+            if(wrap)wrap.style.display='none';
           }
         } else {
           sec.style.background="url('/rakni-login-bg.png') center/cover no-repeat, #0a0a0a";
